@@ -1,10 +1,14 @@
-<% if (progress) { %>
-<section class="glass-card progress-card" aria-label="Download status" role="status">
-  <p><%= progress.message %></p>
-  <% if (typeof progress.percent === 'number') { %>
-  <progress max="100" value="<%= progress.percent %>" aria-label="Download progress">
-    <%= progress.percent %>%
-  </progress>
-  <% } %>
+<section
+  id="progress-card"
+  class="glass-card progress-card"
+  aria-labelledby="progress-title"
+  hidden
+>
+  <h2 id="progress-title" tabindex="-1">Preparing your file</h2>
+  <progress
+    id="download-progress"
+    max="100"
+    aria-label="File preparation progress"
+  ></progress>
+  <div id="progress-metrics"></div>
 </section>
-<% } %>

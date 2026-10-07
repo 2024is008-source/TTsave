@@ -1,10 +1,15 @@
-<% if (result) { %>
-<section class="glass-card result-card" aria-labelledby="result-title">
-  <h2 id="result-title"><%= result.title %></h2>
-  <% if (result.description) { %>
-  <p><%= result.description %></p>
-  <% } %> <% if (result.resolution) { %>
-  <p>Source resolution: <%= result.resolution %></p>
-  <% } %>
+<section
+  id="result-card"
+  class="glass-card result-card"
+  aria-labelledby="result-title"
+  hidden
+>
+  <h2 id="result-title" tabindex="-1">Available video formats</h2>
+  <fieldset class="format-fieldset">
+    <legend>Choose an available video format</legend>
+    <div id="format-options"></div>
+  </fieldset>
+  <button class="primary-button download-button" type="button" disabled>
+    Request download
+  </button>
 </section>
-<% } %>

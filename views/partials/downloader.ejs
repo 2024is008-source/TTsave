@@ -15,14 +15,29 @@
         aria-describedby="availability form-status"
       />
       <button class="paste-button" type="button">Paste</button>
+      <button class="clear-button" type="button" aria-label="Clear video link">
+        Clear
+      </button>
     </div>
     <button class="primary-button analyze-button" type="submit">
       Check link <%- include('icon', { name: 'arrow' }) %>
     </button>
+    <button class="cancel-button" type="button" hidden>Cancel analysis</button>
+    <div id="analyzing-indicator" class="analyzing-indicator" tabindex="-1" hidden>
+      <span class="analyzing-spinner" aria-hidden="true"></span
+      ><span>Checking your public video link. You can cancel this request.</span>
+    </div>
     <p class="availability" id="availability">
       <span class="preview-label">Interface preview</span> <%= availability %>
     </p>
-    <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
   </form>
+  <p
+    class="form-status"
+    id="form-status"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    tabindex="-1"
+  ></p>
   <%- include('result-card') %> <%- include('progress-card') %>
 </div>

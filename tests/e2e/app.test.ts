@@ -35,8 +35,8 @@ describe('application routes', () => {
     expect(response.text).not.toMatch(
       /on(?:click|submit)=|cdn\.tailwindcss|sarah\.wanders|74%|5\.1 MB/,
     );
-    expect(response.text).not.toContain('class="glass-card result-card"');
-    expect(response.text).not.toContain('class="glass-card progress-card"');
+    expect(response.text).toMatch(/id="result-card"[\s\S]*?hidden/);
+    expect(response.text).toMatch(/id="progress-card"[\s\S]*?hidden/);
   });
 
   it('rejects non-TikTok and malformed links', async () => {

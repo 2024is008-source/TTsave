@@ -1,0 +1,131 @@
+.clear-button,
+.cancel-button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  background: var(--canvas);
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.cancel-button {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+.analyzing-indicator {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.analyzing-spinner {
+  flex: 0 0 22px;
+  height: 22px;
+  border: 3px solid var(--line);
+  border-top-color: var(--violet);
+  border-radius: 50%;
+  animation: analyze-spin 0.9s linear infinite;
+}
+@keyframes analyze-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.format-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 20px 0;
+}
+.format-fieldset legend {
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+#format-options {
+  display: grid;
+  gap: 10px;
+}
+.format-option {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 14px;
+  min-height: 52px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.format-option input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--violet);
+  margin: 0;
+}
+.format-option small {
+  grid-column: 2;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+.format-option:has(input:checked) {
+  border-width: 2px;
+  border-color: var(--violet);
+}
+.format-option:has(input:focus-visible) {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+.progress-card h2 {
+  font-size: 1.125rem;
+  margin-bottom: 16px;
+}
+#download-progress {
+  height: 14px;
+}
+#progress-metrics {
+  margin-top: 12px;
+  font-size: 0.875rem;
+}
+[data-state='error'] .form-status {
+  border-left: 3px solid var(--pink);
+  padding: 12px;
+  background: var(--glass);
+}
+@media (max-width: 800px) {
+  .input-capsule input {
+    font-size: 16px;
+  }
+  .download-button,
+  .analyze-button {
+    width: 100%;
+  }
+}
+@media (max-width: 480px) {
+  .input-capsule {
+    flex-wrap: wrap;
+    padding: 10px 12px;
+  }
+  .input-capsule input {
+    flex-basis: 100%;
+    width: 100%;
+  }
+  .paste-button,
+  .clear-button {
+    flex: 1;
+  }
+  .cancel-button {
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .analyzing-spinner {
+    animation: none;
+  }
+}

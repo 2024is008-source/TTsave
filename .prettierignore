@@ -1,5 +1,6 @@
 dist
 node_modules
 public/assets/app.css
+public/assets/js/downloader.js
 reference
 package-lock.json

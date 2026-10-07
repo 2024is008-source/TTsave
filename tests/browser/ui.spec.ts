@@ -65,13 +65,27 @@ for (const width of [390, 768, 1024, 1440]) {
     ).toBeVisible();
     await page.locator('#video-url').fill('https://example.com/video/123');
     await page.getByRole('button', { name: 'Check link' }).click();
-    await expect(page.locator('#form-status')).toHaveText('The request was invalid.');
+    await expect(page.locator('#form-status')).toHaveText(
+      'Enter a public TikTok video link using HTTPS.',
+    );
+    await expect(page.locator('#video-url')).toBeFocused();
     await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
     await page.getByRole('button', { name: 'Check link' }).click();
     await expect(page.locator('#form-status')).toContainText(
       'Downloads are not available yet',
     );
-    await expect(page.locator('.result-card, .progress-card')).toHaveCount(0);
+    await expect(page.locator('.result-card')).toBeHidden();
+    await expect(page.locator('.progress-card')).toBeHidden();
+    await expect(page.locator('#video-url')).toHaveValue(
+      'https://www.tiktok.com/@test/video/123',
+    );
+    if (width <= 800) {
+      expect(
+        await page
+          .locator('#video-url')
+          .evaluate((input) => getComputedStyle(input).fontSize),
+      ).toBe('16px');
+    }
 
     await page.getByRole('button', { name: 'Switch to dark theme' }).click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');

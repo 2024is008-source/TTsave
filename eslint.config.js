@@ -5,7 +5,13 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'public/assets/app.css', 'reference/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'public/assets/app.css',
+      'public/assets/js/downloader.js',
+      'reference/**',
+    ],
   },
   eslint.configs.recommended,
   { files: ['scripts/**/*.mjs'], languageOptions: { globals: globals.node } },
