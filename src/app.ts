@@ -35,6 +35,8 @@ export function createApp() {
   );
   app.use(helmet());
   app.use(healthRouter);
+  // Static artwork must not consume the request budget for application routes.
+  app.use('/assets', express.static(path.join(projectRoot, 'public', 'assets')));
   app.use(
     rateLimit({
       windowMs: 60_000,
@@ -45,7 +47,6 @@ export function createApp() {
   );
   app.use(express.json({ limit: '32kb' }));
   app.use(express.urlencoded({ extended: false, limit: '32kb' }));
-  app.use('/assets', express.static(path.join(projectRoot, 'public', 'assets')));
 
   app.get('/', (_request, response) => {
     response.render('index', mockData);

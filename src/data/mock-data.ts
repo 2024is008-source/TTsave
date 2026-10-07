@@ -5,15 +5,24 @@ export const mockData = {
     'Downloads are not available yet. This is a preview of the TTSave interface.',
   result: null,
   progress: null,
+  stepImageSizes: '(max-width: 600px) 100vw, 30vw',
+  heroArtwork: {
+    alt: 'Original illustration of an adult travel creator on a coastal trail',
+    creator: 'Maya · concept creator',
+    caption: 'Coastal walks. Taking the slow way.',
+    label: 'Illustrated lifestyle preview',
+  },
   features: [
     {
       icon: 'link',
+      image: 'video-card',
       color: 'pink',
       title: 'One link. One place.',
       description: 'A focused space for the TikTok videos you want to keep.',
     },
     {
       icon: 'eye',
+      image: 'available-quality',
       color: 'blue',
       title: 'Clarity comes first.',
       description:
@@ -21,12 +30,14 @@ export const mockData = {
     },
     {
       icon: 'shield',
+      image: null,
       color: 'violet',
       title: 'Public links only.',
       description: 'Private posts and content requiring a login will stay private.',
     },
     {
       icon: 'device',
+      image: 'mobile-friendly',
       color: 'cyan',
       title: 'Made for your screen.',
       description: 'A considered experience, from your phone to your desktop.',
@@ -34,15 +45,18 @@ export const mockData = {
   ],
   steps: [
     {
+      image: 'copy-link-step',
       title: 'Copy a public link',
       description: 'Open a publicly accessible TikTok video. Tap Share, then Copy link.',
     },
     {
+      image: 'paste-link-step',
       title: 'Bring it to TTSave',
       description:
         'Paste the link into the field above. Only public TikTok video links are accepted.',
     },
     {
+      image: 'download-video-step',
       title: 'Choose what is available',
       description:
         'When downloads launch, review the source details and choose an available video format.',

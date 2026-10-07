@@ -17,8 +17,11 @@ Sass. Production uses `npm run build` followed by `npm start`.
   `public/assets/app.css`.
 - `public/assets/js` contains browser modules for theme preferences, navigation
   and link submission. No inline application scripts or handlers are used.
-- `public/assets/coast.svg` is original decorative artwork, not a real video
-  thumbnail. The smartphone displays no fabricated creator or engagement data.
+- `src/artwork` holds original SVG placeholders. `npm run images:build` compiles
+  all nine assets and responsive variants into `public/assets/images`. The
+  smartphone is explicitly labelled as an illustrated lifestyle preview with a
+  fictional adult concept creator, and has no engagement counts. See
+  `docs/IMAGE_REQUIREMENTS.md` for final licensed-photo requirements.
 - `src/data/mock-data.ts` holds temporary server-rendered copy. Result and
   progress data remain `null`, so their partials render nothing until real data
   is available. Never substitute invented media metadata.

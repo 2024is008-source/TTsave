@@ -16,33 +16,84 @@
       ><span><%- include('icon', { name: 'device' }) %> Made for every screen</span>
     </div>
   </div>
-  <div class="hero-art" aria-label="Illustrated coastal scene displayed in a smartphone">
+  <div
+    class="hero-art"
+    aria-label="Concept lifestyle video illustration in a silver smartphone"
+  >
     <div class="phone-stage">
+      <div class="iridescent-ribbon" aria-hidden="true"></div>
+      <div class="art-sphere sphere-one" aria-hidden="true"></div>
+      <div class="art-sphere sphere-two" aria-hidden="true"></div>
       <div class="phone">
         <div class="phone-screen">
-          <img
-            class="phone-scene"
-            src="/assets/coast.svg"
-            alt="An illustrated sun setting over a cyan sea and violet coastal cliffs"
-            width="480"
-            height="900"
-          />
+          <%- include('picture', { imageClass: 'phone-scene', imageName:
+          'hero-video-poster', imageWidth: 1080, imageHeight: 1920, smallWidth: 540,
+          imageSizes: '(max-width: 480px) 258px, (max-width: 1100px) 270px, 310px',
+          imageAlt: heroArtwork.alt, imageLoading: 'eager' }) %>
           <div class="island" aria-hidden="true"><span></span></div>
           <div class="phone-top" aria-hidden="true">
             <span>Explore</span><span class="phone-toptab">For you</span>
           </div>
           <div class="phone-caption">
-            <span class="scene-tag">A moment of calm</span>
-            <p>Some views<br />stay with you.</p>
-            <span class="scene-label">Original illustration</span>
+            <div class="creator-line">
+              <%- include('picture', { imageClass: 'creator-avatar', imageName:
+              'hero-avatar', imageWidth: 256, imageHeight: 256, smallWidth: 128,
+              imageSizes: '36px', imageAlt: '', imageLoading: 'eager' }) %>
+              <span><%= heroArtwork.creator %></span>
+            </div>
+            <p><%= heroArtwork.caption %></p>
+            <span class="scene-label"><%= heroArtwork.label %></span>
+          </div>
+          <div class="social-actions" aria-hidden="true">
+            <svg width="25" height="25" viewBox="0 0 24 24" fill="white">
+              <path d="M12 21 3 12C-3 4 8-2 12 6c4-8 15-2 9 6Z" />
+            </svg>
+            <svg width="25" height="25" viewBox="0 0 24 24" fill="white">
+              <path d="M3 3h18v14H9l-6 5Z" />
+            </svg>
+            <svg width="25" height="25" viewBox="0 0 24 24" fill="white">
+              <path d="M6 2h12v20l-6-4-6 4Z" />
+            </svg>
+            <svg width="25" height="25" viewBox="0 0 24 24" fill="white">
+              <path d="m14 3 8 8-8 7v-5C8 13 5 15 2 20c0-8 5-12 12-12Z" />
+            </svg>
           </div>
           <div class="home-indicator" aria-hidden="true"></div>
         </div>
         <div class="phone-button" aria-hidden="true"></div>
+        <div class="phone-volume volume-up" aria-hidden="true"></div>
+        <div class="phone-volume volume-down" aria-hidden="true"></div>
       </div>
+      <div class="phone-pedestal" aria-hidden="true"></div>
       <div class="art-caption">
         <span class="art-rule" aria-hidden="true"></span
         ><span>Less noise. More of what you love.</span>
+      </div>
+    </div>
+    <div class="floating-artwork" aria-hidden="true">
+      <div class="art-info">
+        <span class="art-overline">Public video links</span
+        ><strong>Source details.<br />Clearly presented.</strong
+        ><span>When downloads become available</span>
+      </div>
+      <div class="art-download">
+        <%- include('icon', { name: 'download' }) %><span
+          >Video downloads<small>Coming later</small></span
+        >
+      </div>
+      <div class="music-tile">
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+        >
+          <path d="M9 18V6l11-3v13M9 10l11-3" />
+          <ellipse cx="6" cy="18" rx="3" ry="2" />
+          <ellipse cx="17" cy="16" rx="3" ry="2" />
+        </svg>
       </div>
     </div>
   </div>

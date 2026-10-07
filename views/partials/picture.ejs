@@ -1,0 +1,16 @@
+<picture class="<%= imageClass %>">
+  <source
+    type="image/webp"
+    srcset="/assets/images/<%= imageName %>-<%= smallWidth %>.webp <%= smallWidth %>w, /assets/images/<%= imageName %>.webp <%= imageWidth %>w"
+    sizes="<%= imageSizes %>"
+  />
+  <img
+    src="/assets/images/<%= imageName %>.webp"
+    width="<%= imageWidth %>"
+    height="<%= imageHeight %>"
+    alt="<%= imageAlt %>"
+    loading="<%= imageLoading %>"
+    decoding="async"
+    fetchpriority="<%= imageLoading === 'eager' ? 'high' : 'auto' %>"
+  />
+</picture>

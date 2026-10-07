@@ -1,0 +1,165 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="1080"
+  height="1920"
+  viewBox="0 0 1080 1920"
+>
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1">
+      <stop stop-color="#99c5df" />
+      <stop offset=".65" stop-color="#f6d4bd" />
+      <stop offset="1" stop-color="#ffe5c6" />
+    </linearGradient>
+    <linearGradient id="water" x2=".5" y2="1">
+      <stop stop-color="#51b7bc" />
+      <stop offset=".45" stop-color="#248b9c" />
+      <stop offset="1" stop-color="#154b65" />
+    </linearGradient>
+    <linearGradient id="cliff" x2="1" y2="1">
+      <stop stop-color="#b2a591" />
+      <stop offset=".5" stop-color="#7c8269" />
+      <stop offset="1" stop-color="#334b50" />
+    </linearGradient>
+    <linearGradient id="linen" x2="1" y2=".2">
+      <stop stop-color="#d8cfc4" />
+      <stop offset=".4" stop-color="#fff5e6" />
+      <stop offset="1" stop-color="#bfb4ac" />
+    </linearGradient>
+    <linearGradient id="skin" x2="1" y2=".2">
+      <stop stop-color="#a96d51" />
+      <stop offset=".45" stop-color="#d79d76" />
+      <stop offset="1" stop-color="#ebbd95" />
+    </linearGradient>
+    <linearGradient id="hair" x2="1" y2="1">
+      <stop stop-color="#2f2728" />
+      <stop offset=".55" stop-color="#574033" />
+      <stop offset="1" stop-color="#927057" />
+    </linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="26" /></filter>
+    <filter id="grain">
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency=".5"
+        numOctaves="3"
+        stitchTiles="stitch"
+      />
+      <feColorMatrix type="saturate" values="0" />
+      <feComponentTransfer><feFuncA type="linear" slope=".065" /></feComponentTransfer>
+      <feBlend in="SourceGraphic" mode="soft-light" />
+    </filter>
+  </defs>
+  <g filter="url(#grain)">
+    <path fill="url(#sky)" d="M0 0h1080v1920H0Z" />
+    <ellipse
+      cx="795"
+      cy="450"
+      rx="165"
+      ry="80"
+      fill="#fff2ce"
+      opacity=".7"
+      filter="url(#soft)"
+    />
+    <g fill="#fff5e6" opacity=".4" filter="url(#soft)">
+      <path d="M40 256q180-50 356 14l160 16-446 4Z" />
+      <path d="M645 132q120-18 322 24l-70 18-293-5Z" />
+    </g>
+    <path d="M0 760q235-8 521 15t559-3v1148H0Z" fill="url(#water)" />
+    <path
+      d="M0 760 170 681 329 694 471 750 303 796 0 814Z"
+      fill="#657e7b"
+      opacity=".55"
+    />
+    <g fill="none" stroke="#a9e6df" opacity=".4">
+      <path
+        d="M20 843q199-18 383-2m-293 93q410-22 875-11M657 1020h356M583 1138q176-20 386-7"
+        stroke-width="4"
+      />
+      <path
+        d="M653 1230q134-15 354 0m-407 34q258-13 393 5m-321 132q161-21 320 0"
+        stroke-width="7"
+      />
+    </g>
+    <path
+      d="M0 948 150 901 242 950 259 1038 352 1118 348 1272 470 1397 615 1505 777 1615 1080 1827v93H0Z"
+      fill="url(#cliff)"
+    />
+    <path d="m0 1273 250-24 114 135 64 76 185 144 291 232 176 61v23H0Z" fill="#74766a" />
+    <path
+      d="M275 1097q-52 76 17 170l176 162 133 105"
+      fill="none"
+      stroke="#cad1ae"
+      stroke-width="27"
+      opacity=".55"
+    />
+    <g stroke="#314c48" stroke-width="7" opacity=".55">
+      <path
+        d="m65 1182 30-104m-17 80-31-45m38 30 32-44m611 639-6-101m-3 52-27-35m37 33 31-36"
+      />
+    </g>
+    <!-- Fictional adult travel creator. Face stays in the upper central safe area. -->
+    <path
+      d="M378 653q-64-51-28-151 18-76 95-90 85-14 131 52 47 65 22 137l28 91-61 53-176-17Z"
+      fill="url(#hair)"
+    />
+    <path d="m442 639-12 104 91 24 5-130Z" fill="url(#skin)" />
+    <path
+      d="M391 526q21-67 83-65 82 6 72 107l-21 64q-35 67-84 29-44-31-50-93Z"
+      fill="url(#skin)"
+    />
+    <path
+      d="M390 532q25-35 31-67 62 26 121 50l16 40-2-58q-37-72-110-49-67 20-56 84Z"
+      fill="url(#hair)"
+    />
+    <path
+      d="m424 553 24-5m37 5 24 5"
+      stroke="#614433"
+      stroke-width="6"
+      stroke-linecap="round"
+    />
+    <path
+      d="m431 572 18 0m34 3 18 3"
+      stroke="#312d2c"
+      stroke-width="4"
+      stroke-linecap="round"
+    />
+    <path d="m463 574-8 30 16 5" fill="none" stroke="#ad775b" stroke-width="4" />
+    <path
+      d="M440 627q21 15 42-1"
+      fill="none"
+      stroke="#934f46"
+      stroke-width="5"
+      stroke-linecap="round"
+    />
+    <path d="M399 534q-33 53-15 104l-32 88 35-6q20-27 28-69" fill="url(#hair)" />
+    <path d="M539 533q-5 58 11 96 15 41 51 55l-36 65q-36-22-49-69" fill="url(#hair)" />
+    <path d="M420 719q-68 9-87 65l-31 137 63 21 40-125 28-28Z" fill="url(#skin)" />
+    <path d="m310 887-22 132q-5 37 42 42l100-56-21-31-68 38 26-116Z" fill="url(#skin)" />
+    <path d="M520 720q49-4 74 47l53 148-49 30-61-127Z" fill="url(#skin)" />
+    <path d="m619 902 30 115-41 77-31-13 24-68-38-87Z" fill="url(#skin)" />
+    <path
+      d="M406 727 448 755l53 0 31-34 42 21-25 138-18 88 57 384-244 0 35-342-9-144Z"
+      fill="url(#linen)"
+    />
+    <path
+      d="m430 762-17 166 8 71-30 303m109-541 10 171-11 58 44 324m-113-302 23 155m35-160-12 241"
+      fill="none"
+      stroke="#b4a79d"
+      stroke-width="7"
+      opacity=".5"
+    />
+    <path d="m375 1341 58 2-8 211 12 65-41 15-28-62Z" fill="url(#skin)" />
+    <path d="m500 1343 53 0 28 227-23 77-37-12 12-76Z" fill="url(#skin)" />
+    <path d="m397 1605 35 0 8 42-28 12-44-8Z" fill="#b68864" />
+    <path d="m537 1613 32 1 11 45-43 12-25-16Z" fill="#b68864" />
+    <path d="M411 736q30 18 68 18" fill="none" stroke="#d8c299" stroke-width="4" />
+    <ellipse
+      cx="469"
+      cy="1712"
+      rx="119"
+      ry="24"
+      fill="#263a36"
+      opacity=".2"
+      filter="url(#soft)"
+    />
+  </g>
+</svg>

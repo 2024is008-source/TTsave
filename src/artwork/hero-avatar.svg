@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1">
+      <stop stop-color="#c3e4e4" />
+      <stop offset="1" stop-color="#efd7c1" />
+    </linearGradient>
+    <linearGradient id="skin" x2="1" y2=".3">
+      <stop stop-color="#b07c5b" />
+      <stop offset="1" stop-color="#edbd94" />
+    </linearGradient>
+  </defs>
+  <path fill="url(#bg)" d="M0 0h256v256H0Z" />
+  <path d="M54 233V97q-2-64 63-69 76-5 89 79l-7 126Z" fill="#4a362e" />
+  <path d="M35 256q11-63 80-63h38q58 7 72 63Z" fill="#f6ead9" />
+  <path d="m109 156-5 45q27 20 48-2l-9-44Z" fill="url(#skin)" />
+  <path
+    d="M83 93q9-42 43-41 47 0 50 45l-9 46q-17 46-50 29-30-14-34-53Z"
+    fill="url(#skin)"
+  />
+  <path d="M73 114q0-66 48-75 54-4 66 66l-22-20-53-26q-14 38-39 55Z" fill="#4a362e" />
+  <path
+    d="m100 109 14-2m29 2 13 3"
+    stroke="#47332b"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+  <path
+    d="m125 115-4 17 10 2m-18 12q14 10 25-1"
+    fill="none"
+    stroke="#a3634d"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+</svg>

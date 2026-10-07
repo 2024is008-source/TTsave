@@ -11,6 +11,9 @@
     <ol class="step-grid">
       <% steps.forEach((step, index) => { %>
       <li>
+        <%- include('picture', { imageClass: 'step-art', imageName: step.image,
+        imageWidth: 800, imageHeight: 600, smallWidth: 400, imageSizes: stepImageSizes,
+        imageAlt: '', imageLoading: 'lazy' }) %>
         <span class="step-number" aria-hidden="true">0<%= index + 1 %></span>
         <h3><%= step.title %></h3>
         <p><%= step.description %></p>

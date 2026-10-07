@@ -17,9 +17,33 @@ for (const width of [390, 768, 1024, 1440]) {
       ),
     ).toBe(true);
     const imageLoaded = await page
-      .locator('.phone-scene')
+      .locator('.phone-scene img')
       .evaluate((image) => (image as HTMLImageElement).naturalWidth > 0);
     expect(imageLoaded).toBe(true);
+    const pictures = page.locator('picture');
+    await expect(pictures).toHaveCount(8);
+    for (const picture of await pictures.all()) {
+      const image = picture.locator('img');
+      await image.scrollIntoViewIfNeeded();
+      await expect(image).toHaveJSProperty('complete', true);
+      await expect
+        .poll(async () =>
+          image.evaluate((element) => (element as HTMLImageElement).naturalWidth),
+        )
+        .toBeGreaterThan(0);
+      await expect(image).toHaveAttribute('src', /^\/assets\/images\/.*\.webp$/);
+      await expect(image).toHaveAttribute('width', /^\d+$/);
+      await expect(image).toHaveAttribute('height', /^\d+$/);
+      await expect(picture.locator('source')).toHaveAttribute(
+        'srcset',
+        /\.webp \d+w, .*\.webp \d+w/,
+      );
+    }
+    await expect(page.locator('.art-sphere')).toHaveCount(2);
+    await expect(
+      page.locator('.social-actions button, .floating-artwork button'),
+    ).toHaveCount(0);
+    await page.evaluate(() => window.scrollTo(0, 0));
     await page.screenshot({
       path: testInfo.outputPath(`light-${String(width)}.png`),
       fullPage: true,
