@@ -1,11 +1,14 @@
-import { Router } from 'express';
-import type { ZodType } from 'zod';
+import { Router, type Request } from 'express';
+import { z, type ZodType } from 'zod';
+import { createReadStream } from 'node:fs';
+import { pipeline } from 'node:stream/promises';
 import {
   analyzeInput,
   analysisSchema,
   apiJobSchema,
   downloadInput,
   jobParams,
+  fileQuery,
 } from '../api/contracts.js';
 import { HttpError } from '../middleware/error-handler.js';
 import type { DownloaderService } from '../services/memory-store.js';
@@ -18,6 +21,13 @@ function validateOutput<T>(schema: ZodType<T>, data: unknown): T {
 
 export function createApiRouter(service: DownloaderService) {
   const router = Router();
+  const authorize = (request: Request, id: string) => {
+    const parsed = z
+      .string()
+      .regex(/^Bearer [A-Za-z0-9_-]{43}$/i)
+      .safeParse(request.get('Authorization'));
+    service.authorizeJob?.(id, parsed.success ? parsed.data.slice(7) : undefined);
+  };
   router.use((_request, response, next) => {
     response.setHeader('Cache-Control', 'no-store');
     next();
@@ -48,22 +58,64 @@ export function createApiRouter(service: DownloaderService) {
   });
   router.post('/downloads', (request, response) => {
     const input = downloadInput.parse(request.body as unknown);
+    const controller = new AbortController();
+    const close = () => {
+      if (!response.writableEnded) controller.abort();
+    };
+    response.once('close', close);
+    response.once('finish', () => response.off('close', close));
     const job = validateOutput(
       apiJobSchema,
-      service.createJob(input.analysisId, input.formatId),
+      service.createJob(input.analysisId, input.formatId, {
+        signal: controller.signal,
+        requestId: typeof request.id === 'string' ? request.id : 'unknown-request',
+        logger: request.log,
+      }),
     );
     response.location(`/api/v1/downloads/${job.id}`).status(201).json(job);
   });
   router.get('/downloads/:jobId', (request, response) => {
     const { jobId } = jobParams.parse(request.params);
+    authorize(request, jobId);
     response.json(validateOutput(apiJobSchema, service.getJob(jobId)));
   });
   router.delete('/downloads/:jobId', (request, response) => {
     const { jobId } = jobParams.parse(request.params);
+    authorize(request, jobId);
     response.json(validateOutput(apiJobSchema, service.cancel(jobId)));
   });
-  router.get('/downloads/:jobId/file', (request) => {
+  router.get('/downloads/:jobId/file', async (request, response) => {
     const { jobId } = jobParams.parse(request.params);
+    if (service.claimFile) {
+      if (request.method !== 'GET')
+        throw new HttpError(405, 'METHOD_NOT_ALLOWED', 'Use GET to request this file.');
+      if (request.get('Range'))
+        throw new HttpError(
+          416,
+          'RANGE_UNSUPPORTED',
+          'Resume is not supported for this single-use download.',
+        );
+      const { token } = fileQuery.parse(request.query);
+      const claim = await service.claimFile(jobId, token);
+      let delivered = false;
+      try {
+        response.setHeader('Content-Type', 'video/mp4');
+        response.setHeader('Content-Length', claim.size);
+        response.setHeader(
+          'Content-Disposition',
+          'attachment; filename="TTSave-video.mp4"',
+        );
+        response.setHeader('Cache-Control', 'private, no-store');
+        response.setHeader('Accept-Ranges', 'none');
+        await pipeline(createReadStream(claim.path), response, { signal: claim.signal });
+        delivered = true;
+      } catch (error) {
+        if (!response.headersSent && !response.destroyed) throw error;
+      } finally {
+        await claim.release(delivered);
+      }
+      return;
+    }
     service.getJob(jobId);
     throw new HttpError(
       409,
@@ -73,14 +125,26 @@ export function createApiRouter(service: DownloaderService) {
   });
   router.get('/downloads/:jobId/events', (request, response) => {
     const { jobId } = jobParams.parse(request.params);
+    authorize(request, jobId);
     const job = validateOutput(apiJobSchema, service.getJob(jobId));
     const send = (value: unknown) => {
+      if (response.writableEnded || response.destroyed) return;
       const update = validateOutput(apiJobSchema, value);
       response.write(`event: job\ndata: ${JSON.stringify(update)}\n\n`);
-      if (update.status === 'cancelled') response.end();
+      if (['ready', 'delivered', 'cancelled', 'error', 'expired'].includes(update.status))
+        response.end();
+      else if (response.writableLength > 65_536) response.destroy();
     };
     const unsubscribe = service.subscribe(jobId, send);
-    response.on('close', unsubscribe);
+    const heartbeat = setInterval(() => {
+      if (!response.writableEnded && !response.destroyed)
+        response.write(': keepalive\n\n');
+    }, 15_000);
+    heartbeat.unref();
+    response.on('close', () => {
+      clearInterval(heartbeat);
+      unsubscribe();
+    });
     response.setHeader('Content-Type', 'text/event-stream');
     response.setHeader('X-Accel-Buffering', 'no');
     response.flushHeaders();

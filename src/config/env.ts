@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import path from 'node:path';
+import { tmpdir } from 'node:os';
 
 const executable = (name: string) =>
   z
@@ -42,6 +43,32 @@ const envSchema = z.object({
     .max(8_388_608)
     .default(2_097_152),
   ANALYSIS_MAX_CONCURRENT: z.coerce.number().int().min(1).max(8).default(2),
+  DOWNLOAD_MAX_CONCURRENT: z.coerce.number().int().min(1).max(8).default(2),
+  APPLICATION_MAX_CONCURRENT: z.coerce.number().int().min(1).max(16).default(4),
+  DOWNLOAD_TIMEOUT_MS: z.coerce.number().int().min(1000).max(600_000).default(120_000),
+  MAX_VIDEO_DURATION_SECONDS: z.coerce.number().int().min(1).max(3600).default(600),
+  DOWNLOAD_MAX_BYTES: z.coerce
+    .number()
+    .int()
+    .min(1024)
+    .max(1_073_741_824)
+    .default(104_857_600),
+  JOB_TTL_MS: z.coerce.number().int().min(1000).max(3_600_000).default(600_000),
+  FILE_ACCESS_TTL_MS: z.coerce.number().int().min(1000).max(300_000).default(60_000),
+  JOB_SWEEP_INTERVAL_MS: z.coerce.number().int().min(1000).max(60_000).default(30_000),
+  DOWNLOAD_TEMP_ROOT: z
+    .string()
+    .min(1)
+    .max(2048)
+    .refine(
+      (value) =>
+        path.isAbsolute(value) &&
+        !/[\p{Cc}]/u.test(value) &&
+        !value.startsWith('\\\\') &&
+        !value.startsWith('//'),
+      'Use a local absolute temporary root.',
+    )
+    .default(path.join(tmpdir(), 'ttsave')),
 });
 
 export type Environment = z.infer<typeof envSchema>;

@@ -36,12 +36,50 @@ export const analysisSchema = z.object({
   mock: z.boolean(),
   downloadAvailable: z.boolean().default(false),
 });
+export const accessTokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
+export const fileQuery = z.object({ token: accessTokenSchema }).strict();
+export const apiProgressSchema = z.object({
+  percent: z.number().min(0).max(100).optional(),
+  speedBytesPerSecond: z.number().nonnegative().optional(),
+  sizeBytes: z.number().int().nonnegative().optional(),
+});
+export const safeFileUrlSchema = z
+  .string()
+  .max(2048)
+  .refine(
+    (value) =>
+      /^\/api\/v1\/downloads\/[a-zA-Z0-9_-]+\/file(?:\?token=[A-Za-z0-9_-]{43})?$/.test(
+        value,
+      ),
+    'Invalid file URL.',
+  );
+export const jobErrorSchema = z.object({
+  code: z.string(),
+  message: z.string(),
+  retryable: z.boolean(),
+  fieldErrors: z.record(z.string(), z.array(z.string())),
+  requestId: z.string(),
+});
 export const apiJobSchema = z.object({
   id: opaqueId,
   analysisId: opaqueId,
   formatId: z.string().min(1).max(200),
-  status: z.enum(['queued', 'cancelled']),
-  mock: z.literal(true),
+  status: z.enum([
+    'queued',
+    'downloading',
+    'ready',
+    'delivering',
+    'delivered',
+    'cancelled',
+    'error',
+    'expired',
+  ]),
+  mock: z.boolean(),
+  accessToken: accessTokenSchema.optional(),
+  progress: apiProgressSchema.optional(),
+  fileUrl: safeFileUrlSchema.optional(),
+  fileExpiresAt: z.number().int().positive().optional(),
+  error: jobErrorSchema.optional(),
 });
 export const apiErrorSchema = z.object({
   error: z.object({

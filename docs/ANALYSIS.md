@@ -60,25 +60,26 @@ another region.
 ## Metadata and format eligibility
 
 Output is parsed as JSON, validated with Zod and projected into the API contract.
-Internal headers, cookies, extractor selectors, filenames and media URLs are
-discarded. Titles and creator names are bounded. Durations and dimensions come
+Internal headers, cookies, filenames and media URLs are discarded. Validated
+extractor selectors remain server-only for job creation. Titles and creator names
+are bounded. Durations and dimensions come
 only from extractor data. Estimated bytes are supplied only from a positive,
 safe integer `filesize`; `filesize_approx` is ignored. No dimensions, sizes or
 quality improvements are inferred.
 
 Only direct HTTPS, non-DRM MP4 formats with known video and audio codecs are
-eligible for the planned single-file delivery path. Audio-only, video-only,
+eligible for the implemented single-file delivery path. Audio-only, video-only,
 unknown-codec, WebM, HLS, DASH, live, playlist and restricted-access results are
 excluded. Local/IP-literal media destinations are excluded. At most 30 formats
 are returned, with application IDs and labels based on actual dimensions. A 4K
 source is never invented; its dimensions appear only if actually returned.
 
 Remote thumbnails are omitted until a safe local thumbnail pipeline exists.
-File delivery is still unimplemented: the response explicitly sets
-`downloadAvailable: false`, the frontend disables its download button and the
-production job creation endpoint returns 503. Eligible source formats do not
-claim that a download has occurred. A future file adapter must independently
-validate every media destination and redirect before fetching it.
+The production service requires a known positive duration within the configured
+limit and a safe server-only format selector. Known oversized formats are excluded.
+Eligible analyses set `downloadAvailable: true`. Jobs re-extract the validated
+TikTok URL through yt-dlp; clients cannot submit media destinations. No arbitrary
+URL fetching endpoint exists. See `DOWNLOAD_JOBS.md` for download limits.
 
 Tests mock child processes and cover argument construction, normalization,
 output bounds, timeout, cancellation, concurrency, safe failures and startup

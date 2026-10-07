@@ -29,6 +29,7 @@ it('uses the production adapter and returns only normalized metadata over HTTP',
           availability: 'public',
           formats: [
             {
+              format_id: 'download-0',
               ext: 'mp4',
               protocol: 'https',
               url: 'https://video.tiktokcdn.com/file.mp4',
@@ -50,13 +51,9 @@ it('uses the production adapter and returns only normalized metadata over HTTP',
     title: 'Public source',
     creator: 'Creator',
     mock: false,
-    downloadAvailable: false,
+    downloadAvailable: true,
   });
   expect(response.text).not.toMatch(/secret|tiktokcdn|raw internal/);
-  await request(app)
-    .post('/api/v1/downloads')
-    .send({ analysisId: media.id, formatId: media.formats[0]?.id })
-    .expect(503);
 });
 it('returns a safe extractor error with a matching request ID', async () => {
   spawnMock.mockImplementation(() => {

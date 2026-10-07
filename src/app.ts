@@ -38,6 +38,13 @@ export function createApp(
     pinoHttp({
       logger,
       genReqId: (request) => request.id,
+      serializers: {
+        req: (request: { id?: unknown; method?: string; url?: string }) => ({
+          id: request.id,
+          method: request.method,
+          url: request.url?.split('?')[0],
+        }),
+      },
     }),
   );
   app.use(helmet());

@@ -2,7 +2,7 @@
 export const mockData = {
   title: 'TTSave — A little more worth keeping',
   availability:
-    'Analyze publicly accessible TikTok video links. File downloads are not available yet.',
+    'Public TikTok videos only. Formats and measured progress come from the source.',
   result: null,
   progress: null,
   stepImageSizes: '(max-width: 600px) 100vw, 30vw',
@@ -59,14 +59,14 @@ export const mockData = {
       image: 'download-video-step',
       title: 'Choose what is available',
       description:
-        'When downloads launch, review the source details and choose an available video format.',
+        'Review the source details, choose an available format and request the video file. Your browser handles saving.',
     },
   ],
   faqs: [
     {
       question: 'Can I download a video right now?',
       answer:
-        'Not yet. This interface supports public video metadata analysis when the server tools are available. Video file downloads are still being built.',
+        'For publicly accessible videos with an available supported MP4 format, TTSave can prepare a download. Availability depends on the source.',
     },
     {
       question: 'Which TikTok links will be supported?',
@@ -86,7 +86,7 @@ export const mockData = {
     {
       question: 'Where will files be saved?',
       answer:
-        'Once downloads are available, your browser will control where a file is saved. TTSave cannot guarantee that it goes directly to a device gallery.',
+        'Your browser controls where a file is saved. TTSave cannot guarantee that it goes directly to a device gallery.',
     },
   ],
 };

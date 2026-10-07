@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { accessTokenSchema, safeFileUrlSchema } from '../api/contracts.js';
 
 export { videoUrlSchema } from '../shared/video-url.js';
 
@@ -27,15 +28,12 @@ export const progressSchema = z.object({
   speedBytesPerSecond: z.number().nonnegative().optional(),
   sizeBytes: z.number().int().nonnegative().optional(),
 });
-export const jobSchema = z.object({ id: z.string().min(1).max(200) });
+export const jobSchema = z.object({
+  id: z.string().min(1).max(200),
+  accessToken: accessTokenSchema.optional(),
+});
 export const downloadSchema = z.object({
-  url: z
-    .string()
-    .max(2048)
-    .refine(
-      (url) => /^\/api\/v1\/downloads\/[a-zA-Z0-9_-]+\/file$/.test(url),
-      'Invalid download URL.',
-    ),
+  url: safeFileUrlSchema,
 });
 export type Media = z.infer<typeof mediaSchema>;
 export type Progress = z.infer<typeof progressSchema>;

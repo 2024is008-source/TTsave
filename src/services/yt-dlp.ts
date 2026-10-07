@@ -9,6 +9,7 @@ import { runTool, type AnalysisContext } from './tool-process.js';
 
 const optionalNumber = z.number().nullable().optional();
 const extractorFormat = z.object({
+  format_id: z.string().optional(),
   url: z.string().optional(),
   ext: z.string().optional(),
   protocol: z.string().optional(),
@@ -32,7 +33,11 @@ const extractorMetadata = z.object({
 });
 
 export function extractorError(stderr: string): HttpError {
-  if (/private|login|log in|sign in|authentication|friends.only|cookie/i.test(stderr))
+  if (
+    /\b(?:private (?:video|post)|(?:video|post)(?: is)? private|login|log in|sign in|authentication|friends.only|cookies?)\b/i.test(
+      stderr,
+    )
+  )
     return new HttpError(
       422,
       'VIDEO_NOT_PUBLIC',
@@ -66,7 +71,11 @@ export function extractorError(stderr: string): HttpError {
 const positiveInteger = (value: number | null | undefined): value is number =>
   value !== null && value !== undefined && Number.isSafeInteger(value) && value > 0;
 
+export type AnalyzedSource = { media: Analysis; selectors: Map<string, string> };
 export function normalizeMetadata(payload: unknown, sourceUrl: string): Analysis {
+  return normalizeSource(payload, sourceUrl).media;
+}
+function normalizeSource(payload: unknown, sourceUrl: string): AnalyzedSource {
   const parsed = extractorMetadata.safeParse(payload);
   if (!parsed.success)
     throw new HttpError(
@@ -88,6 +97,7 @@ export function normalizeMetadata(payload: unknown, sourceUrl: string): Analysis
       'Live video downloads are not supported.',
     );
   const formats: Analysis['formats'] = [];
+  const selectors = new Map<string, string>();
   for (const format of data.formats) {
     if (
       format.ext !== 'mp4' ||
@@ -132,6 +142,8 @@ export function normalizeMetadata(payload: unknown, sourceUrl: string): Analysis
       ...(height === undefined ? {} : { height }),
       ...(size === undefined ? {} : { estimatedBytes: size }),
     });
+    if (format.format_id && /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,199}$/.test(format.format_id))
+      selectors.set(`source-${String(formats.length)}`, format.format_id);
     if (formats.length === 30) break;
   }
   if (!formats.length)
@@ -141,18 +153,21 @@ export function normalizeMetadata(payload: unknown, sourceUrl: string): Analysis
       'No supported single-file MP4 video with audio is available.',
     );
   return {
-    id: randomUUID(),
-    title: data.title.slice(0, 500),
-    creator: (data.uploader ?? data.creator)?.slice(0, 200) ?? null,
-    thumbnail: null,
-    durationSeconds:
-      data.duration !== null && data.duration !== undefined && data.duration >= 0
-        ? data.duration
-        : null,
-    sourceUrl,
-    formats,
-    mock: false,
-    downloadAvailable: false,
+    selectors,
+    media: {
+      id: randomUUID(),
+      title: data.title.slice(0, 500),
+      creator: (data.uploader ?? data.creator)?.slice(0, 200) ?? null,
+      thumbnail: null,
+      durationSeconds:
+        data.duration !== null && data.duration !== undefined && data.duration >= 0
+          ? data.duration
+          : null,
+      sourceUrl,
+      formats,
+      mock: false,
+      downloadAvailable: false,
+    },
   };
 }
 
@@ -160,6 +175,9 @@ export class YtDlpAnalyzer {
   private active = 0;
   constructor(private readonly config: Environment = env) {}
   async analyze(input: string, context: AnalysisContext): Promise<Analysis> {
+    return (await this.analyzeSource(input, context)).media;
+  }
+  async analyzeSource(input: string, context: AnalysisContext): Promise<AnalyzedSource> {
     const url = videoUrlSchema.parse(input);
     if (this.active >= this.config.ANALYSIS_MAX_CONCURRENT)
       throw new HttpError(
@@ -218,7 +236,7 @@ export class YtDlpAnalyzer {
           'The video source returned unsupported metadata.',
         );
       }
-      return normalizeMetadata(payload, url);
+      return normalizeSource(payload, url);
     } finally {
       this.active -= 1;
     }

@@ -1,79 +1,54 @@
 # TTSave API v1
 
-Zod schemas in `src/api/contracts.ts` are the executable contract. Requests and
-service responses are validated. All API responses disable caching. All routes
-return `X-Request-ID`; application requests are rate limited.
+Zod validates requests and responses. API responses disable caching, carry
+`X-Request-ID` and are rate limited. Production extracts public TikTok sources.
 
-Production metadata analysis uses yt-dlp with anonymous access to validated public
-TikTok links. Responses carry `mock: false` and `downloadAvailable: false`.
-Unknown creator and duration are `null`; format dimensions and byte counts are
-omitted when unknown. `thumbnail` is currently `null` because thumbnail copying
-is not implemented and production images must not be hotlinked. See `ANALYSIS.md`.
-
-## Endpoints
-
-| Method and path                       | Request                                                  | Success                                                         |
-| ------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------- |
-| `POST /api/v1/analyze`                | `{ "url": "https://www.tiktok.com/@creator/video/123" }` | 200 analysis                                                    |
-| `POST /api/v1/downloads`              | `{ "analysisId": "<UUID>", "formatId": "source-1" }`     | Production: 503 `DOWNLOADER_UNAVAILABLE`; test service: 201 job |
-| `GET /api/v1/downloads/:jobId`        | UUID job ID                                              | 200 job                                                         |
-| `GET /api/v1/downloads/:jobId/events` | UUID job ID                                              | 200 SSE stream                                                  |
-| `GET /api/v1/downloads/:jobId/file`   | UUID job ID                                              | 409 `FILE_UNAVAILABLE` for existing mock jobs                   |
-| `DELETE /api/v1/downloads/:jobId`     | UUID job ID                                              | 200 cancelled job; idempotent                                   |
-| `GET /health`                         | None                                                     | 200 `{ "status": "ok" }`                                        |
-| `GET /ready`                          | None                                                     | 200 ready or 503 not-ready, based on startup tool checks        |
+| Method and path                             | Request                                                  | Success                          |
+| ------------------------------------------- | -------------------------------------------------------- | -------------------------------- |
+| `POST /api/v1/analyze`                      | `{ "url": "https://www.tiktok.com/@creator/video/123" }` | 200 analysis                     |
+| `POST /api/v1/downloads`                    | `{ "analysisId": "<UUID>", "formatId": "source-1" }`     | 201 job and access token         |
+| `GET /api/v1/downloads/:jobId`              | Bearer access token                                      | 200 job                          |
+| `GET /api/v1/downloads/:jobId/events`       | Bearer access token                                      | 200 SSE stream                   |
+| `GET /api/v1/downloads/:jobId/file?token=…` | One-use file token                                       | 200 MP4 attachment               |
+| `DELETE /api/v1/downloads/:jobId`           | Bearer access token                                      | 200 job; idempotent cancellation |
+| `GET /health`                               | None                                                     | 200 liveness                     |
+| `GET /ready`                                | None                                                     | 200 ready or 503 not ready       |
 
 Analysis contains `id`, `title`, `creator`, `thumbnail`, `durationSeconds`,
-`sourceUrl`, `formats`, `mock` and `downloadAvailable`. A format contains `id`, `container`,
-`qualityLabel` and `hasAudio`, with optional `width`, `height` and
-`estimatedBytes`. The browser maps these fields directly to its display model.
+`sourceUrl`, `formats`, `mock`, `downloadAvailable`. Formats contain `id`,
+`container`, `qualityLabel`, `hasAudio` and optional dimensions and `estimatedBytes`.
+Unknown size is omitted. Remote thumbnails are currently `null`. Eligible responses
+have `mock: false`, `downloadAvailable: true` and known duration within the limit.
 
-The in-memory job contract remains tested using an injected test service; no real
-download jobs can be created in production yet. Jobs contain `id`, `analysisId`,
-`formatId`, `status` and `mock`. Test job status is
-`queued` until explicit cancellation; there are no timed completion transitions,
-progress metrics or downloadable fixtures. SSE sends the current job immediately
-as `event: job` with JSON in `data`, sends cancellation updates, and closes on
-cancellation. Disconnecting releases the subscription. Up to five concurrent
-subscriptions per job are allowed. No heartbeat or simulated progress is sent.
+Jobs contain `id`, `analysisId`, `formatId`, `status`, `mock` and optional
+`progress`, `fileUrl`, `fileExpiresAt`, `error`. Only creation returns `accessToken`;
+send `Authorization: Bearer <accessToken>` for lookup, events and cancellation.
+States are `queued`, `downloading`, `ready`, `delivering`, `delivered`, `cancelled`,
+`error`, `expired`.
 
-The frontend disables file requests when analysis reports download unavailability.
-Tests exercise event streaming and cancellation. File delivery remains future
-work. No frontend mock adapter is shipped.
+SSE sends JSON as `event: job`, starting with the current snapshot. Progress fields
+`percent`, `speedBytesPerSecond`, `sizeBytes` exist only when measured data is
+available. Unknown totals produce indeterminate progress. Heartbeats are comments.
+Terminal events close the stream; the last subscriber disconnect cancels active
+work. Up to five subscribers are allowed per job.
 
-## Errors and limits
+Ready jobs supply a separate expiring one-use file URL. Delivery uses
+`Content-Disposition: attachment; filename="TTSave-video.mp4"`. HEAD and Range
+requests are rejected. Successful or disconnected delivery consumes the token
+and deletes temporary data. Filesystem paths never appear in responses.
 
-Errors use this envelope, without stacks, exception messages or validation internals:
+Errors use `{ "error": { "code", "message", "retryable", "fieldErrors", "requestId" } }`.
+`fieldErrors` is always an object. Stack traces and raw internal output are excluded.
+Validation returns 400; missing records 404; missing authorization 401; incorrect
+tokens 403; unavailable files 409; expired records 410; oversized output 413;
+capacity exhaustion 503; timeout 504. Failed job snapshots carry the same safe
+error fields. Errors before SSE opens use JSON.
 
-```json
-{
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "The request was invalid.",
-    "retryable": false,
-    "fieldErrors": { "url": ["The supplied value is missing or invalid."] },
-    "requestId": "<request UUID>"
-  }
-}
-```
+Only approved HTTPS TikTok hosts are accepted. Credentials, ports, encoded hosts,
+lookalikes and extra request fields are rejected. Clients cannot supply paths or
+filenames. Only an analyzed format can create a job. See `URL_VALIDATION.md`,
+`ANALYSIS.md` and `DOWNLOAD_JOBS.md` for details and configurable limits.
 
-`fieldErrors` is always an object, empty when no input field applies. Retryable is
-true for 429 and 5xx errors. Malformed JSON returns 400; oversized bodies return 413. Missing analyses/jobs return 404, unknown formats return 400, unavailable
-files return 409, capacity exhaustion returns 503 and unexpected service failures
-return 500 with a generic message. Errors before opening SSE use the same JSON
-envelope.
-
-Only HTTPS canonical TikTok video links on `tiktok.com`, `www.tiktok.com` and
-`m.tiktok.com`, plus `vm.tiktok.com`/`vt.tiktok.com` short links, are accepted.
-Credentials, explicit ports, encoded hosts, other hosts, missing inputs and extra body fields
-are rejected. See `URL_VALIDATION.md` for normalization, limits and attack cases.
-URL syntax does not prove that a post is public. Users cannot supply
-paths or filenames. IDs are server-generated UUIDs; only a format returned for
-that analysis can create a job.
-
-Each app instance owns its memory store. It holds at most 200 analyses and 200
-jobs; entries expire after 30 minutes and are pruned on access. Active event
-subscriptions retain their jobs until disconnect. Restarting discards all state.
-Readiness reflects startup availability of yt-dlp and FFmpeg, plus shutdown state;
-it does not guarantee that TikTok is reachable or a particular video is public.
-No persistence or real file downloader is implemented.
+State belongs to one process. Restart loses capabilities and analyses; periodic
+cleanup removes aged orphan directories. Readiness reflects startup tool
+availability and shutdown, not whether TikTok or a particular video is accessible.

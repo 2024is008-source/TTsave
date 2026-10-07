@@ -2,13 +2,23 @@ import { randomUUID } from 'node:crypto';
 import type { Analysis, ApiJob } from '../api/contracts.js';
 import { HttpError } from '../middleware/error-handler.js';
 import type { AnalysisContext } from './tool-process.js';
+export type FileClaim = {
+  path: string;
+  size: number;
+  signal: AbortSignal;
+  release: (delivered: boolean) => Promise<void>;
+};
 
 export type DownloaderService = {
   analyze(url: string, context?: AnalysisContext): Analysis | Promise<Analysis>;
-  createJob(analysisId: string, formatId: string): ApiJob;
+  createJob(analysisId: string, formatId: string, context?: AnalysisContext): ApiJob;
   getJob(id: string): ApiJob;
   cancel(id: string): ApiJob;
   subscribe(id: string, listener: (job: ApiJob) => void): () => void;
+  authorizeJob?: (id: string, token: string | undefined) => void;
+  claimFile?: (id: string, token: string) => Promise<FileClaim>;
+  sweep?: () => Promise<void>;
+  dispose?: () => Promise<void>;
 };
 
 /** Bounded analysis and job storage; no timers simulate work or completion. */

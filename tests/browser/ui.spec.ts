@@ -61,9 +61,12 @@ for (const width of [390, 768, 1024, 1440]) {
       .filter({ hasText: 'Can I download a video right now?' })
       .click();
     await expect(
-      page.getByText('Not yet. This interface supports public video metadata analysis', {
-        exact: false,
-      }),
+      page.getByText(
+        'For publicly accessible videos with an available supported MP4 format',
+        {
+          exact: false,
+        },
+      ),
     ).toBeVisible();
     await page.locator('#video-url').fill('https://example.com/video/123');
     await page.getByRole('button', { name: 'Check link' }).click();

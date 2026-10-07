@@ -1,7 +1,8 @@
 # TTSave
 
 Node.js 24, strict TypeScript, Express and EJS. Public TikTok metadata analysis
-uses yt-dlp. Video file downloading is not implemented yet.
+and single-server MP4 download jobs use yt-dlp. Jobs are held in memory and files
+are temporary. See `docs/DOWNLOAD_JOBS.md` for deployment limits and cleanup.
 
 ## Run locally
 
@@ -36,16 +37,17 @@ format eligibility and operation details.
   only from validated adapter responses. Never substitute invented media metadata.
 - `src/api/contracts.ts` defines versioned request and response schemas.
   `src/services/yt-dlp.ts` extracts and normalizes public source metadata.
-  `src/services/memory-store.ts` owns bounded, expiring analyses and the job
-  contract. Mock metadata lives exclusively in `tests/fixtures`. See `docs/API.md`
+  `src/services/downloader.ts` owns bounded, expiring analyses and real jobs;
+  `src/services/memory-store.ts` defines the service contract and test store.
+  Mock metadata lives exclusively in `tests/fixtures`. See `docs/API.md`
   for endpoints and errors. URL syntax alone does not establish public availability.
 
 ## Verification
 
 `npm run check` runs lint, typecheck, service and route tests, and the production
 build. `npm run format:check` checks formatting.
-Child processes are mocked in automated analysis tests; tests never depend on
-live TikTok. Browser tests intercept analysis requests with contract fixtures.
+Child processes are mocked in automated analysis and download tests; tests never
+depend on live TikTok. Browser tests intercept API requests with contract fixtures.
 
 After building, `npm run test:ui` uses locally installed Google Chrome through
 Playwright. It verifies 390px, 768px, 1024px and 1440px layouts, light and dark
