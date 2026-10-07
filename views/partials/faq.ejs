@@ -6,10 +6,10 @@
     </h2>
     <p>A little clarity before you get started.</p>
   </div>
-  <div class="faq-list">
-    <% faqs.forEach((faq) => { %>
-    <details class="faq-item">
-      <summary>
+  <div class="faq-list glass-card">
+    <% faqs.forEach((faq, i) => { %>
+    <details class="faq-item" id="faq-item-<%= i %>">
+      <summary aria-expanded="false">
         <%= faq.question %><span class="faq-plus" aria-hidden="true">+</span>
       </summary>
       <p><%= faq.answer %></p>

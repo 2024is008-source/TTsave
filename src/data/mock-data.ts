@@ -1,92 +1,109 @@
 // Server-rendered presentation copy. Media is populated only by the API.
 export const mockData = {
-  title: 'TTSave — A little more worth keeping',
+  title: 'TTSave — Online TikTok Video Downloader',
   availability:
-    'Public TikTok videos only. Formats and measured progress come from the source.',
+    'Publicly accessible TikTok video links are supported. Available quality depends on the source.',
   result: null,
   progress: null,
   stepImageSizes: '(max-width: 600px) 100vw, 30vw',
   heroArtwork: {
-    alt: 'Original illustration of an adult travel creator on a coastal trail',
-    creator: 'Maya · concept creator',
-    caption: 'Coastal walks. Taking the slow way.',
-    label: 'Illustrated lifestyle preview',
+    alt: 'Lifestyle photograph of an adult creator at golden-hour beach sunset',
+    creator: '@jenniee',
+    caption: 'Sunset vibes ✨',
+    label: '♫ original sound · jenniee',
   },
   features: [
     {
       icon: 'link',
       image: 'video-card',
       color: 'pink',
-      title: 'One link. One place.',
-      description: 'A focused space for the TikTok videos you want to keep.',
+      title: 'Simple Link',
+      description:
+        'Paste a supported TikTok link and prepare the video in a clear flow.',
     },
     {
       icon: 'eye',
       image: 'available-quality',
       color: 'blue',
-      title: 'Clarity comes first.',
+      title: 'Available Quality',
       description:
-        'Available formats and source details will come from the video, with no invented quality claims.',
+        'Choose from the resolutions and formats provided by the source.',
     },
     {
       icon: 'shield',
       image: null,
       color: 'violet',
-      title: 'Public links only.',
-      description: 'Private posts and content requiring a login will stay private.',
+      title: 'Public Videos',
+      description: 'Process supported, publicly accessible TikTok video links.',
     },
     {
       icon: 'device',
       image: 'mobile-friendly',
       color: 'cyan',
-      title: 'Made for your screen.',
-      description: 'A considered experience, from your phone to your desktop.',
+      title: 'All Devices',
+      description:
+        'Designed for modern phones, tablets, laptops and desktop browsers.',
     },
   ],
   steps: [
     {
       image: 'copy-link-step',
       title: 'Copy a public link',
-      description: 'Open a publicly accessible TikTok video. Tap Share, then Copy link.',
+      description:
+        'Open a public TikTok video, tap Share, then select Copy link.',
     },
     {
       image: 'paste-link-step',
-      title: 'Bring it to TTSave',
-      description:
-        'Paste the link into the field above. Only public TikTok video links are accepted.',
+      title: 'Paste it into TTSave',
+      description: 'Paste the link into the downloader and select Get video.',
     },
     {
       image: 'download-video-step',
-      title: 'Choose what is available',
+      title: 'Choose an available quality',
       description:
-        'Review the source details, choose an available format and request the video file. Your browser handles saving.',
+        'Review the source details, choose an available option and download the MP4.',
     },
   ],
   faqs: [
     {
-      question: 'Can I download a video right now?',
+      question: 'How do I copy a TikTok video link?',
       answer:
-        'For publicly accessible videos with an available supported MP4 format, TTSave can prepare a download. Availability depends on the source.',
+        'Open TikTok and navigate to any public video. Tap the Share button (arrow icon), then choose Copy link. The link is now on your clipboard ready to paste into TTSave.',
     },
     {
-      question: 'Which TikTok links will be supported?',
+      question: 'Which TikTok links are supported?',
       answer:
-        'Publicly accessible TikTok video links only. TTSave will not bypass private-video access, logins, cookies or regional restrictions.',
+        'TTSave supports publicly accessible TikTok video links only. Private posts, content behind a login, and regionally restricted videos cannot be processed.',
     },
     {
-      question: 'Will TTSave improve the video quality?',
+      question: 'Which qualities are available?',
       answer:
-        'No. TTSave will not upscale, restore or improve video quality. Available formats and resolutions will depend on what the source actually provides.',
+        'Available resolutions depend on the source video. TTSave shows only the formats the source actually provides — no invented quality claims or upscaling.',
     },
     {
-      question: 'Are watermark-free videos guaranteed?',
+      question: 'Where will the downloaded file be saved?',
       answer:
-        'No. Watermark availability depends on the accessible source. TTSave does not guarantee watermark removal.',
+        'Your browser controls where files are saved. Depending on your device and browser settings, the file may go to your Downloads folder or directly to your gallery.',
     },
     {
-      question: 'Where will files be saved?',
+      question: 'Can private videos be downloaded?',
       answer:
-        'Your browser controls where a file is saved. TTSave cannot guarantee that it goes directly to a device gallery.',
+        'No. TTSave only processes publicly accessible TikTok video links. Private-video access, login bypasses, cookies and regional restriction workarounds are not supported.',
+    },
+    {
+      question: 'Does TTSave work on iPhone and Android?',
+      answer:
+        'Yes. TTSave is designed for modern phones, tablets, laptops and desktop browsers. The interface adapts to every screen size.',
+    },
+    {
+      question: 'Does TTSave improve the original quality?',
+      answer:
+        'No. TTSave does not upscale, restore or improve video quality. Available formats and resolutions depend on what the source actually provides.',
+    },
+    {
+      question: 'Is TTSave affiliated with TikTok?',
+      answer:
+        'No. TTSave is an independent tool and is not affiliated with, endorsed by, or connected to TikTok or ByteDance in any way.',
     },
   ],
 };

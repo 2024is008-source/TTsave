@@ -1,4 +1,5 @@
 import { mkdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import sharp from 'sharp';
@@ -19,18 +20,34 @@ const assets = [
   ['og-image', 1200, 630, 600],
 ];
 
+let built = 0;
 for (const [name, width, height, smallWidth] of assets) {
-  const input = fileURLToPath(new URL(`${name}.svg`, source));
+  // Prefer .jpg > .png > .svg as source
+  const extensions = ['jpg', 'jpeg', 'png', 'svg'];
+  let inputPath = null;
+  for (const ext of extensions) {
+    const candidate = fileURLToPath(new URL(`${name}.${ext}`, source));
+    if (existsSync(candidate)) {
+      inputPath = candidate;
+      break;
+    }
+  }
+  if (!inputPath) {
+    console.warn(`No source found for ${name}, skipping.`);
+    continue;
+  }
+
   for (const size of [width, smallWidth]) {
     const destination = new URL(
       `${name}${size === width ? '' : `-${size}`}.webp`,
       output,
     );
-    await sharp(input)
-      .resize(size, Math.round((height / width) * size))
-      .webp({ quality: 86, effort: 5 })
+    await sharp(inputPath)
+      .resize(size, Math.round((height / width) * size), { fit: 'cover', position: 'center' })
+      .webp({ quality: 87, effort: 5 })
       .toFile(fileURLToPath(destination));
+    built++;
   }
 }
 
-console.log('Built 9 original illustrations and their responsive WebP variants.');
+console.log(`Built ${String(built)} image variants from ${String(assets.length)} sources.`);

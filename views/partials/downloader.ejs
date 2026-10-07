@@ -1,6 +1,6 @@
 <div class="downloader" id="downloader">
   <form id="download-form" action="/api/v1/analyze" method="post">
-    <label class="field-label" for="video-url">Your public TikTok video link</label>
+    <label class="field-label" for="video-url">TikTok video link</label>
     <div class="input-capsule">
       <span class="input-icon"><%- include('icon', { name: 'link' }) %></span>
       <input
@@ -9,26 +9,26 @@
         type="url"
         inputmode="url"
         autocomplete="off"
-        placeholder="Paste a TikTok video link"
+        placeholder="Paste a TikTok video link here..."
         required
         maxlength="2048"
         aria-describedby="availability form-status"
       />
-      <button class="paste-button" type="button">Paste</button>
-      <button class="clear-button" type="button" aria-label="Clear video link">
-        Clear
+      <button class="clear-button" type="button" aria-label="Clear video link" hidden>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
+      <button class="paste-button" type="button">Paste</button>
     </div>
     <button class="primary-button analyze-button" type="submit">
-      Check link <%- include('icon', { name: 'arrow' }) %>
+      <%- include('icon', { name: 'download' }) %> Get video
     </button>
-    <button class="cancel-button" type="button" hidden>Cancel analysis</button>
+    <button class="cancel-button" type="button" hidden>Cancel</button>
     <div id="analyzing-indicator" class="analyzing-indicator" tabindex="-1" hidden>
       <span class="analyzing-spinner" aria-hidden="true"></span
       ><span>Checking your public video link. You can cancel this request.</span>
     </div>
     <p class="availability" id="availability">
-      <span class="preview-label">Interface preview</span> <%= availability %>
+      <%= availability %>
     </p>
   </form>
   <p

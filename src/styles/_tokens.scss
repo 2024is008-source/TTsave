@@ -1,17 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
 :root {
   color-scheme: light;
   --canvas: #f8faff;
-  --ink: #101422;
-  --muted: #566079;
-  --glass: rgb(255 255 255 / 72%);
-  --rim: rgb(255 255 255 / 90%);
-  --line: #dce1ed;
-  --pink: #c91952;
-  --violet: #7537ce;
-  --blue: #2164cf;
-  --gradient: linear-gradient(115deg, #d72559, #b538b0 42%, #7b3bdb 66%, #2873df);
+  --ink: #080b18;
+  --muted: #59657b;
+  --placeholder: #9fa8bc;
+  --glass: rgba(255, 255, 255, 0.82);
+  --glass-heavy: rgba(255, 255, 255, 0.92);
+  --rim: rgba(255, 255, 255, 0.9);
+  --line: rgba(220, 228, 242, 0.8);
+  --line-solid: #dce4f2;
+  --pink: #fe2c55;
+  --bright-pink: #ff3fa4;
+  --violet: #8a35ff;
+  --blue: #287cff;
+  --cyan: #25f4ee;
+  --gradient: linear-gradient(110deg, #ff2f8e 0%, #b635f2 42%, #5a4fff 70%, #168bff 100%);
+  --gradient-alt: linear-gradient(135deg, #fe2c55 0%, #ff3fa4 32%, #8a35ff 68%, #287cff 100%);
   font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    -apple-system,
+    BlinkMacSystemFont,
+    'SF Pro Display',
+    'SF Pro Text',
+    'Segoe UI',
+    Inter,
+    sans-serif;
   color: var(--ink);
   background: var(--canvas);
   scroll-behavior: smooth;
@@ -19,16 +33,22 @@
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --canvas: #0d111d;
+  --canvas: #0d101a;
   --ink: #f5f6fc;
-  --muted: #b3bcd0;
-  --glass: rgb(29 35 52 / 76%);
-  --rim: rgb(255 255 255 / 13%);
-  --line: #323b51;
+  --muted: #9fa8bc;
+  --placeholder: #5d657b;
+  --glass: rgba(29, 35, 52, 0.76);
+  --glass-heavy: rgba(20, 25, 40, 0.92);
+  --rim: rgba(255, 255, 255, 0.12);
+  --line: rgba(50, 60, 85, 0.8);
+  --line-solid: #323c55;
   --pink: #ff80ad;
+  --bright-pink: #ff9dcc;
   --violet: #c299ff;
   --blue: #93beff;
-  --gradient: linear-gradient(115deg, #ff6c98, #e68bdf 42%, #bf99ff 66%, #7bb2ff);
+  --cyan: #7af0eb;
+  --gradient: linear-gradient(110deg, #ff6c98 0%, #e68bdf 42%, #bf99ff 66%, #7bb2ff 100%);
+  --gradient-alt: linear-gradient(135deg, #ff80ad 0%, #e68bdf 32%, #bf99ff 68%, #7bb2ff 100%);
 }
 
 * {
@@ -39,13 +59,12 @@
 }
 body {
   margin: 0;
-  background:
-    radial-gradient(ellipse at 80% 12%, rgb(138 53 255 / 9%), transparent 26%),
-    radial-gradient(ellipse at 12% 20%, rgb(37 244 238 / 7%), transparent 30%),
-    radial-gradient(ellipse at 90% 30%, rgb(254 44 85 / 7%), transparent 25%),
-    var(--canvas);
-  font-size: 16px;
+  background: var(--canvas);
+  font-size: 17px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 a {
   color: inherit;
@@ -81,23 +100,26 @@ p {
   line-height: 1.65;
 }
 h2 {
-  font-size: clamp(2rem, 3.4vw, 3rem);
+  font-size: clamp(2.25rem, 3.6vw, 3.25rem);
   letter-spacing: -0.045em;
-  line-height: 1.15;
-  font-weight: 750;
+  line-height: 1.12;
+  font-weight: 800;
+  color: var(--ink);
 }
 h3 {
   font-size: 1.125rem;
   letter-spacing: -0.025em;
   line-height: 1.35;
+  font-weight: 700;
+  color: var(--ink);
 }
 :focus-visible {
   outline: 3px solid var(--blue);
   outline-offset: 5px;
 }
 ::selection {
-  background: #e0cff8;
-  color: #191123;
+  background: rgba(138, 53, 255, 0.15);
+  color: var(--ink);
 }
 .icon {
   flex-shrink: 0;
@@ -108,10 +130,11 @@ h3 {
   background: var(--gradient);
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
 }
 .wordmark {
   font-size: 1.75rem;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: -0.06em;
   display: inline-flex;
   align-items: center;
@@ -119,16 +142,16 @@ h3 {
 .brand-dot {
   width: 6px;
   height: 6px;
-  margin-left: 5px;
-  background: #e83373;
+  margin-left: 4px;
+  background: var(--pink);
   border-radius: 50%;
 }
 .kicker {
   display: block;
   color: var(--violet);
-  font-size: 0.8125rem;
-  font-weight: 650;
-  letter-spacing: 0.11em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 1rem;
 }
@@ -136,29 +159,44 @@ h3 {
   background: var(--glass);
   border: 1px solid var(--rim);
   border-radius: 24px;
-  box-shadow: 0 14px 40px -22px rgb(45 67 115 / 25%);
-  backdrop-filter: blur(20px);
+  box-shadow:
+    0 20px 40px -15px rgba(40, 124, 255, 0.07),
+    0 0 25px rgba(254, 44, 85, 0.04);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 .primary-button {
   border: 0;
-  background: linear-gradient(115deg, #d72559, #a034b5 45%, #6437cc 70%, #2365c4);
+  background: var(--gradient);
   color: white;
   min-height: 52px;
-  padding: 14px 24px;
+  padding: 14px 28px;
   border-radius: 999px;
-  font-weight: 650;
+  font-weight: 700;
+  font-size: 1rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  box-shadow: 0 8px 22px -12px #ba287d;
+  gap: 10px;
+  box-shadow:
+    0 8px 28px -8px rgba(254, 44, 85, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
   transition:
-    transform 0.2s,
-    box-shadow 0.2s;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+  cursor: pointer;
+  letter-spacing: -0.01em;
 }
 .primary-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px -12px #ba287d;
+  box-shadow:
+    0 14px 32px -8px rgba(254, 44, 85, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+  opacity: 0.95;
+}
+.primary-button:active {
+  transform: translateY(0);
 }
 .skip-link {
   position: fixed;
@@ -168,6 +206,7 @@ h3 {
   padding: 14px;
   z-index: 100;
   transform: translateY(-180%);
+  border-radius: 12px;
 }
 .skip-link:focus {
   transform: translateY(0);

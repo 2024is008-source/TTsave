@@ -75,7 +75,7 @@ export function initializeDownloader(root: Document = document, options: Options
         ? 'Checking link…'
         : state.status === 'analyzing'
           ? 'Analyzing…'
-          : 'Check link';
+          : 'Get video';
     status.textContent = state.message;
     analyzing.hidden = !['validating', 'analyzing'].includes(state.status);
     result.hidden =
@@ -205,7 +205,7 @@ export function initializeDownloader(root: Document = document, options: Options
           if (version !== clipboardVersion || isBusy(controller.getState().status))
             return;
           input.value = text;
-          controller.setUrl(text, 'Link pasted. Check the link to continue.');
+          controller.setUrl(text, 'Link pasted. Select Get video to continue.');
         } catch {
           if (version !== clipboardVersion || isBusy(controller.getState().status))
             return;

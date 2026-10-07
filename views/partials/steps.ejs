@@ -6,15 +6,17 @@
         Three steps.<br class="mobile-break" />
         A familiar rhythm.
       </h2>
-      <p>The experience we’re building. Downloads are coming later.</p>
+      <p>The simplest path from a public link to your device.</p>
     </div>
     <ol class="step-grid">
       <% steps.forEach((step, index) => { %>
-      <li>
-        <%- include('picture', { imageClass: 'step-art', imageName: step.image,
-        imageWidth: 800, imageHeight: 600, smallWidth: 400, imageSizes: stepImageSizes,
-        imageAlt: '', imageLoading: 'lazy' }) %>
-        <span class="step-number" aria-hidden="true">0<%= index + 1 %></span>
+      <li class="step-card glass-card">
+        <div class="step-header">
+          <span class="step-number" aria-hidden="true">0<%= index + 1 %></span>
+          <%- include('picture', { imageClass: 'step-art', imageName: step.image,
+          imageWidth: 800, imageHeight: 600, smallWidth: 400, imageSizes: stepImageSizes,
+          imageAlt: '', imageLoading: 'lazy' }) %>
+        </div>
         <h3><%= step.title %></h3>
         <p><%= step.description %></p>
       </li>

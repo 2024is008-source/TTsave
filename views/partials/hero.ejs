@@ -1,62 +1,138 @@
 <section class="hero container" aria-labelledby="hero-title">
   <div class="hero-copy">
-    <div class="eyebrow">
-      <span class="small-spark" aria-hidden="true">✦</span> A little more worth keeping
+    <div class="eyebrow-pill" aria-label="Free, Fast, No Watermark">
+      <span class="eyebrow-spark" aria-hidden="true">⚡</span>
+      <span>Free</span>
+      <span class="eyebrow-dot" aria-hidden="true">·</span>
+      <span>Fast</span>
+      <span class="eyebrow-dot" aria-hidden="true">·</span>
+      <span>No Watermark</span>
     </div>
     <h1 id="hero-title">
-      Good moments.<br /><span class="gradient-text">Keep them close.</span>
+      Online <span class="gradient-text">TikTok</span><br />
+      Video Downloader
     </h1>
     <p class="hero-description">
-      Your next favorite TikTok deserves a place of its own. Bring a public video link.
-      We’ll keep the experience simple.
+      Paste a supported public TikTok video link, review the available quality,
+      and download the MP4 to your device.
     </p>
     <%- include('downloader') %>
-    <div class="hero-notes">
-      <span><%- include('icon', { name: 'shield' }) %> Public links only</span
-      ><span><%- include('icon', { name: 'device' }) %> Made for every screen</span>
+    <div class="hero-benefits">
+      <div class="benefit-item">
+        <span class="benefit-icon benefit-icon--green">
+          <%- include('icon', { name: 'shield' }) %>
+        </span>
+        <div>
+          <strong>Safe</strong>
+          <small>100% secure</small>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <span class="benefit-icon benefit-icon--violet">
+          <%- include('icon', { name: 'no-signup' }) %>
+        </span>
+        <div>
+          <strong>No Signup</strong>
+          <small>Start instantly</small>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <span class="benefit-icon benefit-icon--blue">
+          <%- include('icon', { name: 'device' }) %>
+        </span>
+        <div>
+          <strong>Works on All Devices</strong>
+          <small>Phone, tablet, and PC</small>
+        </div>
+      </div>
     </div>
   </div>
   <div
     class="hero-art"
-    aria-label="Concept lifestyle video illustration in a silver smartphone"
+    aria-label="Smartphone showcasing a lifestyle sunset video"
   >
     <div class="phone-stage">
       <div class="iridescent-ribbon" aria-hidden="true"></div>
       <div class="art-sphere sphere-one" aria-hidden="true"></div>
       <div class="art-sphere sphere-two" aria-hidden="true"></div>
+      <div class="art-sphere sphere-three" aria-hidden="true"></div>
+
+      <!-- Floating TikTok icon cube -->
+      <div class="floating-tiktok-icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.26a8.16 8.16 0 0 0 4.77 1.52V7.31a4.85 4.85 0 0 1-1-.62z" fill="#25F4EE"/>
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.26a8.16 8.16 0 0 0 4.77 1.52V7.31a4.85 4.85 0 0 1-1-.62z" fill="#FE2C55" style="mix-blend-mode:screen"/>
+        </svg>
+      </div>
+
       <div class="phone">
         <div class="phone-screen">
           <%- include('picture', { imageClass: 'phone-scene', imageName:
           'hero-video-poster', imageWidth: 1080, imageHeight: 1920, smallWidth: 540,
           imageSizes: '(max-width: 480px) 258px, (max-width: 1100px) 270px, 310px',
           imageAlt: heroArtwork.alt, imageLoading: 'eager' }) %>
+
+          <!-- Top gradient overlay -->
+          <div class="phone-overlay-top" aria-hidden="true"></div>
+          <!-- Bottom gradient overlay -->
+          <div class="phone-overlay-bottom" aria-hidden="true"></div>
+
           <div class="island" aria-hidden="true"><span></span></div>
           <div class="phone-top" aria-hidden="true">
-            <span>Explore</span><span class="phone-toptab">For you</span>
+            <span class="phone-time">9:41</span>
+            <div class="phone-status-icons">
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="white" aria-hidden="true">
+                <rect x="0" y="3" width="2" height="7" rx="1" opacity="0.4"/>
+                <rect x="3" y="2" width="2" height="8" rx="1" opacity="0.6"/>
+                <rect x="6" y="1" width="2" height="9" rx="1" opacity="0.8"/>
+                <rect x="9" y="0" width="2" height="10" rx="1"/>
+              </svg>
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="white" aria-hidden="true">
+                <rect x="0" y="1" width="12" height="8" rx="2" stroke="white" stroke-width="1.5" fill="none"/>
+                <rect x="1.5" y="2.5" width="7" height="5" rx="1" fill="white"/>
+                <path d="M13 3.5v3c.83-.4 1.5-1.5 0-3z" fill="white"/>
+              </svg>
+            </div>
+          </div>
+          <div class="phone-tabs" aria-hidden="true">
+            <span>Following</span><span class="phone-tab-active">For You</span>
+          </div>
+          <div class="social-actions" aria-hidden="true">
+            <div class="social-action-item">
+              <div class="social-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4060"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              </div>
+              <span>252.4K</span>
+            </div>
+            <div class="social-action-item">
+              <div class="social-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18z"/></svg>
+              </div>
+              <span>3.6K</span>
+            </div>
+            <div class="social-action-item">
+              <div class="social-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+              </div>
+              <span>28.1K</span>
+            </div>
+            <div class="social-action-item">
+              <div class="social-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg>
+              </div>
+              <span>4.2K</span>
+            </div>
           </div>
           <div class="phone-caption">
             <div class="creator-line">
               <%- include('picture', { imageClass: 'creator-avatar', imageName:
               'hero-avatar', imageWidth: 256, imageHeight: 256, smallWidth: 128,
-              imageSizes: '36px', imageAlt: '', imageLoading: 'eager' }) %>
+              imageSizes: '32px', imageAlt: '', imageLoading: 'eager' }) %>
               <span><%= heroArtwork.creator %></span>
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="#4299e1" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
             </div>
             <p><%= heroArtwork.caption %></p>
             <span class="scene-label"><%= heroArtwork.label %></span>
-          </div>
-          <div class="social-actions" aria-hidden="true">
-            <svg width="25" height="25" viewBox="0 0 24 24" fill="white">
-              <path d="M12 21 3 12C-3 4 8-2 12 6c4-8 15-2 9 6Z" />
-            </svg>
-            <svg width="25" height="25" viewBox="0 0 24 24" fill="white">
-              <path d="M3 3h18v14H9l-6 5Z" />
-            </svg>
-            <svg width="25" height="25" viewBox="0 0 24 24" fill="white">
-              <path d="M6 2h12v20l-6-4-6 4Z" />
-            </svg>
-            <svg width="25" height="25" viewBox="0 0 24 24" fill="white">
-              <path d="m14 3 8 8-8 7v-5C8 13 5 15 2 20c0-8 5-12 12-12Z" />
-            </svg>
           </div>
           <div class="home-indicator" aria-hidden="true"></div>
         </div>
@@ -65,34 +141,46 @@
         <div class="phone-volume volume-down" aria-hidden="true"></div>
       </div>
       <div class="phone-pedestal" aria-hidden="true"></div>
-      <div class="art-caption">
-        <span class="art-rule" aria-hidden="true"></span
-        ><span>Less noise. More of what you love.</span>
+
+      <!-- Floating quality panel — desktop only -->
+      <div class="floating-quality-panel" aria-hidden="true">
+        <div class="fqp-row">
+          <div class="fqp-icon fqp-icon--blue">HD</div>
+          <div>
+            <div class="fqp-title">HD Quality</div>
+            <div class="fqp-sub">Up to 1080p FHD</div>
+          </div>
+        </div>
+        <div class="fqp-row">
+          <div class="fqp-icon fqp-icon--pink">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
+          </div>
+          <div>
+            <div class="fqp-title">Super Fast</div>
+            <div class="fqp-sub">Download in seconds</div>
+          </div>
+        </div>
+        <div class="fqp-row">
+          <div class="fqp-icon fqp-icon--violet">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          </div>
+          <div>
+            <div class="fqp-title">No Watermark</div>
+            <div class="fqp-sub">Clean videos, no logo</div>
+          </div>
+        </div>
+        <div class="fqp-badge">
+          <span class="fqp-badge-dot"></span>
+          <span>Available quality</span>
+        </div>
       </div>
-    </div>
-    <div class="floating-artwork" aria-hidden="true">
-      <div class="art-info">
-        <span class="art-overline">Public video links</span
-        ><strong>Source details.<br />Clearly presented.</strong
-        ><span>When downloads become available</span>
-      </div>
-      <div class="art-download">
-        <%- include('icon', { name: 'download' }) %><span
-          >Video downloads<small>Coming later</small></span
-        >
-      </div>
-      <div class="music-tile">
-        <svg
-          width="28"
-          height="28"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-        >
-          <path d="M9 18V6l11-3v13M9 10l11-3" />
-          <ellipse cx="6" cy="18" rx="3" ry="2" />
-          <ellipse cx="17" cy="16" rx="3" ry="2" />
+
+      <!-- Music tile floating -->
+      <div class="music-tile" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M9 18V6l11-3v13M9 10l11-3"/>
+          <ellipse cx="6" cy="18" rx="3" ry="2"/>
+          <ellipse cx="17" cy="16" rx="3" ry="2"/>
         </svg>
       </div>
     </div>

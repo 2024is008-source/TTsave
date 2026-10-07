@@ -1,12 +1,16 @@
 <section class="container cta-section" aria-labelledby="cta-title">
-  <div class="cta-panel">
-    <span class="kicker">Keep the good moments</span>
+  <div class="cta-panel glass-card">
+    <div class="cta-decoration" aria-hidden="true">
+      <div class="cta-orb cta-orb--pink"></div>
+      <div class="cta-orb cta-orb--blue"></div>
+    </div>
+    <span class="kicker">Ready when you are</span>
     <h2 id="cta-title">
-      Your favorites.<br /><span class="gradient-text">A little closer.</span>
+      Found something good?<br /><span class="gradient-text">Keep it close.</span>
     </h2>
-    <p>Explore a simpler way to bring your public TikTok links together.</p>
-    <a class="primary-button" href="#downloader"
-      >Try the preview <%- include('icon', { name: 'arrow' }) %></a
+    <p>Paste a public TikTok link and prepare your available MP4 download.</p>
+    <a class="primary-button cta-button" href="#downloader" id="cta-start-btn"
+      ><%- include('icon', { name: 'download' }) %> Start downloading</a
     >
   </div>
 </section>
