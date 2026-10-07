@@ -311,6 +311,11 @@ FakesAssemblies/
 .ntvs_analysis.dat
 node_modules/
 
+# Node.js build and test output
+dist/
+coverage/
+public/assets/app.css
+
 # Visual Studio 6 build log
 *.plg
 
