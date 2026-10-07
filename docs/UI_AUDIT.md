@@ -1,0 +1,36 @@
+# TTSave prototype UI audit
+
+Date: 2026-10-07
+
+## Scope and design direction
+
+Read `reference/code.html` and `reference/DESIGN.md` completely. Inspected the repository inventory and the bytes of `reference/screen.png`. This is a source audit; visual comparison against the supplied screenshot is unavailable because it is invalid. The reference files remain unchanged.
+
+Preserve the premium Apple-inspired direction described as **Luminous Glass Kinetic**: generous whitespace, precise typography, frosted glass surfaces, soft ambient glows, rounded capsules and pink/violet/blue gradients. Prototype copy and simulated behavior are not evidence of implemented capabilities.
+
+## Current prototype problems
+
+| Problem | Evidence and implication |
+| --- | --- |
+| Tailwind is loaded through a browser CDN. | The head loads `https://cdn.tailwindcss.com?plugins=forms,container-queries` and configures Tailwind inline. Production needs locally compiled CSS. |
+| The system is one large HTML file. | `reference/code.html` contains markup, custom styles, configuration, all downloader states and application scripts. Separate Express routes, services, EJS templates and local assets are needed. |
+| Application states are simulated. | `switchState()` only hides and shows `.downloader-state` elements. Download, cancellation, completion and error buttons change presentation without performing backend work. Clipboard failure also substitutes a sample URL. |
+| Analysis automatically completes after a timeout. | `triggerAnalyze()` changes to the ready state after `setTimeout(..., 1600)`, regardless of the URL or any media response. Readiness must follow an actual backend result. |
+| Download progress and metadata are hard-coded. | The markup fixes progress at `74%`, transferred bytes at `23.2 MB / 31.4 MB`, speed at `5.1 MB/s` and remaining time at `~1.5s`. Creator, caption, duration, filename, resolutions and sizes are also static. The metrics bar advertises `10M+` downloads, `500K+` daily users and `4.9 / 5` satisfaction without a data source. Only backend-returned information may be displayed. |
+| The developer state selector is visible to users. | The fixed `data-purpose="state-switcher"` toolbar exposes all six demo states, including completion and error. It does not belong in the production UI. |
+| Images are externally hotlinked. | Video thumbnails, smartphone imagery, avatar and supported-content previews load from `lh3.googleusercontent.com`. Production artwork needs local assets rather than these external image links. |
+| Unsupported privacy, speed, quality, watermark and format claims exist. | Copy includes “100% private,” “less than two seconds,” “enhanced 4K,” “No Watermark” and a guarantee of fetching clean source media. MP3, photo galleries, JPG/PNG extraction and slideshow ZIP/video exports are advertised without implementation or tests. Remove unsupported promises; never claim quality improvement, upscaling or restoration. |
+| The supplied screenshot file is invalid or incomplete. | `reference/screen.png` is only 28 bytes and contains the text `<FIFE Image failed to fetch>`, not PNG image data. It cannot serve as a visual baseline. |
+| No backend exists. | The repository contains the reference prototype and basic repository files, with no server, routes, media service or API integration. The interface cannot resolve or download media. |
+| No validation exists. | The URL field uses native `type="url"`, but there is no Zod schema, TikTok hostname validation or server-side input validation. Native URL syntax checking does not enforce the public TikTok URL policy. |
+| No rate limiting exists. | No backend or request-limiting middleware is present. Future analysis and download routes need rate limiting. The “no limits” marketing claim also requires correction. |
+| No automated tests exist. | There is no test suite, package manifest or configured lint, typecheck, test or build workflow. Important services and routes need tests when implemented. |
+| Mobile layout and smartphone artwork need refinement. | Responsive classes exist, but the phone uses a fixed `255px` by `505px` shell, absolute floating decorations and a desktop side card. The mobile benefit strip remains three columns, navigation disappears below `md`, and the demo toolbar occupies the bottom of the screen. Refine composition, spacing, navigation and touch targets; verify narrow screens and text zoom. These are source-based concerns, not rendered findings. |
+
+## Additional accessibility gaps
+
+The URL input has no associated label. FAQ buttons do not expose `aria-expanded` or `aria-controls`, downloader state changes have no live announcements, and quality tiles are clickable `div` elements rather than keyboard-operable controls. Continuous floating, pulse and spin animations have no reduced-motion handling. Address these alongside focus visibility, contrast and mobile responsiveness while retaining the design direction.
+
+## Verification status
+
+This change creates documentation only. Lint, typecheck, tests and build cannot run yet because no package manifest, tooling or application exists. These checks are required after major implementation steps under `AGENTS.md`.
