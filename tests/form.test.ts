@@ -24,7 +24,7 @@ const media: Media = {
 const makeAdapter = (): DownloaderAdapter => ({
   analyze: vi.fn(() => Promise.resolve(media)),
   startDownload: vi.fn(() => Promise.resolve({ id: 'job' })),
-  waitForDownload: vi.fn(() => Promise.resolve({ url: '/downloads/ticket' })),
+  waitForDownload: vi.fn(() => Promise.resolve({ url: '/api/v1/downloads/ticket/file' })),
 });
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -179,7 +179,7 @@ describe('downloader form', () => {
     report({ percent: 70 });
     expect(progress.value).toBe(70);
     expect(element('#progress-metrics').textContent).not.toContain('bytes/s');
-    file.resolve({ url: '/downloads/ticket' });
+    file.resolve({ url: '/api/v1/downloads/ticket/file' });
     await vi.waitFor(() =>
       expect(ui?.controller.getState().status).toBe('download-requested'),
     );

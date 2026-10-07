@@ -57,7 +57,7 @@ describe('application routes', () => {
       .send({ url: 'https://www.tiktok.com/@test/video/123' })
       .expect(503);
     expect(response.body.error.code).toBe('DOWNLOADER_UNAVAILABLE');
-    expect(response.body.error.message).toContain('Downloads are not available yet');
+    expect(response.body.error.message).toContain('Mock API preview');
   });
 
   it('returns a structured 404 response', async () => {
@@ -68,6 +68,8 @@ describe('application routes', () => {
         code: 'NOT_FOUND',
         message: 'The requested resource was not found.',
         requestId: response.headers['x-request-id'],
+        retryable: false,
+        fieldErrors: {},
       },
     });
   });
@@ -91,6 +93,8 @@ describe('application routes', () => {
         code: 'DEPENDENCY_UNAVAILABLE',
         message: 'A dependency is unavailable.',
         requestId: response.headers['x-request-id'],
+        retryable: true,
+        fieldErrors: {},
       },
     });
   });

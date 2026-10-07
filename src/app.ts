@@ -14,11 +14,17 @@ import { notFound } from './middleware/not-found.js';
 import { requestId } from './middleware/request-id.js';
 import { healthRouter } from './routes/health.js';
 import { analyzeRouter } from './routes/analyze.js';
+import { createApiRouter } from './routes/api.js';
+import {
+  MockDownloaderService,
+  type DownloaderService,
+} from './services/mock-downloader.js';
+import { HttpError } from './middleware/error-handler.js';
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(currentDirectory, '..');
 
-export function createApp() {
+export function createApp(service: DownloaderService = new MockDownloaderService()) {
   const app = express();
 
   app.disable('x-powered-by');
@@ -43,6 +49,14 @@ export function createApp() {
       limit: 100,
       standardHeaders: 'draft-8',
       legacyHeaders: false,
+      handler: (_request, _response, next) =>
+        next(
+          new HttpError(
+            429,
+            'RATE_LIMITED',
+            'Too many requests. Please try again later.',
+          ),
+        ),
     }),
   );
   app.use(express.json({ limit: '32kb' }));
@@ -52,6 +66,7 @@ export function createApp() {
     response.render('index', mockData);
   });
   app.use(analyzeRouter);
+  app.use('/api/v1', createApiRouter(service));
 
   app.use(notFound);
   app.use(errorHandler);

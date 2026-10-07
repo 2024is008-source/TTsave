@@ -71,8 +71,15 @@ for (const width of [390, 768, 1024, 1440]) {
     await expect(page.locator('#video-url')).toBeFocused();
     await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
     await page.getByRole('button', { name: 'Check link' }).click();
+    await expect(page.locator('#result-title')).toHaveText(
+      'Mock API preview — not analyzed TikTok content',
+    );
+    await expect(
+      page.getByRole('radio', { name: 'Mock format — file unavailable' }),
+    ).toBeChecked();
+    await page.getByRole('button', { name: 'Request download', exact: true }).click();
     await expect(page.locator('#form-status')).toContainText(
-      'Downloads are not available yet',
+      'The mock service does not produce video files.',
     );
     await expect(page.locator('.result-card')).toBeHidden();
     await expect(page.locator('.progress-card')).toBeHidden();

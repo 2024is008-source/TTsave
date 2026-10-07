@@ -22,12 +22,13 @@ download, or to idle during analysis. Clear removes the link and result.
 Analysis supplies a media ID and formats with IDs and labels. Dimensions and
 sizes are optional. Download start supplies a job ID; waiting may report optional
 percentage, bytes per second and total bytes. Unknown values are omitted, not
-estimated. A successful job supplies a relative `/downloads/<opaque-id>` URL.
+estimated. A future successful job supplies a relative `/api/v1/downloads/<jobId>/file` URL.
 
-`src/frontend/mock-adapter.ts` currently calls the existing `/analyze` stub,
-which validates input and returns an unavailable response. Download methods
-remain unavailable. Successful media, jobs and progress are injected only by
-tests; the shipped preview does not invent them or simulate completion timers.
+`src/frontend/api-adapter.ts` calls the versioned backend API and reads job events.
+The in-memory backend returns explicitly labelled mock analysis and queued jobs.
+The adapter cancels mock jobs and reports that files cannot be produced. Source
+metrics remain unknown; progress and successful file handoffs occur only in test
+fixtures. See `API.md` for the contract and mock limitations.
 
 Form tests use rendered EJS with jsdom. State-machine tests cover transitions,
 validation, duplicate requests, cancellation, late responses and browser handoff.

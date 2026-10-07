@@ -1,7 +1,8 @@
 # TTSave
 
 Node.js 24, strict TypeScript, Express and EJS. The current interface is a preview;
-video analysis and downloading are not implemented.
+the versioned API uses an explicitly labelled in-memory mock. Real TikTok analysis
+and file downloading are not implemented.
 
 ## Run locally
 
@@ -17,7 +18,7 @@ override defaults, then run `npm run build` and `npm run dev`. Open
 - `src/styles/app.scss` compiles the token, layout, hero and section styles into
   `public/assets/app.css`.
 - `src/frontend` contains the typed downloader state machine, Zod contracts,
-  DOM controller and separate mock adapter. esbuild compiles these into the
+  DOM controller and API adapter. esbuild compiles these into the
   browser module in `public/assets/js`, alongside theme and navigation modules.
   No inline application scripts or handlers are used.
 - `src/artwork` holds original SVG placeholders. `npm run images:build` compiles
@@ -28,9 +29,11 @@ override defaults, then run `npm run build` and `npm run dev`. Open
 - `src/data/mock-data.ts` holds temporary server-rendered copy. Result and
   progress data remain `null`; hidden result and progress containers are populated
   only from validated adapter responses. Never substitute invented media metadata.
-- `POST /analyze` validates link syntax using Zod and returns the preview's
-  unavailable response. It performs no network resolution or downloads, and
-  syntax validation does not establish whether a post is public.
+- `src/api/contracts.ts` defines versioned request and response schemas.
+  `src/services/mock-downloader.ts` owns bounded, expiring in-memory analysis
+  fixtures, jobs and cancellation events. See `docs/API.md` for endpoints and
+  errors. It performs no network resolution or downloads; syntax validation does
+  not establish whether a post is public.
 
 ## Verification
 

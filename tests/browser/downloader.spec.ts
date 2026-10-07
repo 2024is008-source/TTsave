@@ -33,7 +33,7 @@ test('keyboard selection, cancellation, real progress and browser handoff', asyn
             );
             document.addEventListener(
               'test-file-ready',
-              () => resolve({ url: '/downloads/test-ticket' }),
+              () => resolve({ url: '/api/v1/downloads/test-ticket/file' }),
               { once: true, signal },
             );
             signal.addEventListener(

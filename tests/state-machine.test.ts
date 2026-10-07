@@ -35,7 +35,9 @@ function makeAdapter(): DownloaderAdapter {
   return {
     analyze: vi.fn(() => Promise.resolve(media)),
     startDownload: vi.fn(() => Promise.resolve({ id: 'job' })),
-    waitForDownload: vi.fn(() => Promise.resolve({ url: '/downloads/ticket' })),
+    waitForDownload: vi.fn(() =>
+      Promise.resolve({ url: '/api/v1/downloads/ticket/file' }),
+    ),
   };
 }
 
@@ -92,10 +94,10 @@ describe('downloader state machine', () => {
       speedBytesPerSecond: 512,
       sizeBytes: 2048,
     });
-    file.resolve({ url: '/downloads/ticket' });
+    file.resolve({ url: '/api/v1/downloads/ticket/file' });
     await request;
     expect(controller.getState().status).toBe('download-requested');
-    expect(handoff).toHaveBeenCalledWith('/downloads/ticket');
+    expect(handoff).toHaveBeenCalledWith('/api/v1/downloads/ticket/file');
     expect(states).toEqual(
       expect.arrayContaining([
         'idle',
@@ -139,7 +141,7 @@ describe('downloader state machine', () => {
     await vi.waitFor(() => expect(controller.getState().status).toBe('downloading'));
     controller.cancel();
     expect(controller.getState().status).toBe('ready');
-    response.resolve({ url: '/downloads/stale' });
+    response.resolve({ url: '/api/v1/downloads/stale/file' });
     await pending;
     expect(handoff).not.toHaveBeenCalled();
   });

@@ -1,11 +1,6 @@
 import type { RequestHandler } from 'express';
+import { HttpError } from './error-handler.js';
 
-export const notFound: RequestHandler = (request, response) => {
-  response.status(404).json({
-    error: {
-      code: 'NOT_FOUND',
-      message: 'The requested resource was not found.',
-      requestId: request.id,
-    },
-  });
+export const notFound: RequestHandler = (_request, _response, next) => {
+  next(new HttpError(404, 'NOT_FOUND', 'The requested resource was not found.'));
 };

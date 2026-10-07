@@ -1,24 +1,6 @@
 import { z } from 'zod';
 
-export const videoUrlSchema = z
-  .string()
-  .trim()
-  .max(2048)
-  .pipe(z.url())
-  .refine((value) => {
-    if (!URL.canParse(value)) return false;
-    const url = new URL(value);
-    return (
-      url.protocol === 'https:' &&
-      !url.username &&
-      !url.password &&
-      !url.port &&
-      ((['tiktok.com', 'www.tiktok.com'].includes(url.hostname) &&
-        /^\/@[^/]+\/video\/\d+\/?$/.test(url.pathname)) ||
-        (['vm.tiktok.com', 'vt.tiktok.com'].includes(url.hostname) &&
-          /^\/[a-zA-Z0-9]+\/?$/.test(url.pathname)))
-    );
-  }, 'Enter a public TikTok video link using HTTPS.');
+export { videoUrlSchema } from '../shared/video-url.js';
 
 export const formatSchema = z.object({
   id: z.string().min(1).max(200),
@@ -49,7 +31,10 @@ export const downloadSchema = z.object({
   url: z
     .string()
     .max(2048)
-    .refine((url) => /^\/downloads\/[a-zA-Z0-9_-]+$/.test(url), 'Invalid download URL.'),
+    .refine(
+      (url) => /^\/api\/v1\/downloads\/[a-zA-Z0-9_-]+\/file$/.test(url),
+      'Invalid download URL.',
+    ),
 });
 export type Media = z.infer<typeof mediaSchema>;
 export type Progress = z.infer<typeof progressSchema>;

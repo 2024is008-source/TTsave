@@ -1,4 +1,4 @@
-import { createMockAdapter } from './mock-adapter.js';
+import { createApiAdapter } from './api-adapter.js';
 import { createDownloaderController, isBusy, type State } from './state-machine.js';
 import type { DownloaderAdapter } from './contracts.js';
 
@@ -54,7 +54,7 @@ export function initializeDownloader(root: Document = document, options: Options
       link.remove();
     });
   const controller = createDownloaderController({
-    adapter: options.adapter ?? createMockAdapter(),
+    adapter: options.adapter ?? createApiAdapter(),
     requestDownload,
   });
 
