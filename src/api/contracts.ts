@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { videoUrlSchema } from '../shared/video-url.js';
+import { thumbnailSchema } from '../shared/thumbnail.js';
 
 export const analyzeInput = z.object({ url: videoUrlSchema }).strict();
 export const opaqueId = z.uuid();
@@ -15,15 +16,14 @@ export const apiFormat = z.object({
   qualityLabel: z.string().min(1).max(120),
   estimatedBytes: z.number().int().nonnegative().optional(),
   hasAudio: z.boolean(),
+  compatibility: z.enum(['broad', 'device-dependent']).optional(),
+  bitrateKbps: z.number().positive().optional(),
 });
 export const analysisSchema = z.object({
   id: opaqueId,
   title: z.string().min(1).max(500),
   creator: z.string().max(200).nullable(),
-  thumbnail: z
-    .string()
-    .regex(/^\/assets\/images\/[a-zA-Z0-9_-]+\.webp$/)
-    .nullable(),
+  thumbnail: thumbnailSchema.nullable(),
   durationSeconds: z.number().nonnegative().nullable(),
   sourceUrl: videoUrlSchema,
   formats: z
@@ -39,6 +39,7 @@ export const analysisSchema = z.object({
 export const accessTokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
 export const fileQuery = z.object({ token: accessTokenSchema }).strict();
 export const apiProgressSchema = z.object({
+  downloadedBytes: z.number().int().nonnegative().optional(),
   percent: z.number().min(0).max(100).optional(),
   speedBytesPerSecond: z.number().nonnegative().optional(),
   sizeBytes: z.number().int().nonnegative().optional(),
@@ -79,6 +80,7 @@ export const apiJobSchema = z.object({
   progress: apiProgressSchema.optional(),
   fileUrl: safeFileUrlSchema.optional(),
   fileExpiresAt: z.number().int().positive().optional(),
+  deliveredFormat: apiFormat.optional(),
   error: jobErrorSchema.optional(),
 });
 export const apiErrorSchema = z.object({

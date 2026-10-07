@@ -186,6 +186,85 @@ describe('bounded external process', () => {
   });
 });
 describe('production yt-dlp analysis', () => {
+  it('deduplicates identical delivered dimensions, sorts resolutions and prefers an explicitly clean compatible source', async () => {
+    const source = fixture.formats[0];
+    launch(
+      JSON.stringify({
+        ...fixture,
+        formats: [
+          { ...source, format_id: 'large', filesize: 4096, tbr: 1000 },
+          {
+            ...source,
+            format_id: 'safe',
+            format_note: 'No watermark',
+            filesize: 2048,
+            tbr: 1020,
+          },
+          { ...source, format_id: 'low', width: 576, height: 1024 },
+          { ...source, format_id: 'high', width: 1080, height: 1920 },
+          { ...source, format_id: 'high-bitrate', tbr: 2000 },
+          { ...source, format_id: 'alternative', vcodec: 'hevc' },
+          { ...source, format_id: 'unsafe+selector' },
+        ],
+      }),
+    );
+    const result = await new YtDlpAnalyzer().analyzeSource(url, context());
+    expect(result.media.formats.map((format) => format.qualityLabel)).toEqual([
+      '1080p',
+      '720p',
+      '576p',
+    ]);
+    expect([...result.selectors.values()]).toContain('safe');
+    expect([...result.selectors.values()]).not.toContain('large');
+    expect(
+      result.media.formats.filter(
+        (format) => format.compatibility === 'device-dependent',
+      ),
+    ).toHaveLength(0);
+    expect(result.preferred?.has(result.media.formats[1]?.id ?? '')).toBe(true);
+    expect(result.media.formats[1]?.hasAudio).toBe(true);
+    expect(JSON.stringify(result.media)).not.toMatch(
+      /high-bitrate|safe|unsafe\+selector|https:\/\/video/,
+    );
+  });
+  it('excludes a clean variant without audio and keeps the honest watermarked MP4', async () => {
+    launch(
+      JSON.stringify({
+        ...fixture,
+        formats: [
+          {
+            ...fixture.formats[0],
+            format_id: 'clean',
+            format_note: 'No watermark',
+            acodec: 'none',
+          },
+          { ...fixture.formats[0], format_id: 'watermarked', format_note: 'watermarked' },
+        ],
+      }),
+    );
+    const result = await new YtDlpAnalyzer().analyzeSource(url, context());
+    expect([...result.selectors.values()]).toEqual(['watermarked']);
+    expect(result.preferred?.size).toBe(0);
+    expect(result.media.formats[0]?.hasAudio).toBe(true);
+    expect(JSON.stringify(result.media)).not.toContain('watermarked');
+  });
+  it('keeps approved remote thumbnails private and excludes arbitrary or media URLs', async () => {
+    const allowed = 'https://p16-sign.tiktokcdn.com/image.jpeg?signature=test';
+    launch(JSON.stringify({ ...fixture, thumbnail: allowed }));
+    const result = await new YtDlpAnalyzer().analyzeSource(url, context());
+    expect(result.previewUrl).toBe(allowed);
+    expect(result.media.thumbnail).toBeNull();
+    for (const thumbnail of [
+      'http://p16.tiktokcdn.com/image',
+      'https://tiktokcdn.com.evil.test/image',
+      'https://127.0.0.1/image',
+      'https://user:pass@p16.tiktokcdn.com/image',
+      'https://p16.tiktokcdn.com/movie.mp4',
+      'https://p16%2etiktokcdn.com/image',
+    ]) {
+      expect(normalizeMetadata({ ...fixture, thumbnail }, url).thumbnail).toBeNull();
+    }
+  });
   it('passes only a normalized, validated URL and safe fixed options', async () => {
     launch(JSON.stringify(fixture));
     const result = await new YtDlpAnalyzer().analyze(
@@ -202,6 +281,8 @@ describe('production yt-dlp analysis', () => {
         '--no-cookies-from-browser',
         '--no-geo-bypass',
         '--simulate',
+        '--impersonate',
+        'chrome',
         '--dump-single-json',
         '--no-playlist',
         '--use-extractors',
@@ -221,8 +302,9 @@ describe('production yt-dlp analysis', () => {
       {
         id: 'source-1',
         container: 'mp4',
-        qualityLabel: '720 × 1280 source pixels',
+        qualityLabel: '720p',
         hasAudio: true,
+        compatibility: 'broad',
         width: 720,
         height: 1280,
         estimatedBytes: 2048,
@@ -308,8 +390,9 @@ describe('production yt-dlp analysis', () => {
       {
         id: 'source-1',
         container: 'mp4',
-        qualityLabel: 'Source MP4 video',
+        qualityLabel: 'Available MP4',
         hasAudio: true,
+        compatibility: 'broad',
       },
     ]);
     expect(result.durationSeconds).toBeNull();
@@ -337,18 +420,36 @@ describe('startup tools', () => {
   it('checks both executables using bounded version calls', async () => {
     launch('2026.10.01');
     launch('ffmpeg version test');
-    await expect(checkTools(context())).resolves.toEqual({ ytDlp: true, ffmpeg: true });
+    launch('ffprobe version test');
+    launch('Chrome-150 Windows-11 curl_cffi');
+    await expect(checkTools(context())).resolves.toEqual({
+      ytDlp: true,
+      ffmpeg: true,
+      ffprobe: true,
+      chrome: true,
+    });
     expect(spawnMock.mock.calls[1]?.slice(0, 2)).toEqual(['ffmpeg', ['-version']]);
   });
   it('reports unavailable tools without throwing internal details', async () => {
     spawnMock.mockImplementation(() => {
       throw new Error('secret missing tool path');
     });
-    await expect(checkTools(context())).resolves.toEqual({ ytDlp: false, ffmpeg: false });
+    await expect(checkTools(context())).resolves.toEqual({
+      ytDlp: false,
+      ffmpeg: false,
+      ffprobe: false,
+      chrome: false,
+    });
   });
   it('rejects executables that return the wrong version banner', async () => {
     launch('v24.18.0');
     launch('not-ffmpeg');
-    await expect(checkTools(context())).resolves.toEqual({ ytDlp: false, ffmpeg: false });
+    launch('not-ffprobe');
+    await expect(checkTools(context())).resolves.toEqual({
+      ytDlp: false,
+      ffmpeg: false,
+      ffprobe: false,
+      chrome: false,
+    });
   });
 });

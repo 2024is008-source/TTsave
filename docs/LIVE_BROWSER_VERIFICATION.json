@@ -1,0 +1,18 @@
+{
+  "source": "https://www.tiktok.com/@hankgreen1/video/7047596209028074758",
+  "live": true,
+  "thumbnailLocal": true,
+  "formats": [
+    "576p576 × 10242183224 bytes estimatedAudio included · 815 kb/sMP4 ✓",
+    "Available MP4Audio includedMP4 ✓"
+  ],
+  "mobileOverflow": false,
+  "selectedFormat": "source-1",
+  "finalState": "completed",
+  "quality": "576p",
+  "size": "2183224 bytes",
+  "browserDownloadError": null,
+  "browserState": "download-requested",
+  "remainingJobDirectories": 0,
+  "remainingTemporaryEntries": []
+}

@@ -9,6 +9,8 @@ import {
   type DownloaderAdapter,
   type Media,
   type Progress,
+  type Download,
+  type DownloadJob,
 } from './contracts.js';
 
 export type Status =
@@ -18,6 +20,7 @@ export type Status =
   | 'ready'
   | 'starting-download'
   | 'downloading'
+  | 'completed'
   | 'download-requested'
   | 'error';
 export type State = {
@@ -28,6 +31,7 @@ export type State = {
   progress: Progress | null;
   message: string;
   invalidUrl: boolean;
+  download: Download | null;
 };
 export type Event =
   | { type: 'RESET'; url: string; message?: string }
@@ -39,6 +43,8 @@ export type Event =
   | { type: 'DOWNLOADING' }
   | { type: 'PROGRESS'; progress: Progress }
   | { type: 'REQUESTED' }
+  | { type: 'COMPLETE'; download: Download }
+  | { type: 'CHOOSE' }
   | { type: 'FAIL'; message: string; invalidUrl?: boolean }
   | { type: 'CANCEL' };
 
@@ -51,6 +57,7 @@ export function initialState(url = ''): State {
     progress: null,
     message: '',
     invalidUrl: false,
+    download: null,
   };
 }
 export const isBusy = (status: Status): boolean =>
@@ -122,7 +129,7 @@ export function transition(state: State, event: Event): State {
           }
         : state;
     case 'REQUESTED':
-      return state.status === 'downloading'
+      return state.status === 'completed'
         ? {
             ...state,
             status: 'download-requested',
@@ -130,11 +137,31 @@ export function transition(state: State, event: Event): State {
               'Download requested. Your browser will handle the file; saving is not confirmed.',
           }
         : state;
+    case 'COMPLETE':
+      return state.status === 'downloading'
+        ? {
+            ...state,
+            status: 'completed',
+            download: event.download,
+            message: 'Your video is ready. Select Save MP4 to request the file.',
+          }
+        : state;
+    case 'CHOOSE':
+      return state.status === 'error' && state.media
+        ? {
+            ...state,
+            status: 'ready',
+            progress: null,
+            download: null,
+            message: 'Choose an available quality.',
+          }
+        : state;
     case 'FAIL':
       return {
         ...state,
         status: 'error',
         progress: null,
+        download: null,
         message: event.message,
         invalidUrl: event.invalidUrl ?? false,
       };
@@ -162,6 +189,7 @@ export function createDownloaderController({
   let state = initialState();
   let operation = 0;
   let abortController: AbortController | null = null;
+  let readyJob: DownloadJob | null = null;
   const listeners = new Set<(state: State) => void>();
   const dispatch = (event: Event) => {
     const next = transition(state, event);
@@ -173,6 +201,10 @@ export function createDownloaderController({
     operation += 1;
     abortController?.abort();
     abortController = null;
+    if (readyJob) {
+      void adapter.cancelDownload?.(readyJob).catch(() => undefined);
+      readyJob = null;
+    }
   };
   const fail = (error: unknown) =>
     dispatch({
@@ -200,6 +232,32 @@ export function createDownloaderController({
     },
     selectFormat(formatId: string) {
       dispatch({ type: 'SELECT', formatId });
+    },
+    chooseQuality() {
+      dispatch({ type: 'CHOOSE' });
+    },
+    save() {
+      if (state.status !== 'completed' || !state.download) return;
+      if (
+        state.download.expiresAt !== undefined &&
+        state.download.expiresAt <= Date.now()
+      ) {
+        invalidate();
+        fail(
+          new Error(
+            'The prepared file has expired. Try again to prepare a new download.',
+          ),
+        );
+        return;
+      }
+      try {
+        requestDownload(state.download.url);
+        readyJob = null;
+        dispatch({ type: 'REQUESTED' });
+      } catch {
+        invalidate();
+        fail(new Error('Your browser could not request the file. Please try again.'));
+      }
     },
     cancel() {
       invalidate();
@@ -269,8 +327,8 @@ export function createDownloaderController({
           }),
         );
         if (current !== operation) return;
-        requestDownload(download.url);
-        dispatch({ type: 'REQUESTED' });
+        readyJob = job;
+        dispatch({ type: 'COMPLETE', download });
       } catch (error) {
         if (current === operation) {
           if (signal.aborted) dispatch({ type: 'CANCEL' });

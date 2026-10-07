@@ -1,15 +1,195 @@
+<%# result-card.ejs — Compact premium download panel. Shown/hidden via JS: result.hidden
+based on state. The rp-header block is always visible when the panel is shown. Sub-cards:
+#quality-card (ready), #progress-card (downloading), #completed-card, #error-card. All
+state-panel children keep their existing IDs so downloader.ts works unchanged. %>
 <section
   id="result-card"
-  class="glass-card result-card"
-  aria-labelledby="result-title"
+  class="result-panel"
+  aria-label="Video download workspace"
   hidden
 >
-  <h2 id="result-title" tabindex="-1">Available video formats</h2>
-  <fieldset class="format-fieldset">
-    <legend>Choose an available video format</legend>
-    <div id="format-options"></div>
-  </fieldset>
-  <button class="primary-button download-button" type="button" disabled>
-    Request download
-  </button>
+  <%# ── Persistent media header (visible across all states) ── %>
+  <div class="rp-creator-header">
+    <span id="result-creator-initial" class="rp-creator-avatar" aria-hidden="true"></span>
+    <div>
+      <span id="result-creator" class="rp-creator"></span>
+      <p>Public TikTok video</p>
+    </div>
+  </div>
+  <div class="rp-header">
+    <div class="rp-thumb-wrap">
+      <img
+        id="rp-mini-thumb"
+        class="rp-mini-thumb"
+        src=""
+        alt=""
+        width="80"
+        height="56"
+        decoding="async"
+      />
+    </div>
+    <div class="rp-header-copy">
+      <h2 id="result-title" tabindex="-1" class="rp-title">Your video</h2>
+      <p class="rp-meta-row">
+        <span id="result-duration" class="rp-duration"></span>
+        <span class="rp-format-badge">Video</span>
+      </p>
+    </div>
+  </div>
+
+  <%# ── Ready state: status + quality + download ── %>
+  <div id="quality-card">
+    <div class="rp-status-row">
+      <span class="result-success" role="status" tabindex="-1">
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none">
+          <circle cx="7" cy="7" r="7" fill="rgba(16,185,129,0.15)" />
+          <path
+            d="M4 7l2.3 2.3L10 5"
+            stroke="#10b981"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Video ready
+      </span>
+    </div>
+
+    <div class="rp-container-section">
+      <h3 class="rp-section-label" id="container-label">Download format</h3>
+      <div class="rp-container-tabs" role="tablist" aria-labelledby="container-label">
+        <button
+          type="button"
+          class="rp-container-tab"
+          id="video-format-tab"
+          role="tab"
+          aria-selected="true"
+          aria-controls="video-quality-panel"
+        >
+          <%- include('icon', { name: 'video' }) %><span
+            id="result-container-label"
+          ></span>
+        </button>
+      </div>
+    </div>
+    <div id="video-quality-panel" role="tabpanel" aria-labelledby="video-format-tab">
+      <fieldset class="rp-format-fieldset">
+        <legend class="rp-section-label">Video quality</legend>
+        <div id="format-options" class="rp-tile-grid"></div>
+        <details id="more-formats" hidden>
+          <summary class="rp-more-summary">More options</summary>
+          <div id="extra-format-options" class="rp-tile-grid rp-tile-grid--extra"></div>
+        </details>
+      </fieldset>
+    </div>
+
+    <button class="rp-dl-btn download-button" type="button" disabled>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M12 3v13M7 11l5 5 5-5"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M4 20h16"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+        />
+      </svg>
+      <span class="download-label">Download MP4</span>
+    </button>
+
+    <p class="rp-helper">
+      Choose an available source quality. Video and audio are saved together.
+    </p>
+  </div>
+
+  <%# ── Progress card: starting-download + downloading ── %>
+  <div id="progress-card" class="rp-progress" aria-labelledby="progress-title" hidden>
+    <div class="rp-progress-header">
+      <span class="rp-prog-spinner" aria-hidden="true"></span>
+      <h2 id="progress-title" tabindex="-1" class="rp-prog-title">
+        Preparing your download
+      </h2>
+    </div>
+    <p id="progress-quality" class="rp-prog-quality"></p>
+    <div class="rp-prog-track" role="none">
+      <progress
+        id="download-progress"
+        max="100"
+        aria-label="File preparation progress"
+      ></progress>
+      <div class="rp-prog-fill" aria-hidden="true"></div>
+    </div>
+    <div id="progress-metrics" class="rp-prog-metrics"></div>
+    <button type="button" class="rp-cancel-btn progress-cancel">Cancel</button>
+  </div>
+
+  <%# ── Completed card ── %>
+  <div id="completed-card" class="rp-completed" hidden>
+    <div class="rp-completed-header">
+      <span class="rp-done-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="11" fill="rgba(16,185,129,0.15)" />
+          <path
+            d="M6.5 11l3.2 3.2L15.5 8"
+            stroke="#10b981"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+      <h2 id="completed-title" tabindex="-1" class="rp-done-title">Download ready</h2>
+    </div>
+    <p id="completed-quality" class="rp-done-detail"></p>
+    <p id="completed-size" class="rp-done-detail rp-done-size"></p>
+    <button type="button" class="rp-dl-btn save-button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M12 3v13M7 11l5 5 5-5"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M4 20h16"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+        />
+      </svg>
+      Save MP4
+    </button>
+    <button type="button" class="rp-ghost-btn another-button">
+      Download another video
+    </button>
+  </div>
+
+  <%# ── Error card ── %>
+  <div id="error-card" class="rp-error" hidden>
+    <div class="rp-error-header" role="alert">
+      <span class="rp-error-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="10" r="10" fill="rgba(254,44,85,0.12)" />
+          <path
+            d="M10 6.5v4M10 13.5h.01"
+            stroke="#fe2c55"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+      <h2 id="error-title" tabindex="-1" class="rp-error-title">Download failed</h2>
+    </div>
+    <p id="error-message" class="rp-error-msg"></p>
+    <button type="button" class="rp-dl-btn retry-button">Try again</button>
+    <button type="button" class="rp-ghost-btn choose-button" hidden>
+      Choose another quality
+    </button>
+  </div>
 </section>

@@ -1,0 +1,693 @@
+/* ══════════════════════════════════════════════════════════
+   RESULT PANEL — Compact premium glass card
+   Reference: the floating panel beside the phone mockup.
+   Width: 440-500px desktop; stacks below phone on mobile.
+   All states live inside one card — no jumps, no reflow.
+══════════════════════════════════════════════════════════ */
+
+/* ── Panel shell ── */
+.result-panel {
+  width: 100%;
+  padding: 24px 26px 26px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow:
+    0 28px 70px -8px rgba(76, 59, 150, 0.16),
+    0 8px 24px -4px rgba(29, 39, 74, 0.08),
+    inset 0 1.5px 1px rgba(255, 255, 255, 1);
+  overflow: visible;
+}
+[data-theme='dark'] .result-panel {
+  background: rgba(18, 22, 40, 0.82);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 28px 70px -8px rgba(0, 0, 0, 0.4),
+    0 8px 24px -4px rgba(0, 0, 0, 0.24),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.06);
+}
+
+/* ══════════════════════════════════════════════════════════
+   PERSISTENT MEDIA HEADER
+   Creator name · mini thumbnail · title · duration
+   Stays visible across ready / downloading / completed / error
+══════════════════════════════════════════════════════════ */
+.rp-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(220, 228, 242, 0.6);
+}
+[data-theme='dark'] .rp-header {
+  border-bottom-color: rgba(255, 255, 255, 0.07);
+}
+
+/* Mini thumbnail */
+.rp-thumb-wrap {
+  flex-shrink: 0;
+  width: 80px;
+  height: 56px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(138, 53, 255, 0.08);
+  border: 1px solid rgba(220, 228, 242, 0.6);
+  position: relative;
+}
+[data-theme='dark'] .rp-thumb-wrap {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.rp-mini-thumb {
+  width: 80px;
+  height: 56px;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+}
+
+/* Creator + copy stack */
+.rp-header-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.rp-creator-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+}
+.rp-creator {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--violet);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+.rp-creator:empty {
+  display: none;
+}
+.rp-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.018em;
+  line-height: 1.3;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rp-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  flex-wrap: wrap;
+}
+.rp-duration {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+  line-height: 1;
+}
+.rp-duration:empty {
+  display: none;
+}
+.rp-format-badge {
+  font-size: 0.625rem;
+  font-weight: 800;
+  color: var(--blue);
+  background: rgba(40, 124, 255, 0.1);
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════════════════════════════
+   READY STATE — status badge + quality tiles + download btn
+══════════════════════════════════════════════════════════ */
+
+/* Status badge row */
+.rp-status-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.result-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #10b981;
+  letter-spacing: -0.005em;
+  background: rgba(16, 185, 129, 0.08);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Section label */
+.rp-section-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+  padding: 0;
+}
+
+/* Fieldset reset */
+.rp-format-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 18px;
+}
+
+/* Compact quality tile grid */
+.rp-tile-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.rp-tile-grid--extra {
+  margin-top: 8px;
+}
+
+/* Single quality tile — label wraps the radio */
+.format-option {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 1.5px solid rgba(220, 228, 242, 0.9);
+  border-radius: 12px;
+  cursor: pointer;
+  background: rgba(248, 250, 255, 0.7);
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    box-shadow 0.15s;
+  min-width: 0;
+  flex-shrink: 0;
+  user-select: none;
+}
+[data-theme='dark'] .format-option {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+.format-option:hover {
+  border-color: rgba(138, 53, 255, 0.4);
+  background: rgba(138, 53, 255, 0.04);
+}
+.format-option input[type='radio'] {
+  /* visually hidden but accessible */
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.format-option:has(input:checked) {
+  border-color: var(--violet);
+  border-width: 2px;
+  background: rgba(138, 53, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(138, 53, 255, 0.08);
+}
+.format-option:has(input:focus-visible) {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+.format-option:has(input:disabled) {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Tile text block */
+.quality-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.quality-text strong {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.format-option:has(input:checked) .quality-text strong {
+  color: var(--violet);
+}
+.quality-detail {
+  font-size: 0.6875rem;
+  color: var(--muted);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+/* Best badge */
+.quality-badge {
+  font-size: 0.5625rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: rgba(40, 124, 255, 0.1);
+  color: var(--blue);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  align-self: flex-start;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+/* Selected checkmark */
+.selected-indicator {
+  display: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--violet);
+  align-self: flex-start;
+}
+.format-option:has(input:checked) .selected-indicator {
+  display: block;
+}
+
+/* More options disclosure */
+#more-formats {
+  margin-top: 8px;
+}
+.rp-more-summary {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  padding-block: 4px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--violet);
+  cursor: pointer;
+  list-style: none;
+  gap: 5px;
+}
+.rp-more-summary::before {
+  content: '+';
+  font-size: 0.9375rem;
+  font-weight: 700;
+  width: 18px;
+  text-align: center;
+}
+#more-formats[open] .rp-more-summary::before {
+  content: '−';
+}
+
+/* ── Primary download / save button ── */
+.rp-dl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 22px;
+  border: 0;
+  border-radius: 16px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  background: linear-gradient(108deg, #e62c73 0%, #8249ec 50%, #386fe1 100%);
+  box-shadow:
+    0 10px 30px -8px rgba(226, 44, 115, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.rp-dl-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 16px 36px -8px rgba(226, 44, 115, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+.rp-dl-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+.rp-dl-btn:disabled {
+  cursor: wait;
+  opacity: 0.55;
+  transform: none;
+}
+
+/* ── Ghost secondary button ── */
+.rp-ghost-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 9px;
+  padding: 10px 16px;
+  border: 1.5px solid rgba(220, 228, 242, 0.9);
+  background: transparent;
+  border-radius: 13px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+.rp-ghost-btn:hover {
+  border-color: var(--violet);
+  background: rgba(138, 53, 255, 0.04);
+}
+[data-theme='dark'] .rp-ghost-btn {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Helper text */
+.rp-helper {
+  margin-top: 12px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--placeholder);
+  text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PROGRESS STATE
+   Compact integrated progress — no raw bytes, clean metrics
+══════════════════════════════════════════════════════════ */
+.rp-progress {
+  padding: 0;
+}
+.rp-progress-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 10px;
+}
+.rp-prog-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+/* Gradient spinner */
+.rp-prog-spinner {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(138, 53, 255, 0.15);
+  border-top-color: var(--violet);
+  border-right-color: var(--pink);
+  animation: rp-spin 0.85s linear infinite;
+  display: block;
+}
+@keyframes rp-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Quality label during progress */
+.rp-prog-quality {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+/* Progress track — custom styled, wraps native <progress> */
+.rp-prog-track {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: rgba(138, 53, 255, 0.1);
+  margin-bottom: 10px;
+}
+
+/* Style the native <progress> element — keep for accessibility */
+#download-progress {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0; /* hidden visually; accessible value remains */
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: transparent;
+}
+
+/* Custom visual fill (updated by CSS custom property via JS) */
+.rp-prog-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--pink) 0%, var(--violet) 60%, var(--blue) 100%);
+  transform-origin: left center;
+  transform: scaleX(var(--rp-progress, 0));
+  transition: transform 0.3s ease;
+}
+
+/* Indeterminate shimmer when no value */
+.rp-prog-track[data-indeterminate='true'] .rp-prog-fill {
+  transform: scaleX(1);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(138, 53, 255, 0.5) 30%,
+    rgba(254, 44, 85, 0.5) 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: rp-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes rp-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Progress metrics row — clean formatted values */
+.rp-prog-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  min-height: 20px;
+}
+.rp-prog-metrics p {
+  margin: 0;
+  line-height: 1;
+  color: var(--muted);
+}
+
+/* Compact cancel button */
+.rp-cancel-btn {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 20px;
+  border: 1.5px solid rgba(220, 228, 242, 0.9);
+  background: transparent;
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+.rp-cancel-btn:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+/* ══════════════════════════════════════════════════════════
+   COMPLETED STATE
+══════════════════════════════════════════════════════════ */
+.rp-completed {}
+.rp-completed-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.rp-done-icon {
+  flex-shrink: 0;
+  display: flex;
+}
+.rp-done-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.rp-done-detail {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  margin: 0 0 3px;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+.rp-done-size {
+  margin-bottom: 14px;
+}
+.rp-completed .rp-dl-btn {
+  margin-top: 4px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ERROR STATE
+══════════════════════════════════════════════════════════ */
+.rp-error {}
+.rp-error-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-bottom: 8px;
+}
+.rp-error-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+}
+.rp-error-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.rp-error-msg {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin: 0 0 14px;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════════════════════
+   FORM STATE COLORS (error status message in the input form)
+══════════════════════════════════════════════════════════ */
+.downloader .form-status {
+  color: var(--muted);
+}
+.downloader[data-state='error'] .form-status {
+  color: var(--pink);
+}
+[data-state='error'] .form-status {
+  border-left: 3px solid var(--pink);
+  padding: 12px 16px;
+  background: rgba(254, 44, 85, 0.04);
+  border-radius: 0 12px 12px 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤ 767px)
+══════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  .result-panel {
+    padding: 20px 20px 22px;
+    border-radius: 26px;
+  }
+  .rp-thumb-wrap,
+  .rp-mini-thumb {
+    width: 68px;
+    height: 48px;
+  }
+  .rp-title {
+    font-size: 0.875rem;
+  }
+  .rp-dl-btn {
+    min-height: 50px;
+    font-size: 1rem;
+    border-radius: 14px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — MOBILE (≤ 480px)
+══════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .result-panel {
+    padding: 18px 16px 20px;
+    border-radius: 24px;
+  }
+  .rp-header {
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+  }
+  .rp-tile-grid {
+    gap: 7px;
+  }
+  .format-option {
+    padding: 7px 11px;
+    border-radius: 10px;
+  }
+  .quality-text strong {
+    font-size: 0.8125rem;
+  }
+  .quality-detail {
+    font-size: 0.625rem;
+  }
+  .rp-dl-btn {
+    min-height: 48px;
+    border-radius: 13px;
+  }
+  .rp-ghost-btn {
+    min-height: 42px;
+    font-size: 0.8125rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   REDUCED MOTION
+══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .rp-prog-spinner {
+    animation: none;
+    border-top-color: var(--violet);
+    border-right-color: var(--violet);
+    opacity: 0.6;
+  }
+  .rp-prog-fill {
+    transition: none;
+  }
+  .rp-prog-track[data-indeterminate='true'] .rp-prog-fill {
+    animation: none;
+    opacity: 0.4;
+  }
+  .rp-dl-btn:hover:not(:disabled) {
+    transform: none;
+  }
+}

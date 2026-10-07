@@ -47,7 +47,15 @@ export function createApp(
       },
     }),
   );
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          imgSrc: ["'self'"],
+        },
+      },
+    }),
+  );
   app.use(createHealthRouter(isReady));
   // Static artwork must not consume the request budget for application routes.
   app.use('/assets', express.static(path.join(projectRoot, 'public', 'assets')));

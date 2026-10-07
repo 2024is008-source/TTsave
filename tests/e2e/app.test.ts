@@ -31,7 +31,9 @@ describe('application routes', () => {
     expect(response.type).toBe('text/html');
     expect(response.text).toContain('TT<span class="brand">Save</span>');
     expect(response.text).toContain('/assets/js/app.js');
-    expect(response.text).toContain('Interface preview');
+    expect(response.text).toContain('Preview unavailable');
+    expect(response.text).toContain('/assets/images/showcase-left.webp');
+    expect(response.text).toContain('/assets/images/moment-city.webp');
     expect(response.text).not.toMatch(
       /on(?:click|submit)=|cdn\.tailwindcss|sarah\.wanders|74%|5\.1 MB/,
     );
@@ -57,7 +59,7 @@ describe('application routes', () => {
       .send({ url: 'https://www.tiktok.com/@test/video/123' })
       .expect(503);
     expect(response.body.error.code).toBe('DOWNLOADER_UNAVAILABLE');
-    expect(response.body.error.message).toContain('Public TikTok videos only');
+    expect(response.body.error.message).toContain('Publicly accessible TikTok video');
   });
 
   it('returns a structured 404 response', async () => {

@@ -42,6 +42,49 @@ function makeAdapter(): DownloaderAdapter {
 }
 
 describe('downloader state machine', () => {
+  it('keeps valid analyzed metadata on failure and allows another quality without analysis', async () => {
+    const adapter = makeAdapter();
+    adapter.startDownload = vi.fn().mockRejectedValue(new Error('Source unavailable'));
+    const controller = createDownloaderController({ adapter, requestDownload: vi.fn() });
+    controller.setUrl('https://www.tiktok.com/@creator/video/123');
+    await controller.analyze();
+    await controller.download();
+    expect(controller.getState()).toMatchObject({
+      status: 'error',
+      media,
+      formatId: 'source',
+    });
+    controller.chooseQuality();
+    controller.selectFormat('alternate');
+    expect(controller.getState()).toMatchObject({
+      status: 'ready',
+      formatId: 'alternate',
+    });
+    expect(adapter.analyze).toHaveBeenCalledTimes(1);
+  });
+  it('cancels an abandoned prepared file and refuses an expired file capability', async () => {
+    const adapter = makeAdapter();
+    adapter.cancelDownload = vi.fn(() => Promise.resolve());
+    adapter.waitForDownload = vi.fn(() =>
+      Promise.resolve({
+        url: '/api/v1/downloads/ticket/file',
+        expiresAt: Date.now() - 1,
+      }),
+    );
+    const handoff = vi.fn();
+    const controller = createDownloaderController({ adapter, requestDownload: handoff });
+    controller.setUrl('https://www.tiktok.com/@creator/video/123');
+    await controller.analyze();
+    await controller.download();
+    controller.save();
+    expect(controller.getState()).toMatchObject({
+      status: 'error',
+      media,
+      message: expect.stringContaining('expired'),
+    });
+    expect(adapter.cancelDownload).toHaveBeenCalledWith({ id: 'job' });
+    expect(handoff).not.toHaveBeenCalled();
+  });
   it('does not start file delivery when the API reports it is unavailable', async () => {
     const adapter = makeAdapter();
     adapter.analyze = vi.fn(() =>
@@ -108,6 +151,10 @@ describe('downloader state machine', () => {
     });
     file.resolve({ url: '/api/v1/downloads/ticket/file' });
     await request;
+    expect(controller.getState().status).toBe('completed');
+    expect(handoff).not.toHaveBeenCalled();
+    controller.save();
+    controller.save();
     expect(controller.getState().status).toBe('download-requested');
     expect(handoff).toHaveBeenCalledWith('/api/v1/downloads/ticket/file');
     expect(states).toEqual(
@@ -118,6 +165,7 @@ describe('downloader state machine', () => {
         'ready',
         'starting-download',
         'downloading',
+        'completed',
         'download-requested',
       ]),
     );

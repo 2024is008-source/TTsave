@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { initializeDownloader } from '../src/frontend/downloader.js';
 import type { Download, DownloaderAdapter, Media } from '../src/frontend/contracts.js';
+import { mockData } from '../src/data/mock-data.js';
 
 const media: Media = {
   id: 'test',
@@ -51,12 +52,10 @@ const submit = () =>
 let ui: ReturnType<typeof initializeDownloader>;
 
 beforeEach(async () => {
-  const template = await readFile('views/partials/downloader.ejs', 'utf8');
-  document.body.innerHTML = ejs.render(
-    template,
-    { availability: 'Test preview' },
-    { filename: 'views/partials/downloader.ejs' },
-  );
+  const template = await readFile('views/partials/hero.ejs', 'utf8');
+  document.body.innerHTML = ejs.render(template, mockData, {
+    filename: 'views/partials/hero.ejs',
+  });
 });
 afterEach(() => {
   ui?.destroy();
@@ -64,6 +63,58 @@ afterEach(() => {
 });
 
 describe('downloader form', () => {
+  it('connects safe preview metadata, falls back on image failure and removes stale results immediately', async () => {
+    const source = {
+      ...media,
+      title: 'A real source title',
+      creator: 'Source creator',
+      durationSeconds: 65,
+      thumbnail:
+        '/api/v1/analysis/123e4567-e89b-42d3-a456-426614174000/thumbnail?token=' +
+        'a'.repeat(43),
+    };
+    const adapter = makeAdapter();
+    adapter.analyze = vi.fn(() => Promise.resolve(source));
+    ui = initializeDownloader(document, { adapter });
+    setInput('https://www.tiktok.com/@creator/video/123');
+    submit();
+    await vi.waitFor(() => expect(ui?.controller.getState().status).toBe('ready'));
+    const image = element<HTMLImageElement>('#result-thumbnail');
+    expect(image.getAttribute('src')).toBe(source.thumbnail);
+    expect(image.alt).toContain('Source creator');
+    expect(element('#result-duration').textContent).toBe('1:05');
+    expect(element('#result-creator').textContent).toBe('Source creator');
+    image.dispatchEvent(new Event('error'));
+    expect(image.getAttribute('src')).toBe('/assets/images/preview-unavailable.webp');
+    expect(element('#preview-unavailable').hidden).toBe(false);
+    setInput('https://www.tiktok.com/@other/video/456');
+    expect(element('#result-card').hidden).toBe(true);
+    expect(element('#result-creator').textContent).toBe('');
+    expect(document.querySelectorAll('input[name="format"]')).toHaveLength(0);
+  });
+  it('keeps four primary rows and offers accessible additional options', async () => {
+    const adapter = makeAdapter();
+    adapter.analyze = vi.fn(() =>
+      Promise.resolve({
+        ...media,
+        formats: Array.from({ length: 6 }, (_, index) => ({
+          id: `option-${String(index)}`,
+          label: `${String(1080 - index * 100)}p`,
+        })),
+      }),
+    );
+    ui = initializeDownloader(document, { adapter });
+    setInput('https://www.tiktok.com/@creator/video/123');
+    submit();
+    await vi.waitFor(() => expect(ui?.controller.getState().status).toBe('ready'));
+    expect(document.querySelectorAll('#format-options input')).toHaveLength(4);
+    expect(element('#more-formats').hidden).toBe(false);
+    expect(document.querySelectorAll('#extra-format-options input')).toHaveLength(2);
+    const radio = element<HTMLInputElement>('#format-5');
+    radio.checked = true;
+    radio.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(ui?.controller.getState().formatId).toBe('option-5');
+  });
   it('ignores stale clipboard text after Clear', async () => {
     const copied = deferred<string>();
     ui = initializeDownloader(document, {
@@ -146,7 +197,7 @@ describe('downloader form', () => {
     expect(element('#result-title').textContent).toBe(media.title);
     expect(document.querySelector('#result-card script')).toBeNull();
     expect(element('#format-options').textContent).toContain('640 × 360');
-    expect(element('#format-options').textContent).toContain('1024 bytes');
+    expect(element('#format-options').textContent).toContain('~1 KB');
     expect(element('#format-options').textContent).not.toContain('1080');
     expect(document.activeElement).toBe(element('#result-title'));
     const radio = element<HTMLInputElement>('#format-1');
@@ -172,14 +223,19 @@ describe('downloader form', () => {
     await vi.waitFor(() => expect(ui?.controller.getState().status).toBe('downloading'));
     const progress = element<HTMLProgressElement>('#download-progress');
     expect(progress.hasAttribute('value')).toBe(false);
-    expect(element('#progress-metrics').textContent).toBe('Progress is unknown.');
+    expect(element('#progress-metrics').textContent).toContain('Preparing');
     report({ percent: 0, speedBytesPerSecond: 0, sizeBytes: 0 });
     expect(progress.value).toBe(0);
-    expect(element('#progress-metrics').textContent).toContain('0 bytes/s');
+    expect(element('#progress-metrics').textContent).toContain('B/s');
     report({ percent: 70 });
     expect(progress.value).toBe(70);
-    expect(element('#progress-metrics').textContent).not.toContain('bytes/s');
+    expect(element('#progress-metrics').textContent).toContain('70%');
+    expect(element('#progress-metrics').textContent).not.toContain('B/s');
     file.resolve({ url: '/api/v1/downloads/ticket/file' });
+    await vi.waitFor(() => expect(ui?.controller.getState().status).toBe('completed'));
+    expect(handoff).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(element('#completed-title'));
+    element<HTMLButtonElement>('.save-button').click();
     await vi.waitFor(() =>
       expect(ui?.controller.getState().status).toBe('download-requested'),
     );

@@ -19,6 +19,7 @@ export type DownloaderService = {
   claimFile?: (id: string, token: string) => Promise<FileClaim>;
   sweep?: () => Promise<void>;
   dispose?: () => Promise<void>;
+  getThumbnail?: (id: string, token: string) => Promise<Buffer>;
 };
 
 /** Bounded analysis and job storage; no timers simulate work or completion. */

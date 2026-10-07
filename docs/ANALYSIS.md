@@ -34,9 +34,10 @@ are rejected. Operator-owned executable paths are trusted deployment settings;
 clients cannot select them. Prefer absolute paths in production. Install the
 binaries separately; the app does not install or update tools automatically.
 
-Startup and `npm run tools:check` run bounded version commands for both tools,
-verify their expected version banners and log availability with a startup request
-ID. The CLI exits nonzero when either is missing. `/health` reports liveness;
+Both analysis and download use fixed `--impersonate chrome` arguments. Startup and
+`npm run tools:check` verify yt-dlp, FFmpeg, FFprobe and an available Chrome
+curl_cffi impersonation target. The CLI exits nonzero when any dependency is missing.
+Checks log availability with a startup request ID. `/health` reports liveness;
 `/ready` reports 503 when startup checks fail or shutdown starts. Checks use no
 TikTok requests. Readiness is a startup snapshot, not a continuous external monitor.
 
@@ -74,7 +75,10 @@ excluded. Local/IP-literal media destinations are excluded. At most 30 formats
 are returned, with application IDs and labels based on actual dimensions. A 4K
 source is never invented; its dimensions appear only if actually returned.
 
-Remote thumbnails are omitted until a safe local thumbnail pipeline exists.
+Remote thumbnails remain server-private. Approved extractor thumbnails are bounded,
+decoded and stored temporarily as WebP, then exposed through a local capability
+route. CSP allows only same-origin images. See `RESULT_WORKSPACE.md` for the DNS,
+redirect, content-type, size, deadline, authorization and cleanup policies.
 The production service requires a known positive duration within the configured
 limit and a safe server-only format selector. Known oversized formats are excluded.
 Eligible analyses set `downloadAvailable: true`. Jobs re-extract the validated

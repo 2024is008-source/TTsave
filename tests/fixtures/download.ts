@@ -12,6 +12,26 @@ export const mp4Fixture = Buffer.concat([
   Buffer.alloc(20),
 ]);
 export const publicUrl = 'https://www.tiktok.com/@test/video/123';
+export function probeChild(
+  payload: unknown = {
+    streams: [{ codec_type: 'video', width: 720, height: 1280 }, { codec_type: 'audio' }],
+    format: { duration: '30', format_name: 'mov,mp4,m4a,3gp,3g2,mj2' },
+  },
+) {
+  const child = Object.assign(new EventEmitter(), {
+    stdout: new PassThrough(),
+    stderr: new PassThrough(),
+    kill: vi.fn(() => {
+      queueMicrotask(() => child.emit('close', null));
+      return true;
+    }),
+  });
+  queueMicrotask(() => {
+    child.stdout.write(JSON.stringify(payload));
+    child.emit('close', 0);
+  });
+  return child;
+}
 export function sourceFixture(): AnalyzedSource {
   return {
     media: {

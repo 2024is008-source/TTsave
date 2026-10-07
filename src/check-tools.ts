@@ -7,4 +7,5 @@ const tools = await checkTools({
   requestId: randomUUID(),
   logger,
 });
-if (!tools.ytDlp || !tools.ffmpeg) process.exitCode = 1;
+if (!tools.ytDlp || !tools.ffmpeg || !tools.ffprobe || !tools.chrome)
+  process.exitCode = 1;

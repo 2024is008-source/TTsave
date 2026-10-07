@@ -1,10 +1,9 @@
 <section class="steps-section section" id="how-it-works" aria-labelledby="steps-title">
   <div class="container">
     <div class="section-heading">
-      <span class="kicker">From feed to favorite</span>
+      <span class="showcase-label">3 simple steps</span>
       <h2 id="steps-title">
-        Three steps.<br class="mobile-break" />
-        A familiar rhythm.
+        How to download <span class="gradient-text">TikTok videos</span>
       </h2>
       <p>The simplest path from a public link to your device.</p>
     </div>
@@ -12,13 +11,16 @@
       <% steps.forEach((step, index) => { %>
       <li class="step-card glass-card">
         <div class="step-header">
-          <span class="step-number" aria-hidden="true">0<%= index + 1 %></span>
-          <%- include('picture', { imageClass: 'step-art', imageName: step.image,
-          imageWidth: 800, imageHeight: 600, smallWidth: 400, imageSizes: stepImageSizes,
-          imageAlt: '', imageLoading: 'lazy' }) %>
+          <span class="step-number" aria-hidden="true"><%= index + 1 %></span>
+          <span class="step-icon" aria-hidden="true"
+            ><%- include('icon', { name: ['link', 'clipboard', 'download'][index] })
+            %></span
+          >
         </div>
-        <h3><%= step.title %></h3>
-        <p><%= step.description %></p>
+        <div class="step-copy">
+          <h3><%= step.title %></h3>
+          <p><%= step.description %></p>
+        </div>
       </li>
       <% }) %>
     </ol>

@@ -9,6 +9,7 @@ const output = new URL('../public/assets/images/', import.meta.url);
 await mkdir(output, { recursive: true });
 
 const assets = [
+  ['preview-unavailable', 1080, 1920, 540],
   ['hero-video-poster', 1080, 1920, 540],
   ['hero-avatar', 256, 256, 128],
   ['video-card', 800, 600, 400],
@@ -18,6 +19,10 @@ const assets = [
   ['paste-link-step', 800, 600, 400],
   ['download-video-step', 800, 600, 400],
   ['og-image', 1200, 630, 600],
+  ['showcase-left', 800, 1200, 400],
+  ['showcase-right', 800, 1200, 400],
+  ['moment-nature', 600, 800, 300],
+  ['moment-city', 600, 800, 300],
 ];
 
 let built = 0;
@@ -43,11 +48,16 @@ for (const [name, width, height, smallWidth] of assets) {
       output,
     );
     await sharp(inputPath)
-      .resize(size, Math.round((height / width) * size), { fit: 'cover', position: 'center' })
+      .resize(size, Math.round((height / width) * size), {
+        fit: 'cover',
+        position: 'center',
+      })
       .webp({ quality: 87, effort: 5 })
       .toFile(fileURLToPath(destination));
     built++;
   }
 }
 
-console.log(`Built ${String(built)} image variants from ${String(assets.length)} sources.`);
+console.log(
+  `Built ${String(built)} image variants from ${String(assets.length)} sources.`,
+);

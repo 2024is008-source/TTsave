@@ -53,10 +53,12 @@ test('frontend uses authorized job events and a completed single-use file URL', 
   await page.setViewportSize({ width: 390, height: 900 });
   await page.goto('/');
   await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
-  await page.getByRole('button', { name: 'Check link' }).click();
+  await page.getByRole('button', { name: 'Get video' }).click();
   await expect(page.locator('#result-title')).toBeFocused();
   const downloadEvent = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Request download', exact: true }).click();
+  await page.getByRole('button', { name: 'Download MP4', exact: true }).click();
+  await expect(page.locator('#downloader')).toHaveAttribute('data-state', 'completed');
+  await page.getByRole('button', { name: 'Save MP4', exact: true }).click();
   const download = await downloadEvent;
   // Chrome's attachment requests bypass route fixtures. Verify the browser handoff;
   // HTTP integration tests verify the actual file, attachment headers and cleanup.

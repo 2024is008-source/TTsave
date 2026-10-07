@@ -47,28 +47,32 @@ test('keyboard selection, cancellation, real progress and browser handoff', asyn
     });
   });
   await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
-  await page.getByRole('button', { name: 'Check link' }).click();
+  await page.getByRole('button', { name: 'Get video' }).click();
   await expect(page.locator('#result-title')).toBeFocused();
   const source = page.getByRole('radio', { name: 'Source format' });
   const alternative = page.getByRole('radio', { name: 'Alternative format' });
   await source.focus();
   await page.keyboard.press('ArrowDown');
   await expect(alternative).toBeChecked();
-  await page.getByRole('button', { name: 'Request download', exact: true }).click();
+  await page.getByRole('button', { name: 'Download MP4', exact: true }).click();
   await expect(page.locator('#downloader')).toHaveAttribute('data-state', 'downloading');
+  await expect(page.locator('.phone:visible')).toHaveCount(0);
+  await expect(page.locator('.hero h1')).toBeVisible();
   await expect(page.locator('#download-progress')).not.toHaveAttribute('value');
-  await page.getByRole('button', { name: 'Cancel download request' }).click();
+  await page.locator('.progress-cancel').click();
   await expect(page.locator('#downloader')).toHaveAttribute('data-state', 'ready');
   await expect(page.locator('#result-title')).toBeFocused();
   await expect(page.locator('#video-url')).toHaveValue(
     'https://www.tiktok.com/@test/video/123',
   );
-  await page.getByRole('button', { name: 'Request download', exact: true }).click();
+  await page.getByRole('button', { name: 'Download MP4', exact: true }).click();
   await expect(page.locator('#downloader')).toHaveAttribute('data-state', 'downloading');
   await page.evaluate(() => document.dispatchEvent(new Event('test-progress')));
   await expect(page.locator('#download-progress')).toHaveAttribute('value', '40');
-  await expect(page.locator('#progress-metrics')).toContainText('512 bytes/s');
+  await expect(page.locator('#progress-metrics')).toContainText('512 B/s');
   await page.evaluate(() => document.dispatchEvent(new Event('test-file-ready')));
+  await expect(page.locator('#downloader')).toHaveAttribute('data-state', 'completed');
+  await page.getByRole('button', { name: 'Save MP4', exact: true }).click();
   await expect(page.locator('#downloader')).toHaveAttribute(
     'data-state',
     'download-requested',

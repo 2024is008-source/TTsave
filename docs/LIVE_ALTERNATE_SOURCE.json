@@ -1,0 +1,74 @@
+{
+  "source": "https://www.tiktok.com/@patroxofficial/video/6742501081818877190",
+  "live": true,
+  "analysis": {
+    "title": "Tag 1 Friend reverse this Video and look what happens 🤩😱 @skyandtami ...",
+    "creator": "patrox",
+    "durationSeconds": 27,
+    "formats": [
+      {
+        "id": "source-1",
+        "container": "mp4",
+        "width": 576,
+        "height": 1024,
+        "qualityLabel": "576p",
+        "estimatedBytes": 1007170,
+        "hasAudio": true,
+        "compatibility": "broad",
+        "bitrateKbps": 293
+      },
+      {
+        "id": "source-2",
+        "container": "mp4",
+        "qualityLabel": "Available MP4",
+        "hasAudio": true,
+        "compatibility": "broad"
+      }
+    ]
+  },
+  "preview": {
+    "status": 200
+  },
+  "selectedFormat": {
+    "id": "source-2",
+    "container": "mp4",
+    "qualityLabel": "Available MP4",
+    "hasAudio": true,
+    "compatibility": "broad"
+  },
+  "download": {
+    "status": "ready",
+    "progress": {
+      "sizeBytes": 2027898
+    },
+    "eventCount": 16
+  },
+  "delivery": {
+    "status": 200,
+    "bytes": 2027898,
+    "disposition": "attachment; filename=\"TTSave-video.mp4\"",
+    "mp4Header": "ftyp"
+  },
+  "audioAndResolution": "Passed server FFprobe verification before delivery",
+  "replay": 409,
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_type": "video",
+        "width": 540,
+        "height": 960
+      },
+      {
+        "codec_type": "audio"
+      }
+    ],
+    "format": {
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "duration": "27.466667"
+    }
+  },
+  "decodeExitCode": 0,
+  "remainingTemporaryEntries": []
+}

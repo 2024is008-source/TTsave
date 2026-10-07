@@ -5,16 +5,19 @@ import { once } from 'node:events';
 import type { Server } from 'node:http';
 import { PassThrough } from 'node:stream';
 import request from 'supertest';
+import sharp from 'sharp';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from '../../src/app.js';
 import { apiJobSchema, analysisSchema } from '../../src/api/contracts.js';
 import { ProductionDownloaderService } from '../../src/services/downloader.js';
 import { parseEnvironment } from '../../src/config/env.js';
+import { PreviewStore } from '../../src/services/previews.js';
 import {
   downloadChild,
   sourceFixture,
   publicUrl,
   mp4Fixture,
+  probeChild,
 } from '../fixtures/download.js';
 
 const spawnMock = vi.hoisted(() =>
@@ -40,6 +43,7 @@ beforeEach(async () => {
   app = createApp(service);
   children.length = 0;
   spawnMock.mockImplementation((_executable, args) => {
+    if (_executable === 'ffprobe') return probeChild();
     const child = downloadChild(args);
     children.push(child);
     return child;
@@ -96,6 +100,50 @@ async function address() {
   return `http://127.0.0.1:${String(details.port)}`;
 }
 describe('production download endpoints', () => {
+  it('returns a local authorized thumbnail and rejects arbitrary thumbnail URLs, wrong tokens and expired previews', async () => {
+    await service.dispose();
+    const config = parseEnvironment({ DOWNLOAD_TEMP_ROOT: root });
+    const image = await sharp({
+      create: { width: 90, height: 160, channels: 3, background: '#5588cc' },
+    })
+      .png()
+      .toBuffer();
+    const previews = new PreviewStore(config, () => Promise.resolve(image));
+    service = new ProductionDownloaderService(
+      {
+        analyzeSource: () =>
+          Promise.resolve({
+            ...sourceFixture(),
+            previewUrl: 'https://p16.tiktokcdn.com/source.jpeg?secret=private',
+          }),
+      },
+      config,
+      previews,
+    );
+    app = createApp(service);
+    const response = await request(app)
+      .post('/api/v1/analyze')
+      .send({ url: publicUrl })
+      .expect(200);
+    const media = analysisSchema.parse(response.body as unknown);
+    if (!media.thumbnail) throw new Error('Missing local preview');
+    expect(media.thumbnail).toMatch(/^\/api\/v1\/analysis\//);
+    expect(response.text).not.toMatch(/tiktokcdn|secret|private/);
+    const preview = await request(app)
+      .get(media.thumbnail)
+      .expect(200)
+      .expect('Content-Type', /image\/webp/);
+    expect(preview.headers['cache-control']).toBe('private, no-store');
+    await request(app)
+      .get(media.thumbnail.replace(/token=.*/, `token=${'x'.repeat(43)}`))
+      .expect(403);
+    await request(app)
+      .get(media.thumbnail + '&url=https://localhost')
+      .expect(400);
+    vi.spyOn(Date, 'now').mockReturnValue(Date.now() + config.JOB_TTL_MS + 1);
+    await request(app).get(media.thumbnail).expect(404);
+    await service.sweep();
+  });
   it('requires the job capability for lookup, SSE and cancellation', async () => {
     const { job, authorization } = await start();
     for (const suffix of ['', '/events'])
@@ -173,7 +221,7 @@ describe('production download endpoints', () => {
     await child.complete();
     const text = await events.text();
     expect(text).toContain('event: job\n');
-    expect(text).toContain('"progress":{}');
+    expect(text).toContain('"progress":{"downloadedBytes":16}');
     expect(text).toContain('"percent":50');
     expect(text).toContain('"status":"ready"');
     expect(text).not.toContain(root);

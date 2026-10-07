@@ -3,31 +3,35 @@
 Zod validates requests and responses. API responses disable caching, carry
 `X-Request-ID` and are rate limited. Production extracts public TikTok sources.
 
-| Method and path                             | Request                                                  | Success                          |
-| ------------------------------------------- | -------------------------------------------------------- | -------------------------------- |
-| `POST /api/v1/analyze`                      | `{ "url": "https://www.tiktok.com/@creator/video/123" }` | 200 analysis                     |
-| `POST /api/v1/downloads`                    | `{ "analysisId": "<UUID>", "formatId": "source-1" }`     | 201 job and access token         |
-| `GET /api/v1/downloads/:jobId`              | Bearer access token                                      | 200 job                          |
-| `GET /api/v1/downloads/:jobId/events`       | Bearer access token                                      | 200 SSE stream                   |
-| `GET /api/v1/downloads/:jobId/file?token=…` | One-use file token                                       | 200 MP4 attachment               |
-| `DELETE /api/v1/downloads/:jobId`           | Bearer access token                                      | 200 job; idempotent cancellation |
-| `GET /health`                               | None                                                     | 200 liveness                     |
-| `GET /ready`                                | None                                                     | 200 ready or 503 not ready       |
+| Method and path                                      | Request                                                  | Success                          |
+| ---------------------------------------------------- | -------------------------------------------------------- | -------------------------------- |
+| `POST /api/v1/analyze`                               | `{ "url": "https://www.tiktok.com/@creator/video/123" }` | 200 analysis                     |
+| `GET /api/v1/analysis/:analysisId/thumbnail?token=…` | Random preview capability                                | 200 local WebP                   |
+| `POST /api/v1/downloads`                             | `{ "analysisId": "<UUID>", "formatId": "source-1" }`     | 201 job and access token         |
+| `GET /api/v1/downloads/:jobId`                       | Bearer access token                                      | 200 job                          |
+| `GET /api/v1/downloads/:jobId/events`                | Bearer access token                                      | 200 SSE stream                   |
+| `GET /api/v1/downloads/:jobId/file?token=…`          | One-use file token                                       | 200 MP4 attachment               |
+| `DELETE /api/v1/downloads/:jobId`                    | Bearer access token                                      | 200 job; idempotent cancellation |
+| `GET /health`                                        | None                                                     | 200 liveness                     |
+| `GET /ready`                                         | None                                                     | 200 ready or 503 not ready       |
 
 Analysis contains `id`, `title`, `creator`, `thumbnail`, `durationSeconds`,
 `sourceUrl`, `formats`, `mock`, `downloadAvailable`. Formats contain `id`,
 `container`, `qualityLabel`, `hasAudio` and optional dimensions and `estimatedBytes`.
-Unknown size is omitted. Remote thumbnails are currently `null`. Eligible responses
+Unknown size is omitted. Thumbnails use the authorized local image policy in
+`RESULT_WORKSPACE.md`; unavailable or unapproved thumbnails are `null`. Eligible responses
 have `mock: false`, `downloadAvailable: true` and known duration within the limit.
 
 Jobs contain `id`, `analysisId`, `formatId`, `status`, `mock` and optional
-`progress`, `fileUrl`, `fileExpiresAt`, `error`. Only creation returns `accessToken`;
+`progress`, `fileUrl`, `fileExpiresAt`, `deliveredFormat`, `error`. `deliveredFormat`
+contains only verified MP4 dimensions, quality label and audio availability.
+Only creation returns `accessToken`;
 send `Authorization: Bearer <accessToken>` for lookup, events and cancellation.
 States are `queued`, `downloading`, `ready`, `delivering`, `delivered`, `cancelled`,
 `error`, `expired`.
 
 SSE sends JSON as `event: job`, starting with the current snapshot. Progress fields
-`percent`, `speedBytesPerSecond`, `sizeBytes` exist only when measured data is
+`downloadedBytes`, `percent`, `speedBytesPerSecond`, `sizeBytes` exist only when measured data is
 available. Unknown totals produce indeterminate progress. Heartbeats are comments.
 Terminal events close the stream; the last subscriber disconnect cancels active
 work. Up to five subscribers are allowed per job.

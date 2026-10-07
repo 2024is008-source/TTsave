@@ -10,7 +10,9 @@
 .feature-card {
   padding: 28px 24px;
   border-radius: 24px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 .feature-card:hover {
   transform: translateY(-4px);
@@ -62,8 +64,16 @@
 ══════════════════════════════════════════ */
 .steps-section {
   background:
-    radial-gradient(ellipse 600px 400px at 5% 50%, rgba(40, 124, 255, 0.06), transparent 60%),
-    radial-gradient(ellipse 500px 400px at 95% 50%, rgba(138, 53, 255, 0.06), transparent 60%),
+    radial-gradient(
+      ellipse 600px 400px at 5% 50%,
+      rgba(40, 124, 255, 0.06),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 500px 400px at 95% 50%,
+      rgba(138, 53, 255, 0.06),
+      transparent 60%
+    ),
     rgba(248, 250, 255, 0.6);
   border-block: 1px solid var(--line-solid);
 }
@@ -97,13 +107,25 @@
   border-radius: 16px;
   margin-bottom: 24px;
   order: -1;
-  background: linear-gradient(135deg, rgba(254,44,85,0.06) 0%, rgba(138,53,255,0.08) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(254, 44, 85, 0.06) 0%,
+    rgba(138, 53, 255, 0.08) 100%
+  );
 }
 .step-grid li:nth-child(2) .step-art {
-  background: linear-gradient(135deg, rgba(138,53,255,0.06) 0%, rgba(40,124,255,0.08) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(138, 53, 255, 0.06) 0%,
+    rgba(40, 124, 255, 0.08) 100%
+  );
 }
 .step-grid li:nth-child(3) .step-art {
-  background: linear-gradient(135deg, rgba(40,124,255,0.06) 0%, rgba(37,244,238,0.08) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(40, 124, 255, 0.06) 0%,
+    rgba(37, 244, 238, 0.08) 100%
+  );
 }
 .step-art img {
   width: 100%;

@@ -28,7 +28,8 @@ filename is server-owned `video.mp4`. No request accepts paths or filenames.
 
 This version delivers progressive HTTPS MP4 formats containing video and audio.
 Separate streams, HLS and DASH are excluded. These formats need no merge; FFmpeg
-is not invoked for them. Startup still verifies both tools.
+is not invoked for them. Startup verifies yt-dlp, FFmpeg, FFprobe and supported
+Chrome impersonation. Extraction and download share fixed impersonation options.
 
 Only prefixed JSON from the structured progress template is parsed. Estimated
 totals and human-readable progress lines are ignored. Percentage requires measured
@@ -37,7 +38,10 @@ a regular, non-symlink MP4 and actual positive file size. Known oversized format
 are excluded; yt-dlp receives size and duration filters. Progress rejects excessive
 sizes and disk usage is checked every 250 ms. Polling can briefly observe an
 overshoot; final validation prevents delivery of an oversized file. The deadline
-covers setup and extraction.
+covers setup, extraction and verification. FFprobe checks MP4, audio, duration and
+selected dimensions before readiness. Mismatched dimensions fail safely and trigger
+cleanup; they are never silently relabeled. Unknown dimensions remain unknown until
+verification. `deliveredFormat` supplies actual dimensions for the completed card.
 
 Cancellation, timeout, failure, last SSE subscriber disconnect and shutdown abort
 the child. Cleanup waits for process closure. SSE uses authenticated fetch
@@ -48,7 +52,9 @@ Ready files have a separate expiring one-use URL. Claiming it atomically changes
 the job to `delivering`; the server streams a fixed safe attachment filename.
 Tokens are omitted from request logs. Completed or interrupted transfers consume
 access and delete data. Cancellation aborts active delivery and waits for cleanup.
-Browser handoff means a download was requested, not that it was saved.
+The UI first shows a completed state and waits for explicit Save MP4. Browser
+handoff means a download was requested, not that it was saved. Clear, navigation
+and Download another video cancel any prepared file that has not been requested.
 
 Periodic sweeps expire jobs and file tokens, delete data and remove expired records.
 They remove aged untracked `job-` directories after restart, even before the first

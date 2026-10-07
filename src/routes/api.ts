@@ -56,6 +56,21 @@ export function createApiRouter(service: DownloaderService) {
       response.off('close', close);
     }
   });
+  router.get('/analysis/:analysisId/thumbnail', async (request, response) => {
+    const { analysisId } = z.object({ analysisId: z.uuid() }).parse(request.params);
+    const { token } = fileQuery.parse(request.query);
+    if (!service.getThumbnail)
+      throw new HttpError(
+        404,
+        'PREVIEW_UNAVAILABLE',
+        'The video preview is unavailable.',
+      );
+    const bytes = await service.getThumbnail(analysisId, token);
+    response.setHeader('Content-Type', 'image/webp');
+    response.setHeader('Cache-Control', 'private, no-store');
+    response.setHeader('Content-Disposition', 'inline; filename="preview.webp"');
+    response.send(bytes);
+  });
   router.post('/downloads', (request, response) => {
     const input = downloadInput.parse(request.body as unknown);
     const controller = new AbortController();

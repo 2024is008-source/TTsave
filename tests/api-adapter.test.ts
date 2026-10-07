@@ -34,7 +34,15 @@ it('maps only API formats and known metrics into the frontend model', async () =
     signal,
   );
   expect(media.formats).toEqual([
-    { id: 'source', label: 'API format', width: 720, height: 1280, sizeBytes: 2048 },
+    {
+      id: 'source',
+      label: 'API format',
+      container: 'mp4',
+      hasAudio: true,
+      width: 720,
+      height: 1280,
+      sizeBytes: 2048,
+    },
   ]);
   expect(fetcher).toHaveBeenCalledWith(
     '/api/v1/analyze',

@@ -1,0 +1,77 @@
+/* Keep the desktop landing composition present throughout the workflow. */
+@media (min-width: 1024px) {
+  .hero[data-downloader-state] {
+    .hero-intro {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 48px;
+      padding-block: 48px;
+    }
+    .hero-art {
+      display: grid;
+    }
+    .hero-description {
+      max-width: 600px;
+    }
+    h1 {
+      font-size: clamp(3.25rem, 5.5vw, 5.25rem);
+      line-height: 1.06;
+    }
+  }
+  .input-capsule {
+    border-radius: 999px;
+    padding: 8px 8px 8px 22px;
+    min-height: 76px;
+    border-color: var(--rim);
+  }
+  .input-capsule .analyze-button {
+    flex-shrink: 0;
+    min-height: 56px;
+    margin: 0;
+    padding: 14px 22px;
+    width: auto;
+    border-radius: 999px;
+  }
+  .input-capsule input {
+    min-width: 0;
+  }
+  .result-workspace-inner {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 560px;
+    padding-block: 12px 44px;
+  }
+}
+
+/* The result card already includes a source thumbnail. Avoid a second phone. */
+.result-preview-column {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .hero[data-downloader-state] .hero-art {
+    display: none;
+  }
+  .hero[data-downloader-state] .hero-intro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .hero-copy {
+    width: 100%;
+    max-width: 660px;
+    margin-inline: auto;
+  }
+  .result-workspace-inner {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 560px;
+  }
+  .input-capsule {
+    flex-wrap: wrap;
+    border-radius: 22px;
+  }
+  .input-capsule .analyze-button {
+    flex-basis: 100%;
+    width: 100%;
+    min-height: 52px;
+    margin: 4px 0 0;
+    border-radius: 16px;
+  }
+}

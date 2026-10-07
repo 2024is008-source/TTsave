@@ -18,16 +18,14 @@ export const mockData = {
       image: 'video-card',
       color: 'pink',
       title: 'Simple Link',
-      description:
-        'Paste a supported TikTok link and prepare the video in a clear flow.',
+      description: 'Paste a supported TikTok link and prepare the video in a clear flow.',
     },
     {
       icon: 'eye',
       image: 'available-quality',
       color: 'blue',
       title: 'Available Quality',
-      description:
-        'Choose from the resolutions and formats provided by the source.',
+      description: 'Choose from the resolutions and formats provided by the source.',
     },
     {
       icon: 'shield',
@@ -41,27 +39,57 @@ export const mockData = {
       image: 'mobile-friendly',
       color: 'cyan',
       title: 'All Devices',
-      description:
-        'Designed for modern phones, tablets, laptops and desktop browsers.',
+      description: 'Designed for modern phones, tablets, laptops and desktop browsers.',
     },
   ],
   steps: [
     {
       image: 'copy-link-step',
-      title: 'Copy a public link',
-      description:
-        'Open a public TikTok video, tap Share, then select Copy link.',
+      title: 'Copy link',
+      description: 'Open a public TikTok video, tap Share, then select Copy link.',
     },
     {
       image: 'paste-link-step',
-      title: 'Paste it into TTSave',
+      title: 'Paste link',
       description: 'Paste the link into the downloader and select Get video.',
     },
     {
       image: 'download-video-step',
-      title: 'Choose an available quality',
+      title: 'Download video',
       description:
         'Review the source details, choose an available option and download the MP4.',
+    },
+  ],
+  moments: [
+    {
+      image: 'hero-video-poster',
+      width: 1080,
+      height: 1920,
+      small: 540,
+      icon: 'video',
+      color: 'pink',
+      title: 'TikTok videos',
+      copy: 'Save supported public video posts as MP4, with audio.',
+    },
+    {
+      image: 'moment-nature',
+      width: 600,
+      height: 800,
+      small: 300,
+      icon: 'eye',
+      color: 'blue',
+      title: 'Source quality',
+      copy: 'Review the available formats before choosing your download.',
+    },
+    {
+      image: 'moment-city',
+      width: 600,
+      height: 800,
+      small: 300,
+      icon: 'device',
+      color: 'violet',
+      title: 'Your device',
+      copy: 'Use your browser on a phone, tablet or computer.',
     },
   ],
   faqs: [

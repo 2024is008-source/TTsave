@@ -16,7 +16,10 @@ const tools = await checkTools({
   logger,
 });
 const downloads = new ProductionDownloaderService();
-const app = createApp(downloads, () => tools.ytDlp && tools.ffmpeg && !shuttingDown);
+const app = createApp(
+  downloads,
+  () => tools.ytDlp && tools.ffmpeg && tools.ffprobe && tools.chrome && !shuttingDown,
+);
 
 const server: Server = app.listen(env.PORT, env.HOST, () => {
   logger.info({ host: env.HOST, port: env.PORT }, 'TTSave server listening');

@@ -1,0 +1,53 @@
+<section class="section container moments-section" aria-labelledby="moments-title">
+  <div class="section-heading">
+    <span class="showcase-label">From feed to favorite</span>
+    <h2 id="moments-title">
+      Good moments. <span class="gradient-text">Worth keeping.</span>
+    </h2>
+    <p>
+      Travel, everyday inspiration and everything in between. Start with a public video
+      link.
+    </p>
+  </div>
+  <div class="moment-grid">
+    <% moments.forEach((moment) => { %>
+    <article class="moment-card glass-card">
+      <%- include('picture', { imageClass: 'moment-image', imageName: moment.image,
+      imageWidth: moment.width, imageHeight: moment.height, smallWidth: moment.small,
+      imageSizes: '120px', imageAlt: '', imageLoading: 'lazy' }) %>
+      <div class="moment-copy">
+        <div class="moment-title">
+          <span class="icon-well <%= moment.color %>"
+            ><%- include('icon', { name: moment.icon }) %></span
+          >
+          <h3><%= moment.title %></h3>
+        </div>
+        <p><%= moment.copy %></p>
+      </div>
+    </article>
+    <% }) %>
+  </div>
+  <div class="capability-strip glass-card" aria-label="Download capabilities">
+    <div>
+      <span class="icon-well pink"><%- include('icon', { name: 'download' }) %></span>
+      <div>
+        <strong>MP4 video</strong>
+        <p>Video and audio together</p>
+      </div>
+    </div>
+    <div>
+      <span class="icon-well blue"><%- include('icon', { name: 'no-signup' }) %></span>
+      <div>
+        <strong>No signup</strong>
+        <p>Start with a public link</p>
+      </div>
+    </div>
+    <div>
+      <span class="icon-well violet"><%- include('icon', { name: 'eye' }) %></span>
+      <div>
+        <strong>Original source</strong>
+        <p>Available quality, clearly shown</p>
+      </div>
+    </div>
+  </div>
+</section>

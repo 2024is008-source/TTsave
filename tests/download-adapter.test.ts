@@ -15,7 +15,21 @@ it('reads multiple structured SSE events and preserves real progress and authori
       status: 'downloading',
       progress: { percent: 25, speedBytesPerSecond: 256, sizeBytes: 1024 },
     },
-    { ...base, status: 'ready', fileUrl, fileExpiresAt: Date.now() + 60_000 },
+    {
+      ...base,
+      status: 'ready',
+      fileUrl,
+      fileExpiresAt: Date.now() + 60_000,
+      progress: { sizeBytes: 1024 },
+      deliveredFormat: {
+        id: 'source-1',
+        container: 'mp4',
+        qualityLabel: '576p',
+        width: 576,
+        height: 1024,
+        hasAudio: true,
+      },
+    },
   ];
   const fetcher = vi.fn<typeof fetch>((url) =>
     Promise.resolve(
@@ -37,7 +51,12 @@ it('reads multiple structured SSE events and preserves real progress and authori
   const report = vi.fn<(progress: unknown) => void>();
   await expect(
     adapter.waitForDownload(job, new AbortController().signal, report),
-  ).resolves.toEqual({ url: fileUrl });
+  ).resolves.toEqual({
+    url: fileUrl,
+    expiresAt: expect.any(Number),
+    qualityLabel: '576p',
+    sizeBytes: 1024,
+  });
   expect(report.mock.calls.map(([value]: [unknown]) => value)).toEqual([
     {},
     { percent: 25, speedBytesPerSecond: 256, sizeBytes: 1024 },

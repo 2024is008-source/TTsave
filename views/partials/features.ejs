@@ -1,23 +1,14 @@
 <section class="section container" id="features" aria-labelledby="features-title">
   <div class="section-heading">
-    <span class="kicker">Thoughtfully simple</span>
+    <span class="showcase-label">Why choose TTSave</span>
     <h2 id="features-title">
-      A clear space.<br class="mobile-break" />
-      For your favorites.
+      Thoughtful features. <span class="gradient-text">Effortlessly simple.</span>
     </h2>
-    <p>Everything has a purpose. Nothing gets in the way.</p>
+    <p>A clear way to save public TikTok videos, in the quality the source provides.</p>
   </div>
   <div class="feature-grid">
     <% features.forEach((feature) => { %>
     <article class="glass-card feature-card">
-      <% if (feature.image) { %> <%- include('picture', { imageClass: 'feature-art',
-      imageName: feature.image, imageWidth: 800, imageHeight: 600, smallWidth: 400,
-      imageSizes: '(max-width: 600px) 100vw, (max-width: 1100px) 45vw, 280px', imageAlt:
-      '', imageLoading: 'lazy' }) %> <% } else { %>
-      <div class="feature-art privacy-art" aria-hidden="true">
-        <%- include('icon', { name: 'shield' }) %><span>Public links only</span>
-      </div>
-      <% } %>
       <div class="icon-well <%= feature.color %>">
         <%- include('icon', { name: feature.icon }) %>
       </div>

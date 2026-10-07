@@ -33,15 +33,27 @@ export function createApiAdapter(transport: typeof fetch = fetch): DownloaderAda
     }
   };
   return {
+    cancelDownload: cancel,
     async analyze(url, signal) {
       const data = analysisSchema.parse(await read('/analyze', signal, { url }));
       return {
         id: data.id,
         title: data.title,
+        creator: data.creator,
+        durationSeconds: data.durationSeconds,
+        thumbnail: data.thumbnail,
         downloadAvailable: data.downloadAvailable,
         formats: data.formats.map((format) => ({
           id: format.id,
           label: format.qualityLabel,
+          container: format.container,
+          hasAudio: format.hasAudio,
+          ...(format.compatibility === undefined
+            ? {}
+            : { compatibility: format.compatibility }),
+          ...(format.bitrateKbps === undefined
+            ? {}
+            : { bitrateKbps: format.bitrateKbps }),
           ...(format.width === undefined ? {} : { width: format.width }),
           ...(format.height === undefined ? {} : { height: format.height }),
           ...(format.estimatedBytes === undefined
@@ -131,7 +143,18 @@ export function createApiAdapter(transport: typeof fetch = fetch): DownloaderAda
               if (!update.fileUrl?.startsWith(`/api/v1/downloads/${job.id}/file?token=`))
                 throw new Error('The file response was invalid.');
               handedOff = true;
-              return { url: update.fileUrl };
+              return {
+                url: update.fileUrl,
+                ...(update.deliveredFormat === undefined
+                  ? {}
+                  : { qualityLabel: update.deliveredFormat.qualityLabel }),
+                ...(update.fileExpiresAt === undefined
+                  ? {}
+                  : { expiresAt: update.fileExpiresAt }),
+                ...(update.progress?.sizeBytes === undefined
+                  ? {}
+                  : { sizeBytes: update.progress.sizeBytes }),
+              };
             }
             report(update.progress ?? {});
             boundary = buffer.indexOf('\n\n');

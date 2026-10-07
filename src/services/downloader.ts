@@ -10,6 +10,9 @@ import { runTool, type AnalysisContext } from './tool-process.js';
 import { parseDownloadProgress, PROGRESS_TEMPLATE } from './download-progress.js';
 import { HttpError } from '../middleware/error-handler.js';
 import { videoUrlSchema } from '../shared/video-url.js';
+import { publicExtractorOptions } from './extractor-options.js';
+import { PreviewStore } from './previews.js';
+import { verifyVideo } from './verify-video.js';
 
 type MetadataProvider = {
   analyzeSource: (url: string, context: AnalysisContext) => Promise<AnalyzedSource>;
@@ -55,10 +58,13 @@ export class ProductionDownloaderService implements DownloaderService {
   private root: Promise<string> | null = null;
   private sweeping: Promise<void> | null = null;
   private readonly sweepTimer: ReturnType<typeof setInterval>;
+  private readonly previews: PreviewStore;
   constructor(
     private readonly analyzer: MetadataProvider = new YtDlpAnalyzer(),
     private readonly config: Environment = env,
+    previews?: PreviewStore,
   ) {
+    this.previews = previews ?? new PreviewStore(config);
     this.sweepTimer = setInterval(() => {
       void this.sweep().catch(() =>
         logger.warn({ code: 'CLEANUP_FAILED' }, 'Job sweep will be retried'),
@@ -115,6 +121,7 @@ export class ProductionDownloaderService implements DownloaderService {
           'No supported video format within the download limits is available.',
         );
       source.media.downloadAvailable = true;
+      await this.previews.sweep();
       for (const [id, entry] of this.analyses)
         if (entry.expires <= Date.now()) this.analyses.delete(id);
       if (this.analyses.size >= 200)
@@ -123,9 +130,18 @@ export class ProductionDownloaderService implements DownloaderService {
           'SERVICE_CAPACITY',
           'TTSave is busy. Please try again later.',
         );
+      const expires = Date.now() + this.config.JOB_TTL_MS;
+      source.media.thumbnail = await this.previews.create(
+        source.media.id,
+        source.previewUrl,
+        context,
+        expires,
+      );
+      if (context.signal.aborted) await this.previews.delete(source.media.id);
+      context.signal.throwIfAborted();
       this.analyses.set(source.media.id, {
         source,
-        expires: Date.now() + this.config.JOB_TTL_MS,
+        expires,
       });
       return structuredClone(source.media);
     } finally {
@@ -180,6 +196,8 @@ export class ProductionDownloaderService implements DownloaderService {
         signal: controller.signal,
         requestId: context?.requestId ?? randomUUID(),
         logger: context?.logger ?? logger,
+        jobId: value.id,
+        stage: 'download',
       },
       done: Promise.resolve(),
       cleaning: null,
@@ -192,13 +210,16 @@ export class ProductionDownloaderService implements DownloaderService {
       this.cancelRecord(record);
     };
     context?.signal.addEventListener('abort', abort, { once: true });
-    record.done = this.execute(record, analysis.source.media.sourceUrl, selector).finally(
-      () => {
-        context?.signal.removeEventListener('abort', abort);
-        this.activeJobs -= 1;
-        release();
-      },
-    );
+    record.done = this.execute(
+      record,
+      analysis.source.media.sourceUrl,
+      selector,
+      format,
+    ).finally(() => {
+      context?.signal.removeEventListener('abort', abort);
+      this.activeJobs -= 1;
+      release();
+    });
     return { ...this.snapshot(record), accessToken: record.accessToken };
   }
   private lookup(id: string): Record {
@@ -344,7 +365,12 @@ export class ProductionDownloaderService implements DownloaderService {
     }
     return total;
   }
-  private async execute(record: Record, input: string, selector: string) {
+  private async execute(
+    record: Record,
+    input: string,
+    selector: string,
+    selected: Analysis['formats'][number],
+  ) {
     const deadline = setTimeout(() => {
       record.failure = new HttpError(
         504,
@@ -392,17 +418,11 @@ export class ProductionDownloaderService implements DownloaderService {
       }, 250);
       watcher.unref();
       const url = videoUrlSchema.parse(input);
+      const tDownloadStart = performance.now();
       const result = await runTool(
         this.config.YTDLP_PATH,
         [
-          '--ignore-config',
-          '--no-plugin-dirs',
-          '--no-cache-dir',
-          '--no-cookies',
-          '--no-cookies-from-browser',
-          '--no-geo-bypass',
-          '--no-playlist',
-          '--no-warnings',
+          ...publicExtractorOptions,
           '--quiet',
           '--progress',
           '--newline',
@@ -450,6 +470,7 @@ export class ProductionDownloaderService implements DownloaderService {
         record.context,
       );
       record.controller.signal.throwIfAborted();
+      const tDownloadMs = Math.round(performance.now() - tDownloadStart);
       if (result.code !== 0) {
         const failure = extractorError(result.stderr);
         throw failure.code === 'EXTRACTOR_FAILED'
@@ -491,7 +512,22 @@ export class ProductionDownloaderService implements DownloaderService {
         await handle.close();
       }
       record.controller.signal.throwIfAborted();
+      record.context.stage = 'verification';
+      const verified = await verifyVideo(filename, selected, this.config, record.context);
+      record.controller.signal.throwIfAborted();
       record.fileSize = info.size;
+      const deliveredQualityLabel =
+        verified.width && verified.height
+          ? `${String(Math.min(verified.width, verified.height))}p`
+          : selected.qualityLabel;
+      record.value.deliveredFormat = {
+        id: selected.id,
+        container: 'mp4',
+        hasAudio: true,
+        qualityLabel: deliveredQualityLabel,
+        ...(verified.width === undefined ? {} : { width: verified.width }),
+        ...(verified.height === undefined ? {} : { height: verified.height }),
+      };
       record.fileToken = token();
       record.value.status = 'ready';
       record.value.fileExpiresAt = Math.min(
@@ -500,6 +536,16 @@ export class ProductionDownloaderService implements DownloaderService {
       );
       record.value.fileUrl = `/api/v1/downloads/${record.value.id}/file?token=${record.fileToken}`;
       record.value.progress = { sizeBytes: info.size };
+      record.context.logger.info(
+        {
+          requestId: record.context.requestId,
+          jobId: record.value.id,
+          downloadMs: tDownloadMs,
+          fileSizeBytes: info.size,
+          qualityLabel: deliveredQualityLabel,
+        },
+        'Download job ready',
+      );
       this.publish(record);
     } catch (error) {
       if (!terminalStates.has(record.value.status)) {
@@ -526,6 +572,8 @@ export class ProductionDownloaderService implements DownloaderService {
             requestId: record.context.requestId,
             jobId: record.value.id,
             code: failure.code,
+            stage: record.context.stage,
+            failureCategory: failure.code,
           },
           'Download job failed',
         );
@@ -611,6 +659,7 @@ export class ProductionDownloaderService implements DownloaderService {
   sweep(): Promise<void> {
     if (this.sweeping) return this.sweeping;
     this.sweeping = (async () => {
+      await this.previews.sweep();
       for (const [id, entry] of this.analyses)
         if (entry.expires <= Date.now()) this.analyses.delete(id);
       for (const [id, record] of this.jobs) {
@@ -669,5 +718,9 @@ export class ProductionDownloaderService implements DownloaderService {
     );
     this.analyses.clear();
     this.jobs.clear();
+    await this.previews.dispose();
+  }
+  getThumbnail(id: string, token: string) {
+    return this.previews.get(id, token);
   }
 }

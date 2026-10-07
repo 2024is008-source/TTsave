@@ -6,7 +6,12 @@ import { ProductionDownloaderService } from '../src/services/downloader.js';
 import { parseEnvironment } from '../src/config/env.js';
 import { createLogger } from '../src/config/logger.js';
 import { parseDownloadProgress } from '../src/services/download-progress.js';
-import { downloadChild, sourceFixture, publicUrl } from './fixtures/download.js';
+import {
+  downloadChild,
+  sourceFixture,
+  publicUrl,
+  probeChild,
+} from './fixtures/download.js';
 
 const spawnMock = vi.hoisted(() =>
   vi.fn<(executable: string, args: string[], options: unknown) => unknown>(),
@@ -34,6 +39,7 @@ beforeEach(async () => {
   metadata.analyzeSource.mockImplementation(() => Promise.resolve(sourceFixture()));
   children.length = 0;
   spawnMock.mockImplementation((_executable, args) => {
+    if (_executable === 'ffprobe') return probeChild();
     const child = downloadChild(args);
     children.push(child);
     return child;
@@ -67,6 +73,38 @@ async function ready() {
 }
 
 describe('production download jobs', () => {
+  it.each([
+    {
+      streams: [{ codec_type: 'video', width: 720, height: 1280 }],
+      format: { duration: '30', format_name: 'mp4' },
+    },
+    {
+      streams: [
+        { codec_type: 'video', width: 360, height: 640 },
+        { codec_type: 'audio' },
+      ],
+      format: { duration: '30', format_name: 'mp4' },
+    },
+    {
+      streams: [
+        { codec_type: 'video', width: 720, height: 1280 },
+        { codec_type: 'audio' },
+      ],
+      format: { duration: '999999', format_name: 'mp4' },
+    },
+  ])('rejects an undeliverable file and cleans temporary data: %j', async (probe) => {
+    spawnMock.mockImplementation((executable, args) => {
+      if (executable === 'ffprobe') return probeChild(probe);
+      const child = downloadChild(args);
+      children.push(child);
+      return child;
+    });
+    const { job, child } = await start();
+    await child.complete();
+    await vi.waitFor(() => expect(service.getJob(job.id).status).toBe('error'));
+    expect(service.getJob(job.id).error?.code).toBe('VIDEO_VERIFICATION_FAILED');
+    await vi.waitFor(async () => expect(await readdir(root)).toEqual([]));
+  });
   it('uses unpredictable IDs, capability authorization and private server-controlled output', async () => {
     const { media, job, child } = await ready();
     expect(media.downloadAvailable).toBe(true);
@@ -91,6 +129,8 @@ describe('production download jobs', () => {
         'video.mp4',
         '--fixup',
         'never',
+        '--impersonate',
+        'chrome',
         '--progress-template',
       ]),
       expect.objectContaining({ shell: false }),
@@ -111,12 +151,13 @@ describe('production download jobs', () => {
     child.stdout.write(
       'TTSave:{"downloadedBytes":10,"totalBytes":null,"speedBytesPerSecond":null}\n',
     );
-    expect(service.getJob(job.id).progress).toEqual({});
+    expect(service.getJob(job.id).progress).toEqual({ downloadedBytes: 10 });
     child.stdout.write(
       'TTSave:{"downloadedBytes":16,"totalBytes":32,"speedBytesPerSecond":128}\n',
     );
     expect(service.getJob(job.id).progress).toEqual({
       percent: 50,
+      downloadedBytes: 16,
       sizeBytes: 32,
       speedBytesPerSecond: 128,
     });
@@ -301,12 +342,12 @@ describe('structured extractor progress', () => {
         'TTSave:{"downloadedBytes":16,"totalBytes":"NA","total_bytes_estimate":32}',
         1024,
       ),
-    ).toEqual({});
+    ).toEqual({ downloadedBytes: 16 });
     expect(
       parseDownloadProgress(
         'TTSave:{"downloadedBytes":0,"totalBytes":32,"speedBytesPerSecond":0}',
         1024,
       ),
-    ).toEqual({ percent: 0, sizeBytes: 32, speedBytesPerSecond: 0 });
+    ).toEqual({ percent: 0, downloadedBytes: 0, sizeBytes: 32, speedBytesPerSecond: 0 });
   });
 });

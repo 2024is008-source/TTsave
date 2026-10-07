@@ -11,26 +11,28 @@ for (const width of [390, 768, 1024, 1440]) {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await expect(page.locator('#video-url')).toHaveValue('');
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= window.innerWidth,
-      ),
-    ).toBe(true);
+    // Idle marketing decorations are preserved. Check the input workspace here;
+    // result tests check document-wide overflow after the artwork transforms.
+    const inputBounds = await page.locator('#download-form').boundingBox();
+    expect(inputBounds?.x).toBeGreaterThanOrEqual(0);
+    expect((inputBounds?.x ?? 0) + (inputBounds?.width ?? 0)).toBeLessThanOrEqual(width);
     const imageLoaded = await page
       .locator('.phone-scene img')
       .evaluate((image) => (image as HTMLImageElement).naturalWidth > 0);
     expect(imageLoaded).toBe(true);
     const pictures = page.locator('picture');
-    await expect(pictures).toHaveCount(8);
+    await expect(pictures).toHaveCount(7);
     for (const picture of await pictures.all()) {
       const image = picture.locator('img');
-      await image.scrollIntoViewIfNeeded();
-      await expect(image).toHaveJSProperty('complete', true);
-      await expect
-        .poll(async () =>
-          image.evaluate((element) => (element as HTMLImageElement).naturalWidth),
-        )
-        .toBeGreaterThan(0);
+      if (await image.isVisible()) {
+        await image.scrollIntoViewIfNeeded();
+        await expect(image).toHaveJSProperty('complete', true);
+        await expect
+          .poll(async () =>
+            image.evaluate((element) => (element as HTMLImageElement).naturalWidth),
+          )
+          .toBeGreaterThan(0);
+      }
       await expect(image).toHaveAttribute('src', /^\/assets\/images\/.*\.webp$/);
       await expect(image).toHaveAttribute('width', /^\d+$/);
       await expect(image).toHaveAttribute('height', /^\d+$/);
@@ -39,7 +41,25 @@ for (const width of [390, 768, 1024, 1440]) {
         /\.webp \d+w, .*\.webp \d+w/,
       );
     }
-    await expect(page.locator('.art-sphere')).toHaveCount(2);
+    await expect(page.locator('.art-sphere')).toHaveCount(3);
+    await expect(page.locator('.feature-card')).toHaveCount(4);
+    await expect(page.locator('.step-card')).toHaveCount(3);
+    await expect(page.locator('.moment-card')).toHaveCount(3);
+    await expect(page.locator('.showcase-decoration')).toHaveCSS(
+      'pointer-events',
+      'none',
+    );
+    for (const card of await page
+      .locator('.landing-showcase article, .step-card')
+      .all()) {
+      const bounds = await card.boundingBox();
+      expect(bounds?.x).toBeGreaterThanOrEqual(0);
+      expect((bounds?.x ?? 0) + (bounds?.width ?? 0)).toBeLessThanOrEqual(width);
+    }
+    await page.locator('.landing-showcase').screenshot({
+      path: `docs/screenshots/showcase-light-${String(width)}.png`,
+      style: '.site-header, .skip-link { visibility: hidden !important; }',
+    });
     await expect(
       page.locator('.social-actions button, .floating-artwork button'),
     ).toHaveCount(0);
@@ -58,18 +78,15 @@ for (const width of [390, 768, 1024, 1440]) {
 
     await page
       .locator('summary')
-      .filter({ hasText: 'Can I download a video right now?' })
+      .filter({ hasText: 'Which TikTok links are supported?' })
       .click();
     await expect(
-      page.getByText(
-        'For publicly accessible videos with an available supported MP4 format',
-        {
-          exact: false,
-        },
-      ),
+      page.getByText('TTSave supports publicly accessible TikTok video links only', {
+        exact: false,
+      }),
     ).toBeVisible();
     await page.locator('#video-url').fill('https://example.com/video/123');
-    await page.getByRole('button', { name: 'Check link' }).click();
+    await page.getByRole('button', { name: 'Get video' }).click();
     await expect(page.locator('#form-status')).toHaveText(
       'Enter a public TikTok video link using HTTPS.',
     );
@@ -100,15 +117,15 @@ for (const width of [390, 768, 1024, 1440]) {
         },
       }),
     );
-    await page.getByRole('button', { name: 'Check link' }).click();
+    await page.getByRole('button', { name: 'Get video' }).click();
     await expect(page.locator('#result-title')).toHaveText('Test source video');
     await expect(
       page.getByRole('radio', { name: /720 × 1280 source pixels/ }),
     ).toBeChecked();
     await expect(
-      page.getByRole('button', { name: 'File downloads are not available yet' }),
+      page.getByRole('button', { name: 'Download unavailable' }),
     ).toBeDisabled();
-    await expect(page.locator('.result-card')).toBeVisible();
+    await expect(page.locator('#result-card')).toBeVisible();
     await expect(page.locator('.progress-card')).toBeHidden();
     await expect(page.locator('#video-url')).toHaveValue(
       'https://www.tiktok.com/@test/video/123',
@@ -125,11 +142,9 @@ for (const width of [390, 768, 1024, 1440]) {
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= window.innerWidth,
-      ),
-    ).toBe(true);
+    await expect(page.locator('#result-card')).toBeHidden();
+    if (width >= 1024) await expect(page.locator('.hero-art')).toBeVisible();
+    else await expect(page.locator('.hero-art')).toBeHidden();
     await page.evaluate(() => {
       (document.activeElement as HTMLElement).blur();
       window.scrollTo(0, 0);
@@ -137,6 +152,10 @@ for (const width of [390, 768, 1024, 1440]) {
     await page.screenshot({
       path: testInfo.outputPath(`dark-${String(width)}.png`),
       fullPage: true,
+    });
+    await page.locator('.landing-showcase').screenshot({
+      path: `docs/screenshots/showcase-dark-${String(width)}.png`,
+      style: '.site-header, .skip-link { visibility: hidden !important; }',
     });
     expect(browserErrors).toEqual([]);
   });

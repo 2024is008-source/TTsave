@@ -1,0 +1,50 @@
+{
+  "source": "https://www.tiktok.com/@patroxofficial/video/6742501081818877190",
+  "live": true,
+  "analysis": {
+    "title": "Tag 1 Friend reverse this Video and look what happens 🤩😱 @skyandtami ...",
+    "creator": "patrox",
+    "durationSeconds": 27,
+    "formats": [
+      {
+        "id": "source-1",
+        "container": "mp4",
+        "width": 576,
+        "height": 1024,
+        "qualityLabel": "576p",
+        "estimatedBytes": 1007170,
+        "hasAudio": true,
+        "compatibility": "broad",
+        "bitrateKbps": 293
+      },
+      {
+        "id": "source-2",
+        "container": "mp4",
+        "qualityLabel": "Available MP4",
+        "hasAudio": true,
+        "compatibility": "broad"
+      }
+    ]
+  },
+  "preview": {
+    "status": 200
+  },
+  "download": {
+    "status": "error",
+    "error": {
+      "code": "VIDEO_VERIFICATION_FAILED",
+      "message": "The source did not deliver the selected MP4 video with audio. Check the public link again.",
+      "retryable": true,
+      "fieldErrors": {},
+      "requestId": "07fd193f-ad42-41b5-971c-b226530c54ac"
+    },
+    "progress": {
+      "downloadedBytes": 1007170,
+      "percent": 100,
+      "speedBytesPerSecond": 520498.10075568984,
+      "sizeBytes": 1007170
+    },
+    "eventCount": 7
+  },
+  "remainingTemporaryEntries": []
+}

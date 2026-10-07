@@ -17,14 +17,15 @@
   --blue: #287cff;
   --cyan: #25f4ee;
   --gradient: linear-gradient(110deg, #ff2f8e 0%, #b635f2 42%, #5a4fff 70%, #168bff 100%);
-  --gradient-alt: linear-gradient(135deg, #fe2c55 0%, #ff3fa4 32%, #8a35ff 68%, #287cff 100%);
+  --gradient-alt: linear-gradient(
+    135deg,
+    #fe2c55 0%,
+    #ff3fa4 32%,
+    #8a35ff 68%,
+    #287cff 100%
+  );
   font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    'SF Pro Display',
-    'SF Pro Text',
-    'Segoe UI',
-    Inter,
+    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Inter,
     sans-serif;
   color: var(--ink);
   background: var(--canvas);
@@ -48,7 +49,13 @@
   --blue: #93beff;
   --cyan: #7af0eb;
   --gradient: linear-gradient(110deg, #ff6c98 0%, #e68bdf 42%, #bf99ff 66%, #7bb2ff 100%);
-  --gradient-alt: linear-gradient(135deg, #ff80ad 0%, #e68bdf 32%, #bf99ff 68%, #7bb2ff 100%);
+  --gradient-alt: linear-gradient(
+    135deg,
+    #ff80ad 0%,
+    #e68bdf 32%,
+    #bf99ff 68%,
+    #7bb2ff 100%
+  );
 }
 
 * {

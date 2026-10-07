@@ -47,6 +47,7 @@ export function parseDownloadProgress(
       ? (downloaded / total) * 100
       : undefined;
   return {
+    ...(downloaded === undefined ? {} : { downloadedBytes: downloaded }),
     ...(percent !== undefined && percent <= 100 ? { percent } : {}),
     ...(total === undefined ? {} : { sizeBytes: total }),
     ...(typeof speedBytesPerSecond === 'number' ? { speedBytesPerSecond } : {}),

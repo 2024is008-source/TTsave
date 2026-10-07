@@ -76,6 +76,12 @@ overlap the link-entry controls, the subject's face or the phone caption.
 
 ## Checks
 
+The lower landing-page redesign replaces the displayed flat feature/step images
+with compact HTML/SVG icon cards and four new generated raster assets. See
+[SHOWCASE_ARTWORK.md](SHOWCASE_ARTWORK.md) for current dimensions, source paths,
+generation prompts and responsive placement. Legacy feature/step assets remain
+available but are no longer rendered by these sections.
+
 Run `npm run format:check`, `npm run check`, and `npm run test:ui`. Browser tests
 cover all four requested widths in both themes, image decoding and local paths,
 responsive source attributes, dimensions, noninteractive decorative elements,

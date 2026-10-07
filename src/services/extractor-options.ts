@@ -1,0 +1,21 @@
+/** Identical anonymous network setup for metadata and file extraction. */
+export const publicExtractorOptions = [
+  '--ignore-config',
+  '--no-plugin-dirs',
+  '--no-cache-dir',
+  '--no-cookies',
+  '--no-cookies-from-browser',
+  '--no-geo-bypass',
+  '--no-playlist',
+  '--no-warnings',
+  '--socket-timeout',
+  '10',
+  '--retries',
+  '0',
+  '--extractor-retries',
+  '0',
+  '--use-extractors',
+  'TikTok,TikTokVM',
+  '--impersonate',
+  'chrome',
+];

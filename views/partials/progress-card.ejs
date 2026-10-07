@@ -1,14 +1,13 @@
-<section
-  id="progress-card"
-  class="glass-card progress-card"
-  aria-labelledby="progress-title"
-  hidden
->
+<section id="progress-card" class="progress-card" aria-labelledby="progress-title" hidden>
   <h2 id="progress-title" tabindex="-1">Preparing your file</h2>
+  <p id="progress-quality"></p>
   <progress
     id="download-progress"
     max="100"
     aria-label="File preparation progress"
   ></progress>
   <div id="progress-metrics"></div>
+  <button type="button" class="secondary-button progress-cancel">
+    Cancel download request
+  </button>
 </section>

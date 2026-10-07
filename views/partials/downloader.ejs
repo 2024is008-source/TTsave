@@ -15,21 +15,36 @@
         aria-describedby="availability form-status"
       />
       <button class="clear-button" type="button" aria-label="Clear video link" hidden>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
       </button>
       <button class="paste-button" type="button">Paste</button>
+      <button class="primary-button analyze-button" type="submit">
+        <%- include('icon', { name: 'download' }) %>
+        <span class="analyze-label">Get video</span>
+      </button>
     </div>
-    <button class="primary-button analyze-button" type="submit">
-      <%- include('icon', { name: 'download' }) %> Get video
-    </button>
     <button class="cancel-button" type="button" hidden>Cancel</button>
     <div id="analyzing-indicator" class="analyzing-indicator" tabindex="-1" hidden>
       <span class="analyzing-spinner" aria-hidden="true"></span
-      ><span>Checking your public video link. You can cancel this request.</span>
+      ><span class="fetching-copy"
+        ><strong>Fetching video info…</strong
+        ><span>Analyzing the TikTok link, please wait…</span></span
+      >
     </div>
-    <p class="availability" id="availability">
-      <%= availability %>
-    </p>
+    <p class="availability" id="availability"><%= availability %></p>
   </form>
   <p
     class="form-status"
@@ -39,5 +54,4 @@
     aria-atomic="true"
     tabindex="-1"
   ></p>
-  <%- include('result-card') %> <%- include('progress-card') %>
 </div>

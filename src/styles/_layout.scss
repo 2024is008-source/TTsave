@@ -15,10 +15,26 @@ body::before {
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 680px 520px at 8% 18%, rgba(37, 244, 238, 0.13), transparent 55%),
-    radial-gradient(ellipse 600px 500px at 88% 35%, rgba(254, 44, 85, 0.1), transparent 50%),
-    radial-gradient(ellipse 800px 600px at 60% 80%, rgba(138, 53, 255, 0.08), transparent 55%),
-    radial-gradient(ellipse 500px 400px at 25% 65%, rgba(40, 124, 255, 0.07), transparent 50%);
+    radial-gradient(
+      ellipse 680px 520px at 8% 18%,
+      rgba(37, 244, 238, 0.13),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 600px 500px at 88% 35%,
+      rgba(254, 44, 85, 0.1),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 800px 600px at 60% 80%,
+      rgba(138, 53, 255, 0.08),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 500px 400px at 25% 65%,
+      rgba(40, 124, 255, 0.07),
+      transparent 50%
+    );
 }
 body > * {
   position: relative;
@@ -94,7 +110,9 @@ body > * {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(8px);
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 .theme-toggle:hover,
 .menu-toggle:hover {
@@ -114,7 +132,9 @@ body > * {
   font-weight: 700;
   font-size: 0.9375rem;
   letter-spacing: -0.01em;
-  transition: opacity 0.15s, transform 0.15s;
+  transition:
+    opacity 0.15s,
+    transform 0.15s;
 }
 .header-cta:hover {
   opacity: 0.88;

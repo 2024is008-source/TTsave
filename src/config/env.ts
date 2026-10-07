@@ -35,6 +35,9 @@ const envSchema = z.object({
   TRUST_PROXY: booleanFromString,
   YTDLP_PATH: executable('yt-dlp'),
   FFMPEG_PATH: executable('ffmpeg'),
+  FFPROBE_PATH: executable('ffprobe'),
+  PREVIEW_MAX_BYTES: z.coerce.number().int().min(1024).max(8_388_608).default(3_145_728),
+  PREVIEW_TIMEOUT_MS: z.coerce.number().int().min(1000).max(30_000).default(8000),
   ANALYSIS_TIMEOUT_MS: z.coerce.number().int().min(1000).max(120_000).default(30_000),
   ANALYSIS_MAX_OUTPUT_BYTES: z.coerce
     .number()

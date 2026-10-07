@@ -1,0 +1,78 @@
+{
+  "source": "https://www.tiktok.com/@hankgreen1/video/7047596209028074758",
+  "live": true,
+  "analysis": {
+    "title": "TikTok video #7047596209028074758",
+    "creator": "hankgreen1",
+    "durationSeconds": 21,
+    "formats": [
+      {
+        "id": "source-1",
+        "container": "mp4",
+        "width": 576,
+        "height": 1024,
+        "qualityLabel": "576p",
+        "estimatedBytes": 2183224,
+        "hasAudio": true,
+        "compatibility": "broad",
+        "bitrateKbps": 815
+      },
+      {
+        "id": "source-2",
+        "container": "mp4",
+        "qualityLabel": "Available MP4",
+        "hasAudio": true,
+        "compatibility": "broad"
+      }
+    ]
+  },
+  "preview": {
+    "status": 200
+  },
+  "selectedFormat": {
+    "id": "source-1",
+    "container": "mp4",
+    "width": 576,
+    "height": 1024,
+    "qualityLabel": "576p",
+    "estimatedBytes": 2183224,
+    "hasAudio": true,
+    "compatibility": "broad",
+    "bitrateKbps": 815
+  },
+  "download": {
+    "status": "ready",
+    "progress": {
+      "sizeBytes": 2183224
+    },
+    "eventCount": 10
+  },
+  "delivery": {
+    "status": 200,
+    "bytes": 2183224,
+    "disposition": "attachment; filename=\"TTSave-video.mp4\"",
+    "mp4Header": "ftyp"
+  },
+  "audioAndResolution": "Passed server FFprobe verification before delivery",
+  "replay": 409,
+  "probe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_type": "video",
+        "width": 576,
+        "height": 1024
+      },
+      {
+        "codec_type": "audio"
+      }
+    ],
+    "format": {
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "duration": "21.268005"
+    }
+  },
+  "decodeExitCode": 0,
+  "remainingTemporaryEntries": []
+}

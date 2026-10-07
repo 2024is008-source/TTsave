@@ -23,24 +23,69 @@ export function initializeDownloader(root: Document = document, options: Options
   };
   const input = get<HTMLInputElement>('#video-url');
   const submit = get<HTMLButtonElement>('.analyze-button');
+  const submitLabel = root.querySelector<HTMLElement>('.analyze-label') ?? submit;
   const paste = get<HTMLButtonElement>('.paste-button');
   const clear = get<HTMLButtonElement>('.clear-button');
   const cancel = get<HTMLButtonElement>('.cancel-button');
   const status = get('#form-status');
   const result = get('#result-card');
   const resultHeading = get('#result-title');
+  const resultWorkspace = root.querySelector<HTMLElement>('.result-workspace');
   const formats = get('#format-options');
+  const extraFormats = get('#extra-format-options');
+  const moreFormats = get<HTMLDetailsElement>('#more-formats');
+  const thumbnail = get<HTMLImageElement>('#result-thumbnail');
+  const previewUnavailable = get('#preview-unavailable');
+  const creator = get('#result-creator');
+  const previewCreator = get('#preview-creator');
+  const previewTitle = get('#preview-title');
+  const duration = get('#result-duration');
   const download = get<HTMLButtonElement>('.download-button');
+  const downloadLabel = root.querySelector<HTMLElement>('.download-label') ?? download;
   const progressCard = get('#progress-card');
   const progressHeading = get('#progress-title');
   const progress = get<HTMLProgressElement>('#download-progress');
   const metrics = get('#progress-metrics');
   const analyzing = get('#analyzing-indicator');
+  const hero = root.querySelector<HTMLElement>('#hero');
+  const qualityCard = get('#quality-card');
+  const completedCard = get('#completed-card');
+  const errorCard = get('#error-card');
+  const save = get<HTMLButtonElement>('.save-button');
+  const preview = get('.analyzed-phone');
+  // Mini thumbnail inside the result panel (separate from the phone thumbnail)
+  const miniThumb = root.querySelector<HTMLImageElement>('#rp-mini-thumb');
+  // Custom progress fill div (driven by CSS variable --rp-progress)
+  const progFill = root.querySelector<HTMLElement>('.rp-prog-fill');
+  const progTrack = root.querySelector<HTMLElement>('.rp-prog-track');
   let lastStatus = 'idle';
   let renderedMedia: State['media'] = null;
   let clipboardVersion = 0;
   const eventController = new AbortController();
   const events = { signal: eventController.signal };
+  const fallback = '/assets/images/preview-unavailable.webp';
+  // ── Byte formatting helpers ──────────────────────────────────────
+  const fmtBytes = (bytes: number): string => {
+    if (bytes >= 1_048_576) return `${(bytes / 1_048_576).toFixed(1)} MB`;
+    if (bytes >= 1024) return `${String(Math.round(bytes / 1024))} KB`;
+    return `${String(bytes)} B`;
+  };
+  const fmtSpeed = (bps: number): string => {
+    if (bps >= 1_048_576) return `${(bps / 1_048_576).toFixed(1)} MB/s`;
+    if (bps >= 1024) return `${String(Math.round(bps / 1024))} KB/s`;
+    return `${String(bps)} B/s`;
+  };
+  // ─────────────────────────────────────────────────────────────────
+  thumbnail.addEventListener(
+    'error',
+    () => {
+      if (thumbnail.getAttribute('src') === fallback) return;
+      thumbnail.src = fallback;
+      thumbnail.alt = 'Video preview unavailable';
+      previewUnavailable.hidden = false;
+    },
+    events,
+  );
   const clipboard = options.clipboard ?? root.defaultView?.navigator.clipboard;
   const requestDownload =
     options.requestDownload ??
@@ -62,39 +107,98 @@ export function initializeDownloader(root: Document = document, options: Options
     const busy = isBusy(state.status);
     const downloading = ['starting-download', 'downloading'].includes(state.status);
     get('#downloader').dataset.state = state.status;
+    // Drive idle vs active layout via the hero section's data attribute
+    if (hero) hero.dataset.downloaderState = state.status;
+    preview.hidden = !state.media;
     form.setAttribute('aria-busy', String(busy));
     input.disabled = busy;
     input.setAttribute('aria-invalid', String(state.invalidUrl));
     submit.disabled = busy;
     paste.disabled = busy;
-    cancel.hidden = !busy;
+    cancel.hidden = !busy || downloading;
     cancel.textContent = downloading ? 'Cancel download request' : 'Cancel analysis';
     clear.disabled = !input.value && !busy;
-    submit.textContent =
+    submitLabel.textContent =
       state.status === 'validating'
         ? 'Checking link…'
         : state.status === 'analyzing'
-          ? 'Analyzing…'
+          ? 'Analyzing video…'
           : 'Get video';
     status.textContent = state.message;
     analyzing.hidden = !['validating', 'analyzing'].includes(state.status);
-    result.hidden =
-      !state.media ||
-      !['ready', 'starting-download', 'downloading', 'download-requested'].includes(
-        state.status,
-      );
+    result.hidden = ![
+      'ready',
+      'starting-download',
+      'downloading',
+      'completed',
+      'download-requested',
+      'error',
+    ].includes(state.status);
+    qualityCard.hidden = state.status !== 'ready';
+    completedCard.hidden = !['completed', 'download-requested'].includes(state.status);
+    errorCard.hidden = state.status !== 'error';
+    get('#error-message').textContent = state.message;
+    get<HTMLButtonElement>('.choose-button').hidden = !state.media;
+    save.disabled = state.status !== 'completed';
+    save.textContent =
+      state.status === 'download-requested' ? 'Save requested' : 'Save MP4';
+    const selected = state.media?.formats.find((format) => format.id === state.formatId);
+    const creatorInitial = root.querySelector<HTMLElement>('#result-creator-initial');
+    if (creatorInitial)
+      creatorInitial.textContent =
+        state.media?.creator?.replace(/^@/, '').slice(0, 1).toUpperCase() ?? '';
+    const creatorHeader = root.querySelector<HTMLElement>('.rp-creator-header');
+    if (creatorHeader) creatorHeader.hidden = !state.media?.creator;
+    const containerLabel = root.querySelector<HTMLElement>('#result-container-label');
+    if (containerLabel)
+      containerLabel.textContent = selected?.container?.toUpperCase() ?? 'Video';
+    get('#progress-quality').textContent = selected?.label ?? '';
+    get('#completed-quality').textContent =
+      state.download?.qualityLabel ?? selected?.label ?? '';
+    get('#completed-size').textContent =
+      state.download?.sizeBytes === undefined || state.download.sizeBytes === 0
+        ? ''
+        : fmtBytes(state.download.sizeBytes);
     download.disabled =
-      state.status !== 'ready' ||
+      !['ready', 'starting-download'].includes(state.status) ||
+      state.status === 'starting-download' ||
       !state.formatId ||
       state.media?.downloadAvailable === false;
-    download.textContent =
+    downloadLabel.textContent =
       state.media?.downloadAvailable === false
-        ? 'File downloads are not available yet'
-        : 'Request download';
+        ? 'Download unavailable'
+        : state.status === 'starting-download'
+          ? 'Preparing download\u2026'
+          : downloading && state.status === 'downloading'
+            ? 'Preparing download\u2026'
+            : 'Download MP4';
     if (state.media !== renderedMedia) {
       formats.replaceChildren();
+      extraFormats.replaceChildren();
+      moreFormats.open = false;
+      moreFormats.hidden = !state.media || state.media.formats.length <= 4;
       renderedMedia = state.media;
       resultHeading.textContent = state.media?.title ?? 'Available video formats';
+      resultHeading.title = state.media?.title ?? '';
+      creator.textContent = state.media?.creator ?? '';
+      previewCreator.textContent = state.media?.creator ?? '';
+      const title = state.media?.title ?? '';
+      previewTitle.textContent = title;
+      duration.textContent =
+        state.media?.durationSeconds == null
+          ? ''
+          : `${String(Math.floor(state.media.durationSeconds / 60))}:${String(Math.floor(state.media.durationSeconds % 60)).padStart(2, '0')}`;
+      get('#preview-duration').textContent = duration.textContent;
+      thumbnail.src = state.media?.thumbnail ?? fallback;
+      thumbnail.alt = state.media?.thumbnail
+        ? `Preview of ${state.media.title ?? 'the analyzed video'}${state.media.creator ? ` by ${state.media.creator}` : ''}`
+        : 'Video preview unavailable';
+      previewUnavailable.hidden = !!state.media?.thumbnail;
+      // Populate the mini-thumb in the result panel
+      if (miniThumb) {
+        miniThumb.src = state.media?.thumbnail ?? fallback;
+        miniThumb.alt = thumbnail.alt;
+      }
       state.media?.formats.forEach((format, index) => {
         const label = root.createElement('label');
         label.className = 'format-option';
@@ -103,54 +207,123 @@ export function initializeDownloader(root: Document = document, options: Options
         radio.name = 'format';
         radio.value = format.id;
         radio.id = `format-${String(index)}`;
+        radio.setAttribute('aria-label', format.label);
         const text = root.createElement('span');
-        text.textContent = format.label;
+        text.className = 'quality-text';
+        const name = root.createElement('strong');
+        name.textContent = format.label;
+        text.append(name);
         label.append(radio, text);
-        if (format.width !== undefined && format.height !== undefined) {
-          const resolution = root.createElement('small');
-          resolution.textContent = `${String(format.width)} × ${String(format.height)} source pixels`;
-          label.append(resolution);
+        // Build a single readable detail line: "1080 × 1920 · MP4"
+        const detailParts: string[] = [];
+        if (format.width !== undefined && format.height !== undefined)
+          detailParts.push(`${String(format.width)} \u00d7 ${String(format.height)}`);
+        if (format.container) detailParts.push(format.container.toUpperCase());
+        if (format.compatibility === 'device-dependent')
+          detailParts.push('Limited compatibility');
+        if (detailParts.length) {
+          const resolution = root.createElement('span');
+          resolution.className = 'quality-detail';
+          resolution.textContent = detailParts.join(' \u00b7 ');
+          text.append(resolution);
         }
-        if (format.sizeBytes !== undefined) {
-          const size = root.createElement('small');
-          size.textContent = `${String(format.sizeBytes)} bytes`;
-          label.append(size);
+        // Optional size line (only when genuinely known)
+        if (format.sizeBytes !== undefined && format.sizeBytes > 0) {
+          const sizeMb = Math.round(format.sizeBytes / (1024 * 1024));
+          const sizeLabel =
+            sizeMb > 0
+              ? `~${String(sizeMb)} MB`
+              : `~${String(Math.round(format.sizeBytes / 1024))} KB`;
+          const sizeEl = root.createElement('span');
+          sizeEl.className = 'quality-detail';
+          sizeEl.textContent = sizeLabel;
+          text.append(sizeEl);
         }
-        formats.append(label);
+        // Right-side badges
+        const badges = root.createElement('span');
+        badges.style.display = 'grid';
+        badges.style.gap = '4px';
+        badges.style.justifyItems = 'end';
+        const selectedEl = root.createElement('span');
+        selectedEl.className = 'selected-indicator';
+        selectedEl.textContent = 'Selected';
+        selectedEl.setAttribute('aria-hidden', 'true');
+        badges.append(selectedEl);
+        label.append(badges);
+        (index < 4 ? formats : extraFormats).append(label);
       });
     }
-    formats.querySelectorAll<HTMLInputElement>('input').forEach((radio) => {
+    result.querySelectorAll<HTMLInputElement>('input[name="format"]').forEach((radio) => {
       radio.checked = radio.value === state.formatId;
       radio.disabled = state.status !== 'ready';
     });
     progressCard.hidden = !downloading;
+    // Progress heading: distinguish start from active and 100%
     progressHeading.textContent =
-      state.status === 'starting-download'
-        ? 'Starting download request'
-        : 'Preparing your file';
+      state.status === 'starting-download' || state.progress?.percent === 100
+        ? 'Preparing your download\u2026'
+        : 'Downloading\u2026';
     const percent = state.progress?.percent;
-    if (percent === undefined) progress.removeAttribute('value');
+    const isIndeterminate = percent === undefined;
+    if (isIndeterminate) progress.removeAttribute('value');
     else progress.value = percent;
+    // Drive the custom CSS progress fill via CSS custom property
+    if (progFill) {
+      progFill.style.setProperty(
+        '--rp-progress',
+        isIndeterminate ? '1' : String(percent / 100),
+      );
+    }
+    if (progTrack) progTrack.dataset.indeterminate = String(isIndeterminate);
+    // Build clean metrics row
     metrics.replaceChildren();
-    const addMetric = (value: string) => {
+    const addMetric = (text: string, sep = false) => {
+      if (sep && metrics.childElementCount > 0) {
+        const dot = root.createElement('span');
+        dot.textContent = '\u00b7';
+        dot.setAttribute('aria-hidden', 'true');
+        metrics.append(dot);
+      }
       const item = root.createElement('p');
-      item.textContent = value;
+      item.textContent = text;
       metrics.append(item);
     };
-    if (percent !== undefined) addMetric(`${String(percent)}%`);
+    if (!isIndeterminate) addMetric(`${String(percent)}%`);
+    if (state.progress?.downloadedBytes !== undefined)
+      addMetric(fmtBytes(state.progress.downloadedBytes), true);
+    if (state.progress?.sizeBytes !== undefined && state.progress.sizeBytes > 0)
+      addMetric(`/ ${fmtBytes(state.progress.sizeBytes)}`, false);
     if (state.progress?.speedBytesPerSecond !== undefined)
-      addMetric(`${String(state.progress.speedBytesPerSecond)} bytes/s`);
-    if (state.progress?.sizeBytes !== undefined)
-      addMetric(`${String(state.progress.sizeBytes)} bytes total`);
-    if (percent === undefined) addMetric('Progress is unknown.');
+      addMetric(fmtSpeed(state.progress.speedBytesPerSecond), true);
+    if (isIndeterminate) addMetric('Preparing\u2026');
 
     if (lastStatus !== state.status) {
       if (state.status === 'error') {
         if (state.invalidUrl) input.focus();
         else status.focus();
-      } else if (state.status === 'ready') resultHeading.focus();
-      else if (state.status === 'analyzing') analyzing.focus();
+      } else if (state.status === 'ready') {
+        // Scroll the workspace into view so its top sits just below the sticky
+        // header (scroll-margin-top: 96px is already set in CSS). Then move
+        // keyboard focus to the analyzed video's heading. We set
+        // preventScroll:true so that the focus() call does NOT trigger a
+        // second, competing scroll event.
+        if (lastStatus !== 'ready' && resultWorkspace) {
+          const win = root.defaultView;
+          const prefersReduced =
+            typeof win?.matchMedia === 'function'
+              ? win.matchMedia('(prefers-reduced-motion: reduce)').matches
+              : false;
+          if (typeof resultWorkspace.scrollIntoView === 'function') {
+            resultWorkspace.scrollIntoView({
+              behavior: prefersReduced ? 'auto' : 'smooth',
+              block: 'start',
+            });
+          }
+        }
+        resultHeading.focus({ preventScroll: true });
+      } else if (state.status === 'analyzing') analyzing.focus();
       else if (downloading) progressHeading.focus();
+      else if (state.status === 'completed') get('#completed-title').focus();
       else if (state.status === 'download-requested') status.focus();
       else if (state.status === 'idle' && lastStatus !== 'idle') input.focus();
     }
@@ -219,7 +392,7 @@ export function initializeDownloader(root: Document = document, options: Options
     },
     events,
   );
-  formats.addEventListener(
+  result.addEventListener(
     'change',
     (event) => {
       const target = event.target;
@@ -234,6 +407,36 @@ export function initializeDownloader(root: Document = document, options: Options
     },
     events,
   );
+  get<HTMLButtonElement>('.progress-cancel').addEventListener(
+    'click',
+    () => controller.cancel(),
+    events,
+  );
+  save.addEventListener('click', () => controller.save(), events);
+  get<HTMLButtonElement>('.another-button').addEventListener(
+    'click',
+    () => {
+      input.value = '';
+      controller.setUrl('');
+      input.focus();
+    },
+    events,
+  );
+  get<HTMLButtonElement>('.choose-button').addEventListener(
+    'click',
+    () => controller.chooseQuality(),
+    events,
+  );
+  get<HTMLButtonElement>('.retry-button').addEventListener(
+    'click',
+    () => {
+      if (controller.getState().media) {
+        controller.chooseQuality();
+        void controller.download();
+      } else void controller.analyze();
+    },
+    events,
+  );
   const instance = {
     controller,
     destroy() {
@@ -245,5 +448,6 @@ export function initializeDownloader(root: Document = document, options: Options
     },
   };
   instances.set(root, instance);
+  root.defaultView?.addEventListener('pagehide', () => instance.destroy(), events);
   return instance;
 }

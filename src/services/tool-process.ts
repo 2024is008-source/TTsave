@@ -4,7 +4,13 @@ import type { Logger } from 'pino';
 import { StringDecoder } from 'node:string_decoder';
 import { HttpError } from '../middleware/error-handler.js';
 
-export type AnalysisContext = { signal: AbortSignal; requestId: string; logger: Logger };
+export type AnalysisContext = {
+  signal: AbortSignal;
+  requestId: string;
+  logger: Logger;
+  jobId?: string;
+  stage?: string;
+};
 export type ProcessLimits = {
   timeoutMs: number;
   maxOutputBytes: number;
@@ -77,7 +83,12 @@ export function runTool(
       stderr: new StringDecoder('utf8'),
     };
     const lines = { stdout: '', stderr: '' };
-    context.logger.info({ requestId: context.requestId }, 'External tool started');
+    const diagnostic = {
+      requestId: context.requestId,
+      jobId: context.jobId,
+      stage: context.stage ?? limits.operation ?? 'analysis',
+    };
+    context.logger.info(diagnostic, 'External tool started');
     const cleanup = () => {
       clearTimeout(timer);
       context.signal.removeEventListener('abort', abort);
@@ -88,7 +99,7 @@ export function runTool(
       stopping = error;
       child.kill('SIGKILL');
       context.logger.warn(
-        { requestId: context.requestId, code: error.code },
+        { ...diagnostic, code: error.code, failureCategory: error.code },
         'External tool stopped',
       );
       if (!limits.waitForClose) {
@@ -178,7 +189,7 @@ export function runTool(
       settled = true;
       cleanup();
       context.logger.warn(
-        { requestId: context.requestId, code: 'TOOL_UNAVAILABLE' },
+        { ...diagnostic, code: 'TOOL_UNAVAILABLE', failureCategory: 'TOOL_UNAVAILABLE' },
         'External tool failed to start',
       );
       reject(
@@ -195,11 +206,15 @@ export function runTool(
       settled = true;
       cleanup();
       if (stopping) {
+        context.logger.warn(
+          { ...diagnostic, exitCode: code, failureCategory: stopping.code },
+          'External tool closed after cancellation',
+        );
         reject(stopping);
         return;
       }
       context.logger.info(
-        { requestId: context.requestId, exitCode: code, outputBytes: totalBytes },
+        { ...diagnostic, exitCode: code, outputBytes: totalBytes },
         'External tool exited',
       );
       resolve({

@@ -1,0 +1,32 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="1080"
+  height="1920"
+  viewBox="0 0 1080 1920"
+>
+  <defs>
+    <linearGradient id="g" x2="1" y2="1">
+      <stop stop-color="#253149" />
+      <stop offset=".5" stop-color="#48365e" />
+      <stop offset="1" stop-color="#151c30" />
+    </linearGradient>
+    <radialGradient id="r">
+      <stop stop-color="#54d4df" stop-opacity=".35" />
+      <stop offset="1" stop-color="#54d4df" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#g)" />
+  <circle cx="180" cy="510" r="650" fill="url(#r)" />
+  <rect
+    x="365"
+    y="765"
+    width="350"
+    height="270"
+    rx="45"
+    fill="none"
+    stroke="#e6e5f5"
+    stroke-opacity=".5"
+    stroke-width="8"
+  />
+  <path d="M480 825v150l135-75z" fill="#e6e5f5" fill-opacity=".65" />
+</svg>
