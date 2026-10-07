@@ -1,0 +1,21 @@
+<section class="steps-section section" id="how-it-works" aria-labelledby="steps-title">
+  <div class="container">
+    <div class="section-heading">
+      <span class="kicker">From feed to favorite</span>
+      <h2 id="steps-title">
+        Three steps.<br class="mobile-break" />
+        A familiar rhythm.
+      </h2>
+      <p>The experience we’re building. Downloads are coming later.</p>
+    </div>
+    <ol class="step-grid">
+      <% steps.forEach((step, index) => { %>
+      <li>
+        <span class="step-number" aria-hidden="true">0<%= index + 1 %></span>
+        <h3><%= step.title %></h3>
+        <p><%= step.description %></p>
+      </li>
+      <% }) %>
+    </ol>
+  </div>
+</section>

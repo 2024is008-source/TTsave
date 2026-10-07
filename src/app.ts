@@ -8,10 +8,12 @@ import { pinoHttp } from 'pino-http';
 
 import { env } from './config/env.js';
 import { logger } from './config/logger.js';
+import { mockData } from './data/mock-data.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { notFound } from './middleware/not-found.js';
 import { requestId } from './middleware/request-id.js';
 import { healthRouter } from './routes/health.js';
+import { analyzeRouter } from './routes/analyze.js';
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(currentDirectory, '..');
@@ -46,8 +48,9 @@ export function createApp() {
   app.use('/assets', express.static(path.join(projectRoot, 'public', 'assets')));
 
   app.get('/', (_request, response) => {
-    response.render('index', { title: 'TTSave' });
+    response.render('index', mockData);
   });
+  app.use(analyzeRouter);
 
   app.use(notFound);
   app.use(errorHandler);

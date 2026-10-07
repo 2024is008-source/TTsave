@@ -3,13 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A considered space for public TikTok video links. Explore the TTSave interface preview."
+    />
     <title><%= title %></title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/assets/app.css" />
+    <script type="module" src="/assets/js/app.js"></script>
   </head>
   <body>
-    <main class="shell">
-      <h1>TT<span class="brand">Save</span></h1>
-      <p>The secure application foundation is ready. Downloader functionality is not available yet.</p>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <%- include('partials/header') %>
+    <main id="main">
+      <%- include('partials/hero') %> <%- include('partials/features') %> <%-
+      include('partials/steps') %> <%- include('partials/faq') %> <%-
+      include('partials/cta') %>
     </main>
+    <%- include('partials/footer') %>
   </body>
 </html>

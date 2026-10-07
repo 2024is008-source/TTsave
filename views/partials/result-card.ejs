@@ -1,0 +1,10 @@
+<% if (result) { %>
+<section class="glass-card result-card" aria-labelledby="result-title">
+  <h2 id="result-title"><%= result.title %></h2>
+  <% if (result.description) { %>
+  <p><%= result.description %></p>
+  <% } %> <% if (result.resolution) { %>
+  <p>Source resolution: <%= result.resolution %></p>
+  <% } %>
+</section>
+<% } %>

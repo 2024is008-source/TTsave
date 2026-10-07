@@ -16,9 +16,10 @@
     "start": "node --env-file-if-exists=.env dist/server.js",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --exclude tests/e2e/**",
-    "test:watch": "vitest --exclude tests/e2e/**",
+    "test": "vitest run --exclude tests/e2e/** --exclude tests/browser/**",
+    "test:watch": "vitest --exclude tests/e2e/** --exclude tests/browser/**",
     "test:e2e": "vitest run tests/e2e",
+    "test:ui": "playwright test",
     "check": "npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -34,6 +35,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
+    "@playwright/test": "^1.63.0",
     "@types/ejs": "^3.1.5",
     "@types/express": "^5.0.3",
     "@types/node": "^24.10.0",

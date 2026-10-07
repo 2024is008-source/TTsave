@@ -1,0 +1,49 @@
+<section class="hero container" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <div class="eyebrow">
+      <span class="small-spark" aria-hidden="true">✦</span> A little more worth keeping
+    </div>
+    <h1 id="hero-title">
+      Good moments.<br /><span class="gradient-text">Keep them close.</span>
+    </h1>
+    <p class="hero-description">
+      Your next favorite TikTok deserves a place of its own. Bring a public video link.
+      We’ll keep the experience simple.
+    </p>
+    <%- include('downloader') %>
+    <div class="hero-notes">
+      <span><%- include('icon', { name: 'shield' }) %> Public links only</span
+      ><span><%- include('icon', { name: 'device' }) %> Made for every screen</span>
+    </div>
+  </div>
+  <div class="hero-art" aria-label="Illustrated coastal scene displayed in a smartphone">
+    <div class="phone-stage">
+      <div class="phone">
+        <div class="phone-screen">
+          <img
+            class="phone-scene"
+            src="/assets/coast.svg"
+            alt="An illustrated sun setting over a cyan sea and violet coastal cliffs"
+            width="480"
+            height="900"
+          />
+          <div class="island" aria-hidden="true"><span></span></div>
+          <div class="phone-top" aria-hidden="true">
+            <span>Explore</span><span class="phone-toptab">For you</span>
+          </div>
+          <div class="phone-caption">
+            <span class="scene-tag">A moment of calm</span>
+            <p>Some views<br />stay with you.</p>
+            <span class="scene-label">Original illustration</span>
+          </div>
+          <div class="home-indicator" aria-hidden="true"></div>
+        </div>
+        <div class="phone-button" aria-hidden="true"></div>
+      </div>
+      <div class="art-caption">
+        <span class="art-rule" aria-hidden="true"></span
+        ><span>Less noise. More of what you love.</span>
+      </div>
+    </div>
+  </div>
+</section>

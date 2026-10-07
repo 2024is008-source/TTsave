@@ -1,0 +1,37 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="wordmark" href="/" aria-label="TTSave home"
+      >TT<span class="brand">Save</span><span class="brand-dot" aria-hidden="true"></span
+    ></a>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="#how-it-works">How it works</a><a href="#features">Why TTSave</a
+      ><a href="#faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <button
+        class="theme-toggle"
+        type="button"
+        aria-label="Switch to dark theme"
+        aria-pressed="false"
+      >
+        <%- include('icon', { name: 'moon' }) %>
+      </button>
+      <a class="header-cta" href="#downloader"
+        >Try TTSave <span aria-hidden="true">↗</span></a
+      >
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <%- include('icon', { name: 'menu' }) %>
+      </button>
+    </div>
+  </div>
+  <nav class="mobile-nav container" id="mobile-nav" aria-label="Mobile navigation" hidden>
+    <a href="#how-it-works">How it works</a><a href="#features">Why TTSave</a
+    ><a href="#faq">FAQ</a>
+  </nav>
+</header>

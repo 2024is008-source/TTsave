@@ -315,6 +315,8 @@ node_modules/
 dist/
 coverage/
 public/assets/app.css
+test-results/
+playwright-report/
 
 # Visual Studio 6 build log
 *.plg

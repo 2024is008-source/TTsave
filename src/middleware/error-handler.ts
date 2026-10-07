@@ -18,7 +18,8 @@ export const errorHandler: ErrorRequestHandler = (error, request, response, next
     return;
   }
 
-  const status = error instanceof HttpError ? error.status : error instanceof ZodError ? 400 : 500;
+  const status =
+    error instanceof HttpError ? error.status : error instanceof ZodError ? 400 : 500;
   const code =
     error instanceof HttpError
       ? error.code

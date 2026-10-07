@@ -1,0 +1,28 @@
+<div class="downloader" id="downloader">
+  <form id="download-form" action="/analyze" method="post">
+    <label class="field-label" for="video-url">Your public TikTok video link</label>
+    <div class="input-capsule">
+      <span class="input-icon"><%- include('icon', { name: 'link' }) %></span>
+      <input
+        id="video-url"
+        name="url"
+        type="url"
+        inputmode="url"
+        autocomplete="off"
+        placeholder="Paste a TikTok video link"
+        required
+        maxlength="2048"
+        aria-describedby="availability form-status"
+      />
+      <button class="paste-button" type="button">Paste</button>
+    </div>
+    <button class="primary-button analyze-button" type="submit">
+      Check link <%- include('icon', { name: 'arrow' }) %>
+    </button>
+    <p class="availability" id="availability">
+      <span class="preview-label">Interface preview</span> <%= availability %>
+    </p>
+    <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+  </form>
+  <%- include('result-card') %> <%- include('progress-card') %>
+</div>

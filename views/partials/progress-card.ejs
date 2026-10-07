@@ -1,0 +1,10 @@
+<% if (progress) { %>
+<section class="glass-card progress-card" aria-label="Download status" role="status">
+  <p><%= progress.message %></p>
+  <% if (typeof progress.percent === 'number') { %>
+  <progress max="100" value="<%= progress.percent %>" aria-label="Download progress">
+    <%= progress.percent %>%
+  </progress>
+  <% } %>
+</section>
+<% } %>

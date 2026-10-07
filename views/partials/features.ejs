@@ -1,0 +1,21 @@
+<section class="section container" id="features" aria-labelledby="features-title">
+  <div class="section-heading">
+    <span class="kicker">Thoughtfully simple</span>
+    <h2 id="features-title">
+      A clear space.<br class="mobile-break" />
+      For your favorites.
+    </h2>
+    <p>Everything has a purpose. Nothing gets in the way.</p>
+  </div>
+  <div class="feature-grid">
+    <% features.forEach((feature) => { %>
+    <article class="glass-card feature-card">
+      <div class="icon-well <%= feature.color %>">
+        <%- include('icon', { name: feature.icon }) %>
+      </div>
+      <h3><%= feature.title %></h3>
+      <p><%= feature.description %></p>
+    </article>
+    <% }) %>
+  </div>
+</section>

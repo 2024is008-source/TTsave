@@ -1,0 +1,19 @@
+<section class="section container faq-section" id="faq" aria-labelledby="faq-title">
+  <div class="faq-intro">
+    <span class="kicker">A few things to know</span>
+    <h2 id="faq-title">
+      Good questions.<br /><span class="gradient-text">Clear answers.</span>
+    </h2>
+    <p>A little clarity before you get started.</p>
+  </div>
+  <div class="faq-list">
+    <% faqs.forEach((faq) => { %>
+    <details class="faq-item">
+      <summary>
+        <%= faq.question %><span class="faq-plus" aria-hidden="true">+</span>
+      </summary>
+      <p><%= faq.answer %></p>
+    </details>
+    <% }) %>
+  </div>
+</section>
