@@ -218,7 +218,9 @@ export function createDownloaderController({
       if (!validation.success) {
         dispatch({
           type: 'FAIL',
-          message: 'Enter a public TikTok video link using HTTPS.',
+          message:
+            validation.error.issues[0]?.message ??
+            'Enter a public TikTok video link using HTTPS.',
           invalidUrl: true,
         });
         return;

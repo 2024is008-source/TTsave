@@ -61,9 +61,11 @@ files return 409, capacity exhaustion returns 503 and unexpected service failure
 return 500 with a generic message. Errors before opening SSE use the same JSON
 envelope.
 
-Only HTTPS canonical TikTok video links and `vm`/`vt` short links are accepted.
-Credentials, nondefault ports, other hosts, missing inputs and extra body fields
-are rejected. URL syntax does not prove that a post is public. Users cannot supply
+Only HTTPS canonical TikTok video links on `tiktok.com`, `www.tiktok.com` and
+`m.tiktok.com`, plus `vm.tiktok.com`/`vt.tiktok.com` short links, are accepted.
+Credentials, explicit ports, encoded hosts, other hosts, missing inputs and extra body fields
+are rejected. See `URL_VALIDATION.md` for normalization, limits and attack cases.
+URL syntax does not prove that a post is public. Users cannot supply
 paths or filenames. IDs are server-generated UUIDs; only a format returned for
 that analysis can create a job.
 

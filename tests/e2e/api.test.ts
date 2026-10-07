@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import request from 'supertest';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { URL_MESSAGES } from '../../src/shared/video-url.js';
 import { createApp } from '../../src/app.js';
 import { analysisSchema, apiJobSchema, apiErrorSchema } from '../../src/api/contracts.js';
 import { MockDownloaderService } from '../../src/services/mock-downloader.js';
@@ -19,6 +20,52 @@ async function createJob(app: ReturnType<typeof createApp>) {
   return apiJobSchema.parse(response.body as unknown);
 }
 describe('versioned mock API', () => {
+  it('normalizes approved mobile host casing before invoking the service', async () => {
+    const service = new MockDownloaderService();
+    const spy = vi.spyOn(service, 'analyze');
+    const response = await request(createApp(service))
+      .post('/api/v1/analyze')
+      .send({ url: '  HTTPS://M.TikTok.COM/@Creator/video/123  ' })
+      .expect(200);
+    expect(analysisSchema.parse(response.body as unknown).sourceUrl).toBe(
+      'https://m.tiktok.com/@Creator/video/123',
+    );
+    expect(spy).toHaveBeenCalledWith('https://m.tiktok.com/@Creator/video/123');
+  });
+  it.each([
+    '@creator',
+    'https://tiktok.com.evil.test/@creator/video/123',
+    'https://attacker.tiktok.com/@creator/video/123',
+    'https://%74iktok.com/@creator/video/123',
+    'https://localhost/@creator/video/123',
+    'https://192.168.1.1/@creator/video/123',
+    'https://[::1]/@creator/video/123',
+    'https://[fc00::1]/@creator/video/123',
+    'http://tiktok.com/@creator/video/123',
+    'https://user:secret@tiktok.com/@creator/video/123',
+    'https:///tiktok.com/@creator/video/123',
+    'x'.repeat(2049),
+  ])('rejects unsafe links before invoking any analysis service: %s', async (input) => {
+    const service = new MockDownloaderService();
+    const spy = vi.spyOn(service, 'analyze');
+    const response = await request(createApp(service))
+      .post('/api/v1/analyze')
+      .send({ url: input })
+      .expect(400);
+    const error = apiErrorSchema.parse(response.body as unknown).error;
+    expect(error.fieldErrors.url?.[0]).toBeTruthy();
+    expect(spy).not.toHaveBeenCalled();
+    expect(response.text).not.toContain('secret');
+  });
+  it('returns friendly missing-link feedback', async () => {
+    const response = await request(createApp())
+      .post('/api/v1/analyze')
+      .send({})
+      .expect(400);
+    expect(apiErrorSchema.parse(response.body as unknown).error.fieldErrors.url).toEqual([
+      URL_MESSAGES.required,
+    ]);
+  });
   it('returns complete, explicitly mocked analysis without invented source metrics', async () => {
     const app = createApp();
     const media = await analyze(app);

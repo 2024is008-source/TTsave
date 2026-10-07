@@ -1,5 +1,6 @@
 import type { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
+import { safeUrlMessages } from '../shared/video-url.js';
 
 export class HttpError extends Error {
   public constructor(
@@ -69,7 +70,22 @@ export const errorHandler: ErrorRequestHandler = (error, request, response, next
           ? Object.fromEntries(
               [
                 ...new Set(error.issues.map((issue) => String(issue.path[0] ?? 'body'))),
-              ].map((field) => [field, ['The supplied value is missing or invalid.']]),
+              ].map((field) => [
+                field,
+                field === 'url'
+                  ? [
+                      ...new Set(
+                        error.issues
+                          .filter((issue) => issue.path[0] === field)
+                          .map((issue) =>
+                            safeUrlMessages.has(issue.message)
+                              ? issue.message
+                              : 'The supplied value is missing or invalid.',
+                          ),
+                      ),
+                    ]
+                  : ['The supplied value is missing or invalid.'],
+              ]),
             )
           : {},
     },
