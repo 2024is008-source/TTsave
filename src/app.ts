@@ -12,19 +12,20 @@ import { mockData } from './data/mock-data.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { notFound } from './middleware/not-found.js';
 import { requestId } from './middleware/request-id.js';
-import { healthRouter } from './routes/health.js';
+import { createHealthRouter } from './routes/health.js';
 import { analyzeRouter } from './routes/analyze.js';
 import { createApiRouter } from './routes/api.js';
-import {
-  MockDownloaderService,
-  type DownloaderService,
-} from './services/mock-downloader.js';
+import type { DownloaderService } from './services/memory-store.js';
+import { ProductionDownloaderService } from './services/downloader.js';
 import { HttpError } from './middleware/error-handler.js';
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(currentDirectory, '..');
 
-export function createApp(service: DownloaderService = new MockDownloaderService()) {
+export function createApp(
+  service: DownloaderService = new ProductionDownloaderService(),
+  isReady: () => boolean = () => true,
+) {
   const app = express();
 
   app.disable('x-powered-by');
@@ -40,7 +41,7 @@ export function createApp(service: DownloaderService = new MockDownloaderService
     }),
   );
   app.use(helmet());
-  app.use(healthRouter);
+  app.use(createHealthRouter(isReady));
   // Static artwork must not consume the request budget for application routes.
   app.use('/assets', express.static(path.join(projectRoot, 'public', 'assets')));
   app.use(

@@ -3,9 +3,18 @@ import type { Server } from 'node:http';
 import { createApp } from './app.js';
 import { env } from './config/env.js';
 import { logger } from './config/logger.js';
+import { randomUUID } from 'node:crypto';
+import { checkTools } from './services/tool-check.js';
+import { stopRunningTools } from './services/tool-process.js';
 
-const app = createApp();
 let shuttingDown = false;
+const startupController = new AbortController();
+const tools = await checkTools({
+  signal: startupController.signal,
+  requestId: randomUUID(),
+  logger,
+});
+const app = createApp(undefined, () => tools.ytDlp && tools.ffmpeg && !shuttingDown);
 
 const server: Server = app.listen(env.PORT, env.HOST, () => {
   logger.info({ host: env.HOST, port: env.PORT }, 'TTSave server listening');
@@ -19,6 +28,8 @@ server.on('error', (error) => {
 function shutdown(signal: NodeJS.Signals): void {
   if (shuttingDown) return;
   shuttingDown = true;
+  startupController.abort();
+  stopRunningTools();
   logger.info({ signal }, 'Graceful shutdown started');
 
   const forceShutdownTimer = setTimeout(() => {

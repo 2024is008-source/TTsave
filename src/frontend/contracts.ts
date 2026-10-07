@@ -12,6 +12,7 @@ export const formatSchema = z.object({
 export const mediaSchema = z.object({
   id: z.string().min(1).max(200),
   title: z.string().min(1).max(500).optional(),
+  downloadAvailable: z.boolean().optional(),
   formats: z
     .array(formatSchema)
     .min(1)

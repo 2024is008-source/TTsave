@@ -1,8 +1,7 @@
 # TTSave
 
-Node.js 24, strict TypeScript, Express and EJS. The current interface is a preview;
-the versioned API uses an explicitly labelled in-memory mock. Real TikTok analysis
-and file downloading are not implemented.
+Node.js 24, strict TypeScript, Express and EJS. Public TikTok metadata analysis
+uses yt-dlp. Video file downloading is not implemented yet.
 
 ## Run locally
 
@@ -11,6 +10,12 @@ override defaults, then run `npm run build` and `npm run dev`. Open
 `http://127.0.0.1:3000`. Run `npm run css:watch` when editing Sass and
 `npm run frontend:watch` when editing the downloader modules. Production uses
 `npm run build` followed by `npm start`.
+
+Install yt-dlp and FFmpeg independently, then configure `YTDLP_PATH` and
+`FFMPEG_PATH` as approved tool names on PATH or local absolute executable paths.
+Run `npm run tools:check` to verify them. Startup performs the same bounded checks;
+`/ready` returns 503 if either tool is missing. See `docs/ANALYSIS.md` for limits,
+format eligibility and operation details.
 
 ## Interface structure
 
@@ -30,15 +35,17 @@ override defaults, then run `npm run build` and `npm run dev`. Open
   progress data remain `null`; hidden result and progress containers are populated
   only from validated adapter responses. Never substitute invented media metadata.
 - `src/api/contracts.ts` defines versioned request and response schemas.
-  `src/services/mock-downloader.ts` owns bounded, expiring in-memory analysis
-  fixtures, jobs and cancellation events. See `docs/API.md` for endpoints and
-  errors. It performs no network resolution or downloads; syntax validation does
-  not establish whether a post is public.
+  `src/services/yt-dlp.ts` extracts and normalizes public source metadata.
+  `src/services/memory-store.ts` owns bounded, expiring analyses and the job
+  contract. Mock metadata lives exclusively in `tests/fixtures`. See `docs/API.md`
+  for endpoints and errors. URL syntax alone does not establish public availability.
 
 ## Verification
 
 `npm run check` runs lint, typecheck, service and route tests, and the production
 build. `npm run format:check` checks formatting.
+Child processes are mocked in automated analysis tests; tests never depend on
+live TikTok. Browser tests intercept analysis requests with contract fixtures.
 
 After building, `npm run test:ui` uses locally installed Google Chrome through
 Playwright. It verifies 390px, 768px, 1024px and 1440px layouts, light and dark

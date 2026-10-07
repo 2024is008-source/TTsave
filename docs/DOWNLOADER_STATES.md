@@ -25,10 +25,11 @@ percentage, bytes per second and total bytes. Unknown values are omitted, not
 estimated. A future successful job supplies a relative `/api/v1/downloads/<jobId>/file` URL.
 
 `src/frontend/api-adapter.ts` calls the versioned backend API and reads job events.
-The in-memory backend returns explicitly labelled mock analysis and queued jobs.
-The adapter cancels mock jobs and reports that files cannot be produced. Source
-metrics remain unknown; progress and successful file handoffs occur only in test
-fixtures. See `API.md` for the contract and mock limitations.
+The production backend analyzes public links with yt-dlp and returns only source
+metadata. `downloadAvailable: false` disables file requests in both the UI and
+controller because real file delivery is not implemented. Mock metadata and jobs
+are confined to test fixtures. Progress and successful file handoffs occur only
+in tests. See `API.md` and `ANALYSIS.md` for contracts and operational limits.
 
 Form tests use rendered EJS with jsdom. State-machine tests cover transitions,
 validation, duplicate requests, cancellation, late responses and browser handoff.

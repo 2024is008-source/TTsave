@@ -57,7 +57,7 @@ describe('application routes', () => {
       .send({ url: 'https://www.tiktok.com/@test/video/123' })
       .expect(503);
     expect(response.body.error.code).toBe('DOWNLOADER_UNAVAILABLE');
-    expect(response.body.error.message).toContain('Mock API preview');
+    expect(response.body.error.message).toContain('File downloads are not available yet');
   });
 
   it('returns a structured 404 response', async () => {

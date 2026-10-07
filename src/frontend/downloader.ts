@@ -83,7 +83,14 @@ export function initializeDownloader(root: Document = document, options: Options
       !['ready', 'starting-download', 'downloading', 'download-requested'].includes(
         state.status,
       );
-    download.disabled = state.status !== 'ready' || !state.formatId;
+    download.disabled =
+      state.status !== 'ready' ||
+      !state.formatId ||
+      state.media?.downloadAvailable === false;
+    download.textContent =
+      state.media?.downloadAvailable === false
+        ? 'File downloads are not available yet'
+        : 'Request download';
     if (state.media !== renderedMedia) {
       formats.replaceChildren();
       renderedMedia = state.media;

@@ -1,5 +1,5 @@
 import { expect, it, vi } from 'vitest';
-import { MockDownloaderService } from '../src/services/mock-downloader.js';
+import { MockDownloaderService } from './fixtures/mock-downloader.js';
 
 it('notifies live subscribers on cancellation and releases disconnected listeners', () => {
   const service = new MockDownloaderService();

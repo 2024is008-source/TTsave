@@ -241,7 +241,13 @@ export function createDownloaderController({
       }
     },
     async download() {
-      if (state.status !== 'ready' || !state.media || !state.formatId) return;
+      if (
+        state.status !== 'ready' ||
+        !state.media ||
+        !state.formatId ||
+        state.media.downloadAvailable === false
+      )
+        return;
       invalidate();
       const current = operation;
       const mediaId = state.media.id;

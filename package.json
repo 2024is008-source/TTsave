@@ -23,6 +23,7 @@
     "test:watch": "vitest --exclude tests/e2e/** --exclude tests/browser/**",
     "test:e2e": "vitest run tests/e2e",
     "test:ui": "playwright test",
+    "tools:check": "tsx --env-file-if-exists=.env src/check-tools.ts",
     "check": "npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

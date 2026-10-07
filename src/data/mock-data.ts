@@ -1,8 +1,8 @@
-// Temporary presentation data. Media stays empty until a real provider exists.
+// Server-rendered presentation copy. Media is populated only by the API.
 export const mockData = {
   title: 'TTSave — A little more worth keeping',
   availability:
-    'Mock API preview. Link checks return labelled fixtures, not TikTok metadata. No video files are produced.',
+    'Analyze publicly accessible TikTok video links. File downloads are not available yet.',
   result: null,
   progress: null,
   stepImageSizes: '(max-width: 600px) 100vw, 30vw',
@@ -66,7 +66,7 @@ export const mockData = {
     {
       question: 'Can I download a video right now?',
       answer:
-        'Not yet. This interface is a preview. The API returns clearly labelled mock fixtures and cannot produce video files or verify public availability.',
+        'Not yet. This interface supports public video metadata analysis when the server tools are available. Video file downloads are still being built.',
     },
     {
       question: 'Which TikTok links will be supported?',

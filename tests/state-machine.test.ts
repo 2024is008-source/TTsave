@@ -42,6 +42,18 @@ function makeAdapter(): DownloaderAdapter {
 }
 
 describe('downloader state machine', () => {
+  it('does not start file delivery when the API reports it is unavailable', async () => {
+    const adapter = makeAdapter();
+    adapter.analyze = vi.fn(() =>
+      Promise.resolve({ ...media, downloadAvailable: false }),
+    );
+    const controller = createDownloaderController({ adapter, requestDownload: vi.fn() });
+    controller.setUrl('https://www.tiktok.com/@creator/video/123');
+    await controller.analyze();
+    await controller.download();
+    expect(controller.getState().status).toBe('ready');
+    expect(adapter.startDownload).not.toHaveBeenCalled();
+  });
   it('rejects invalid transitions and unknown format selection', () => {
     const idle = initialState();
     expect(transition(idle, { type: 'DOWNLOADING' })).toBe(idle);

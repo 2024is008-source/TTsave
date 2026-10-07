@@ -33,7 +33,8 @@ export const analysisSchema = z.object({
     .refine(
       (formats) => new Set(formats.map((format) => format.id)).size === formats.length,
     ),
-  mock: z.literal(true),
+  mock: z.boolean(),
+  downloadAvailable: z.boolean().default(false),
 });
 export const apiJobSchema = z.object({
   id: opaqueId,

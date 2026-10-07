@@ -34,6 +34,7 @@ export function createApiAdapter(transport: typeof fetch = fetch): DownloaderAda
       return {
         id: data.id,
         title: data.title,
+        downloadAvailable: data.downloadAvailable,
         formats: data.formats.map((format) => ({
           id: format.id,
           label: format.qualityLabel,

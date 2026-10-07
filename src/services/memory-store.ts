@@ -1,17 +1,18 @@
 import { randomUUID } from 'node:crypto';
 import type { Analysis, ApiJob } from '../api/contracts.js';
 import { HttpError } from '../middleware/error-handler.js';
+import type { AnalysisContext } from './tool-process.js';
 
 export type DownloaderService = {
-  analyze(url: string): Analysis;
+  analyze(url: string, context?: AnalysisContext): Analysis | Promise<Analysis>;
   createJob(analysisId: string, formatId: string): ApiJob;
   getJob(id: string): ApiJob;
   cancel(id: string): ApiJob;
   subscribe(id: string, listener: (job: ApiJob) => void): () => void;
 };
 
-/** Explicit contract fixtures. No network resolution, simulated progress or files. */
-export class MockDownloaderService implements DownloaderService {
+/** Bounded analysis and job storage; no timers simulate work or completion. */
+export class InMemoryJobStore {
   private analyses = new Map<string, { value: Analysis; expires: number }>();
   private jobs = new Map<string, { value: ApiJob; expires: number }>();
   private listeners = new Map<string, Set<(job: ApiJob) => void>>();
@@ -28,30 +29,13 @@ export class MockDownloaderService implements DownloaderService {
     if (size >= 200)
       throw new HttpError(
         503,
-        'MOCK_CAPACITY',
+        'SERVICE_CAPACITY',
         'The preview is busy. Please try again later.',
       );
   }
-  analyze(url: string): Analysis {
+  protected storeAnalysis(value: Analysis): Analysis {
     this.prune();
     this.capacity(this.analyses.size);
-    const value: Analysis = {
-      id: randomUUID(),
-      title: 'Mock API preview — not analyzed TikTok content',
-      creator: null,
-      thumbnail: null,
-      durationSeconds: null,
-      sourceUrl: url,
-      formats: [
-        {
-          id: 'mock-mp4',
-          container: 'mp4',
-          qualityLabel: 'Mock format — file unavailable',
-          hasAudio: false,
-        },
-      ],
-      mock: true,
-    };
     this.analyses.set(value.id, { value, expires: Date.now() + this.ttl });
     return structuredClone(value);
   }

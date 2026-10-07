@@ -2,9 +2,12 @@ import { randomUUID } from 'node:crypto';
 import request from 'supertest';
 import { describe, expect, it, vi } from 'vitest';
 import { URL_MESSAGES } from '../../src/shared/video-url.js';
-import { createApp } from '../../src/app.js';
+import { createApp as createProductionApp } from '../../src/app.js';
 import { analysisSchema, apiJobSchema, apiErrorSchema } from '../../src/api/contracts.js';
-import { MockDownloaderService } from '../../src/services/mock-downloader.js';
+import { MockDownloaderService } from '../fixtures/mock-downloader.js';
+import type { DownloaderService } from '../../src/services/memory-store.js';
+const createApp = (service: DownloaderService = new MockDownloaderService()) =>
+  createProductionApp(service);
 
 const url = 'https://www.tiktok.com/@test/video/123';
 async function analyze(app: ReturnType<typeof createApp>) {
@@ -30,7 +33,13 @@ describe('versioned mock API', () => {
     expect(analysisSchema.parse(response.body as unknown).sourceUrl).toBe(
       'https://m.tiktok.com/@Creator/video/123',
     );
-    expect(spy).toHaveBeenCalledWith('https://m.tiktok.com/@Creator/video/123');
+    expect(spy).toHaveBeenCalledWith(
+      'https://m.tiktok.com/@Creator/video/123',
+      expect.objectContaining({
+        requestId: expect.any(String),
+        signal: expect.any(AbortSignal),
+      }),
+    );
   });
   it.each([
     '@creator',

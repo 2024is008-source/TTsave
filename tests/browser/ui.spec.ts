@@ -61,7 +61,9 @@ for (const width of [390, 768, 1024, 1440]) {
       .filter({ hasText: 'Can I download a video right now?' })
       .click();
     await expect(
-      page.getByText('Not yet. This interface is a preview.', { exact: false }),
+      page.getByText('Not yet. This interface supports public video metadata analysis', {
+        exact: false,
+      }),
     ).toBeVisible();
     await page.locator('#video-url').fill('https://example.com/video/123');
     await page.getByRole('button', { name: 'Check link' }).click();
@@ -70,18 +72,40 @@ for (const width of [390, 768, 1024, 1440]) {
     );
     await expect(page.locator('#video-url')).toBeFocused();
     await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
+    // Browser automation never contacts live TikTok. Exercise the API response contract.
+    await page.route('**/api/v1/analyze', (route) =>
+      route.fulfill({
+        json: {
+          id: '123e4567-e89b-42d3-a456-426614174000',
+          title: 'Test source video',
+          creator: 'Test creator',
+          thumbnail: null,
+          durationSeconds: 12,
+          sourceUrl: 'https://www.tiktok.com/@test/video/123',
+          mock: false,
+          downloadAvailable: false,
+          formats: [
+            {
+              id: 'source-1',
+              container: 'mp4',
+              qualityLabel: '720 × 1280 source pixels',
+              width: 720,
+              height: 1280,
+              hasAudio: true,
+            },
+          ],
+        },
+      }),
+    );
     await page.getByRole('button', { name: 'Check link' }).click();
-    await expect(page.locator('#result-title')).toHaveText(
-      'Mock API preview — not analyzed TikTok content',
-    );
+    await expect(page.locator('#result-title')).toHaveText('Test source video');
     await expect(
-      page.getByRole('radio', { name: 'Mock format — file unavailable' }),
+      page.getByRole('radio', { name: /720 × 1280 source pixels/ }),
     ).toBeChecked();
-    await page.getByRole('button', { name: 'Request download', exact: true }).click();
-    await expect(page.locator('#form-status')).toContainText(
-      'The mock service does not produce video files.',
-    );
-    await expect(page.locator('.result-card')).toBeHidden();
+    await expect(
+      page.getByRole('button', { name: 'File downloads are not available yet' }),
+    ).toBeDisabled();
+    await expect(page.locator('.result-card')).toBeVisible();
     await expect(page.locator('.progress-card')).toBeHidden();
     await expect(page.locator('#video-url')).toHaveValue(
       'https://www.tiktok.com/@test/video/123',
