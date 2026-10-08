@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <%- include('partials/header') %>
+    <main id="main" class="legal-page container">
+      <article>
+        <p class="section-eyebrow">TTSave / TikSaveMP4</p>
+        <h1><%= page.title %></h1>
+        <p class="legal-date">
+          Last updated: <time datetime="2026-10-08">8 October 2026</time> · Operational
+          draft
+        </p>
+        <aside class="legal-note" aria-label="Developer note">
+          <strong>Developer note — review before commercial launch.</strong>
+          The site owner should have this operational draft reviewed for the applicable
+          jurisdiction, publish their operator identity and a monitored contact channel,
+          and confirm hosting providers and log retention before commercial launch.
+        </aside>
+        <p class="legal-intro"><%= page.introduction %></p>
+        <p>
+          TikSaveMP4 is an independent service and is not affiliated with, endorsed by or
+          sponsored by TikTok or ByteDance. TikTok is a trademark of its respective owner.
+          Neither company operates or approves this website. The service grants no
+          ownership or reuse rights in third-party media.
+        </p>
+        <% if (page.path === '/contact') { %>
+        <section>
+          <h2>Public contact channel</h2>
+          <% if (contactEmail) { %>
+          <p>
+            Email <a href="mailto:<%= contactEmail %>"><%= contactEmail %></a> for
+            support, privacy and copyright concerns.
+          </p>
+          <% } else { %>
+          <p>
+            A public contact address has not yet been configured. This draft does not
+            currently provide a way to submit a report. The site owner must publish a
+            monitored contact address before public launch.
+          </p>
+          <% } %>
+        </section>
+        <% } %> <% for (const section of page.sections) { %>
+        <section>
+          <h2><%= section.heading %></h2>
+          <% for (const paragraph of section.paragraphs) { %>
+          <p><%= paragraph %></p>
+          <% } %>
+        </section>
+        <% } %> <% if (page.path === '/privacy') { %>
+        <section>
+          <h2>Current server retention settings</h2>
+          <p>
+            Analysis and job lifetime: <%= jobRetentionMinutes %> minutes. Cleanup sweep
+            interval: <%= sweepSeconds %> seconds. File access lifetime: up to <%=
+            fileAccessSeconds %> seconds, bounded by job expiry. These are application
+            settings, not hosting-log or backup retention periods.
+          </p>
+        </section>
+        <% } %> <% if (page.path !== '/contact') { %>
+        <section>
+          <h2>Contact</h2>
+          <% if (contactEmail) { %>
+          <p>
+            Send privacy, terms or copyright questions to
+            <a href="mailto:<%= contactEmail %>"><%= contactEmail %></a>.
+          </p>
+          <% } else { %>
+          <p>
+            The legal contact address is not configured. A monitored address must be
+            published before launch; see <a href="/contact">Contact and Support</a> for
+            the current status.
+          </p>
+          <% } %>
+        </section>
+        <% } %>
+        <nav class="legal-links" aria-label="Service policies">
+          <a href="/privacy">Privacy</a><a href="/terms">Terms</a>
+          <a href="/responsible-use">Responsible use</a><a href="/copyright">Copyright</a>
+          <a href="/contact">Contact</a>
+        </nav>
+        <% if (page.path === '/copyright') { %>
+        <p>
+          US procedure references:
+          <a href="https://www.copyright.gov/512/"
+            >Copyright Office Section 512 guidance</a
+          >
+          and
+          <a
+            href="https://uscode.house.gov/view.xhtml?req=(title:17%20section:512%20edition:prelim)"
+            >17 USC § 512</a
+          >. These references do not establish the operator’s eligibility or select
+          governing law.
+        </p>
+        <% } %>
+      </article>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

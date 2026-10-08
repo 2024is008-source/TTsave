@@ -25,7 +25,27 @@ const booleanFromString = z
   .default('false')
   .transform((value) => value === 'true');
 
+const publicBaseUrlSchema = z
+  .url()
+  .refine((value) => {
+    if (!/^https:\/\/tiksavemp4\.online\/?$/i.test(value)) return false;
+    const url = new URL(value);
+    return (
+      url.origin === 'https://tiksavemp4.online' &&
+      url.pathname === '/' &&
+      !url.username &&
+      !url.password &&
+      !url.search &&
+      !url.hash &&
+      !url.port
+    );
+  }, 'Use https://tiksavemp4.online without credentials, a path, port, query or fragment.')
+  .transform(() => 'https://tiksavemp4.online');
+
 const envSchema = z.object({
+  PUBLIC_BASE_URL: publicBaseUrlSchema.default('https://tiksavemp4.online'),
+  LEGAL_CONTACT_EMAIL: z.email().optional(),
+  PUBLIC_CONTACT_EMAIL: z.email().optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   HOST: z.string().trim().min(1).default('127.0.0.1'),
   PORT: z.coerce.number().int().min(1).max(65_535).default(3000),
@@ -77,7 +97,11 @@ const envSchema = z.object({
 export type Environment = z.infer<typeof envSchema>;
 
 export function parseEnvironment(source: NodeJS.ProcessEnv = process.env): Environment {
-  const result = envSchema.safeParse(source);
+  const schema =
+    source.NODE_ENV === 'production'
+      ? envSchema.extend({ PUBLIC_BASE_URL: publicBaseUrlSchema })
+      : envSchema;
+  const result = schema.safeParse(source);
 
   if (!result.success) {
     const details = result.error.issues

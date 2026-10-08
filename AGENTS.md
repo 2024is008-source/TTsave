@@ -22,3 +22,4 @@ These rules apply throughout this repository. Read `reference/code.html` and `re
 18. Run lint, typecheck, tests and build after every major step.
 19. Do not create Docker files.
 20. Do not commit automatically.
+21. Use `https://tiksavemp4.online` as the only canonical public domain. Generate public URLs from validated `PUBLIC_BASE_URL`, never request Host or forwarding headers.

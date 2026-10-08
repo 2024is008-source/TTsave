@@ -5,31 +5,41 @@
         <a class="wordmark" href="/" aria-label="TTSave home"
           >TT<span class="brand">Save</span></a
         >
-        <p>Download public TikTok videos to your device in the quality provided by the source.</p>
+        <p>
+          Download public TikTok videos to your device in the quality provided by the
+          source.
+        </p>
       </div>
       <nav class="footer-nav" aria-label="Product navigation">
         <span class="footer-nav-heading">Product</span>
-        <a href="#how-it-works">How it works</a>
-        <a href="#features">Features</a>
-        <a href="#faq">FAQ</a>
-        <a href="#downloader">Start downloading</a>
+        <a href="/">Home</a>
+        <a href="<%= page.path === '/' ? '' : '/' %>#how-it-works">How it works</a>
+        <a href="<%= page.path === '/' ? '' : '/' %>#features">Features</a>
+        <a href="<%= page.path === '/' ? '' : '/' %>#faq">FAQ</a>
+        <a href="<%= page.path === '/' ? '' : '/' %>#downloader">Start downloading</a>
       </nav>
       <nav class="footer-nav" aria-label="Help navigation">
         <span class="footer-nav-heading">Help</span>
-        <a href="#faq">Support</a>
-        <a href="#faq">Privacy Policy</a>
-        <a href="#faq">Terms of Use</a>
-        <a href="#faq">Responsible Use</a>
+        <a href="/contact">Contact / Support</a>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Use</a>
+        <a href="/responsible-use">Responsible Use</a>
       </nav>
       <div class="footer-legal">
         <span class="footer-nav-heading">Legal</span>
-        <p>TTSave is independent and is not affiliated with TikTok or ByteDance. Respect creators and only download content you have permission to save.</p>
-        <p class="footer-dmca">DMCA: For takedown requests, contact us directly.</p>
+        <p>
+          TTSave is independent and is not affiliated with TikTok or ByteDance. Respect
+          creators and only download content you have permission to save.
+        </p>
+        <p class="footer-dmca"><a href="/copyright">Copyright and DMCA</a></p>
       </div>
     </div>
     <div class="footer-bottom">
       <span>© <%= new Date().getFullYear() %> TTSave. All rights reserved.</span>
-      <p>TTSave is not affiliated with, endorsed by, or connected to TikTok or ByteDance.</p>
+      <p>
+        TikSaveMP4 is an independent service and is not affiliated with, endorsed by or
+        sponsored by TikTok or ByteDance. TikTok is a trademark of its respective owner.
+      </p>
     </div>
   </div>
 </footer>

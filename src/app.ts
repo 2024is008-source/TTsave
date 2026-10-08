@@ -8,7 +8,7 @@ import { pinoHttp } from 'pino-http';
 
 import { env } from './config/env.js';
 import { logger } from './config/logger.js';
-import { mockData } from './data/mock-data.js';
+import { publicRouter } from './routes/public.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { notFound } from './middleware/not-found.js';
 import { requestId } from './middleware/request-id.js';
@@ -56,6 +56,17 @@ export function createApp(
       },
     }),
   );
+  app.use((request, response, next) => {
+    if (
+      /^\/(?:api(?:\/|$)|analyze(?:\/|$)|health(?:\/|$)|ready(?:\/|$))/i.test(
+        request.path,
+      )
+    ) {
+      response.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+      response.setHeader('Cache-Control', 'no-store');
+    }
+    next();
+  });
   app.use(createHealthRouter(isReady));
   // Static artwork must not consume the request budget for application routes.
   app.use('/assets', express.static(path.join(projectRoot, 'public', 'assets')));
@@ -78,9 +89,7 @@ export function createApp(
   app.use(express.json({ limit: '32kb' }));
   app.use(express.urlencoded({ extended: false, limit: '32kb' }));
 
-  app.get('/', (_request, response) => {
-    response.render('index', mockData);
-  });
+  app.use(publicRouter);
   app.use(analyzeRouter);
   app.use('/api/v1', createApiRouter(service));
 

@@ -12,6 +12,12 @@ override defaults, then run `npm run build` and `npm run dev`. Open
 `npm run frontend:watch` when editing the downloader modules. Production uses
 `npm run build` followed by `npm start`.
 
+Production requires `NODE_ENV=production` and explicit
+`PUBLIC_BASE_URL=https://tiksavemp4.online`. Set `LEGAL_CONTACT_EMAIL` to a real
+monitored legal inbox before launch. Review the operational legal drafts and
+configure DNS, TLS and domain redirects as described in
+[`docs/PRODUCTION_SEO.md`](docs/PRODUCTION_SEO.md).
+
 Install yt-dlp and FFmpeg independently, then configure `YTDLP_PATH` and
 `FFMPEG_PATH` as approved tool names on PATH or local absolute executable paths.
 Run `npm run tools:check` to verify them. Startup performs the same bounded checks;

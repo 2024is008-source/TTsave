@@ -193,6 +193,7 @@ describe('production download endpoints', () => {
     await request(app).head(file).expect(405);
     await request(app).get(file).set('Range', 'bytes=0-10').expect(416);
     const response = await request(app).get(file).buffer(true).expect(200);
+    expect(response.headers['x-robots-tag']).toBe('noindex, nofollow, noarchive');
     expect(response.headers['content-disposition']).toBe(
       'attachment; filename="TTSave-video.mp4"',
     );
@@ -212,6 +213,7 @@ describe('production download endpoints', () => {
     });
     expect(events.status).toBe(200);
     expect(events.headers.get('content-type')).toContain('text/event-stream');
+    expect(events.headers.get('x-robots-tag')).toBe('noindex, nofollow, noarchive');
     child.stdout.write(
       'TTSave:{"downloadedBytes":16,"totalBytes":null,"speedBytesPerSecond":null}\n',
     );

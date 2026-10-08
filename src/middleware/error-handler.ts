@@ -59,6 +59,8 @@ export const errorHandler: ErrorRequestHandler = (error, request, response, next
     'Request failed',
   );
 
+  response.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  response.setHeader('Cache-Control', 'no-store');
   response.status(status).json({
     error: {
       code,

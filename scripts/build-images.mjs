@@ -1,4 +1,4 @@
-import { mkdir } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -47,17 +47,29 @@ for (const [name, width, height, smallWidth] of assets) {
       `${name}${size === width ? '' : `-${size}`}.webp`,
       output,
     );
-    await sharp(inputPath)
+    const encoded = await sharp(inputPath)
       .resize(size, Math.round((height / width) * size), {
         fit: 'cover',
         position: 'center',
       })
       .webp({ quality: 87, effort: 5 })
-      .toFile(fileURLToPath(destination));
+      .toBuffer();
+    await writeFile(fileURLToPath(destination), encoded);
     built++;
   }
 }
 
 console.log(
   `Built ${String(built)} image variants from ${String(assets.length)} sources.`,
+);
+
+const socialOutput = new URL('../public/assets/og/', import.meta.url);
+await mkdir(socialOutput, { recursive: true });
+const socialCard = await sharp(fileURLToPath(new URL('og-image.svg', source)))
+  .resize(1200, 630)
+  .jpeg({ quality: 85, mozjpeg: true })
+  .toBuffer();
+await writeFile(
+  fileURLToPath(new URL('tiksavemp4-social-card.jpg', socialOutput)),
+  socialCard,
 );

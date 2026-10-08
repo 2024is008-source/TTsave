@@ -8,7 +8,13 @@ export default defineConfig({
   webServer: {
     command: 'node dist/server.js',
     url: 'http://127.0.0.1:3100/health',
-    env: { PORT: '3100', HOST: '127.0.0.1', LOG_LEVEL: 'silent' },
+    env: {
+      PORT: '3100',
+      HOST: '127.0.0.1',
+      LOG_LEVEL: 'silent',
+      NODE_ENV: 'production',
+      PUBLIC_BASE_URL: 'https://tiksavemp4.online',
+    },
     reuseExistingServer: false,
   },
 });
