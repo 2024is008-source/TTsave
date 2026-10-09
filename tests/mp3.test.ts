@@ -8,8 +8,9 @@ it('creates bounded ASCII MP3 filenames from untrusted metadata', () => {
     'CON <script>',
   ]) {
     const name = audioFilename('creator"\r\n', title);
-    expect(name).toMatch(/^[a-zA-Z0-9_-]{1,80}\.mp3$/);
+    expect(name).toMatch(/^[\p{L}\p{N}\p{M}_-]+\.mp3$/u);
+    expect(Buffer.byteLength(name)).toBeLessThanOrEqual(164);
     expect(name).not.toContain('..');
   }
-  expect(audioFilename(null, '音楽')).toBe('TikSaveMp4-audio.mp3');
+  expect(audioFilename(null, '音楽')).toBe('音楽.mp3');
 });

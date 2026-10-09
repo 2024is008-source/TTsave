@@ -143,7 +143,7 @@ it('converts with fixed safe encoder settings, serves audio/mpeg and cleans afte
     .expect(200)
     .expect('Content-Type', 'audio/mpeg');
   expect(response.headers['content-disposition']).toBe(
-    'attachment; filename="Test-creator-Test-source.mp3"',
+    'attachment; filename="Test-creator-Test-source.mp3"; filename*=UTF-8\'\'Test-creator-Test-source.mp3',
   );
   expect(response.headers['cache-control']).toBe('private, no-store');
   expect(response.headers['x-content-type-options']).toBe('nosniff');

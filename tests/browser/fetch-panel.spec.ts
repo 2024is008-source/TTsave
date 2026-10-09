@@ -7,7 +7,7 @@ for (const width of [390, 1440]) {
     await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
     await page.goto('/');
     await page.evaluate(async () => {
-      const modulePath = '/assets/js/downloader.js';
+      const modulePath = '/assets/js/downloader.js?v=simple-panels-4';
       const module = (await import(
         modulePath
       )) as typeof import('../../src/frontend/downloader.js');
@@ -39,7 +39,7 @@ for (const width of [390, 1440]) {
     await page.getByRole('button', { name: 'Cancel analysis' }).click();
     await expect(page.locator('#analyzing-indicator')).toBeHidden();
     await page.evaluate(async () => {
-      const modulePath = '/assets/js/downloader.js';
+      const modulePath = '/assets/js/downloader.js?v=simple-panels-4';
       const module = (await import(
         modulePath
       )) as typeof import('../../src/frontend/downloader.js');

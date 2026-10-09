@@ -22,6 +22,8 @@ import { HttpError } from './middleware/error-handler.js';
 /** Log route labels, never user-defined paths, queries or capability identifiers. */
 export function safeRequestPath(value: string | undefined): string {
   const pathname = value?.split('?')[0] ?? '';
+  if (/^\/api\/v1\/analysis\/[^/]+\/photos\/[^/]+\/preview\/?$/i.test(pathname))
+    return '/api/v1/analysis/:id/photos/:photoId/preview';
   if (/^\/api\/v1\/analysis\/[^/]+\/thumbnail\/?$/i.test(pathname))
     return '/api/v1/analysis/:id/thumbnail';
   if (/^\/api\/v1\/downloads\/[^/]+(?:\/(?:file|events))?\/?$/i.test(pathname))

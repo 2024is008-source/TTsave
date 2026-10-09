@@ -220,8 +220,9 @@ describe('downloader form', () => {
     expect(document.querySelectorAll('input[name="format"]')).toHaveLength(2);
     expect(element('#result-title').textContent).toBe(media.title);
     expect(document.querySelector('#result-card script')).toBeNull();
-    expect(element('#format-options').textContent).toContain('640 × 360');
-    expect(element('#format-options').textContent).toContain('~1 KB');
+    expect(element('#format-options').textContent).toBe(
+      media.formats.map((format) => format.label).join(''),
+    );
     expect(element('#format-options').textContent).not.toContain('1080');
     expect(document.activeElement).toBe(element('#result-title'));
     const radio = element<HTMLInputElement>('#format-1');

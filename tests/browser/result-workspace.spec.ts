@@ -2,12 +2,15 @@
 import { expect, test } from '@playwright/test';
 
 for (const [width, height] of [
+  [390, 640],
   [390, 844],
   [768, 1024],
   [1024, 900],
   [1440, 1000],
 ]) {
-  test(`connected result at ${String(width)}px`, async ({ page }) => {
+  test(`connected result at ${String(width)}x${String(height)}`, async ({
+    page,
+  }, testInfo) => {
     await page.setViewportSize({ width: width ?? 390, height: height ?? 844 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
     const id = '123e4567-e89b-42d3-a456-426614174000';
@@ -50,7 +53,8 @@ for (const [width, height] of [
                 height: Math.round((resolution * 16) / 9),
                 qualityLabel: `${String(resolution)}p`,
                 hasAudio: true,
-                compatibility: 'broad',
+                compatibility: index === 0 ? 'device-dependent' : 'broad',
+                estimatedBytes: index === 0 ? 342016 : 285696,
               })),
             },
           }),
@@ -82,6 +86,17 @@ for (const [width, height] of [
     await expect(
       page.getByRole('button', { name: 'Download MP4', exact: true }),
     ).toBeEnabled();
+    await page.screenshot({ path: testInfo.outputPath('compact-video-panel.png') });
+    await expect(page.locator('.download-button')).toBeInViewport({ ratio: 1 });
+    expect(
+      await page
+        .locator('#result-card')
+        .evaluate((element) => element.getBoundingClientRect().height),
+    ).toBeLessThanOrEqual((height ?? 844) - 112);
+    for (const tile of await page.locator('#format-options label').all())
+      expect(
+        await tile.evaluate((element) => element.getBoundingClientRect().height),
+      ).toBeLessThanOrEqual(96);
     const choices = await page.locator('#format-options').boundingBox();
     const primary = await page.locator('.download-button').boundingBox();
     if (!choices || !primary) throw new Error('Missing quality controls');

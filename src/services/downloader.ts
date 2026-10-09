@@ -1,3 +1,4 @@
+import { downloadFilename } from './filename.js';
 import { randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
 import {
   mkdir,
@@ -8,6 +9,7 @@ import {
   realpath,
   rm,
   statfs,
+  writeFile,
 } from 'node:fs/promises';
 import path from 'node:path';
 import { env, type Environment } from '../config/env.js';
@@ -23,11 +25,13 @@ import { publicExtractorOptions } from './extractor-options.js';
 import { PreviewStore } from './previews.js';
 import { verifyVideo } from './verify-video.js';
 import { audioFilename, convertMp3, verifyMp3 } from './mp3.js';
+import { fetchPhotoImage } from './photo-images.js';
 
 type MetadataProvider = {
   analyzeSource: (url: string, context: AnalysisContext) => Promise<AnalyzedSource>;
 };
 type Record = {
+  imageContentType?: string;
   filename: string;
   value: ApiJob;
   accessToken: string;
@@ -107,6 +111,37 @@ export class ProductionDownloaderService implements DownloaderService {
     try {
       const source = await this.analyzer.analyzeSource(url, context);
       context.signal.throwIfAborted();
+      if (source.media.postType === 'photo') {
+        for (const [id, entry] of this.analyses)
+          if (entry.expires <= Date.now()) this.analyses.delete(id);
+        if (this.analyses.size >= 200)
+          throw new HttpError(
+            503,
+            'SERVICE_CAPACITY',
+            'TikSaveMp4 is busy. Please try again later.',
+          );
+        if (!source.photoSources?.size || source.photoSources.size > 35)
+          throw new HttpError(
+            422,
+            'PHOTO_UNSUPPORTED',
+            'No supported public images are available.',
+          );
+        const capability = token();
+        source.media.capability = capability;
+        source.media.photos = [...source.photoSources].map(([id, photo]) => ({
+          id,
+          position: photo.position,
+          previewUrl: `/api/v1/analysis/${source.media.id}/photos/${id}/preview?token=${capability}`,
+        }));
+        source.media.downloadAvailable = true;
+        source.media.formats = [];
+        source.media.capabilities = { images: true, mp4: false, mp3: false };
+        this.analyses.set(source.media.id, {
+          source,
+          expires: Date.now() + this.config.JOB_TTL_MS,
+        });
+        return structuredClone(source.media);
+      }
       const duration = source.media.durationSeconds;
       if (duration === null || duration <= 0)
         throw new HttpError(
@@ -168,9 +203,10 @@ export class ProductionDownloaderService implements DownloaderService {
     analysisId: string,
     formatId: string,
     context?: AnalysisContext,
-    downloadType: 'mp4' | 'mp3' = 'mp4',
+    downloadType: 'mp4' | 'mp3' | 'image' = 'mp4',
+    capability?: string,
   ): ApiJob {
-    if (!['mp4', 'mp3'].includes(downloadType))
+    if (!['mp4', 'mp3', 'image'].includes(downloadType))
       throw new HttpError(400, 'INVALID_DOWNLOAD_TYPE', 'Choose MP4 video or MP3 audio.');
     const analysis = this.analyses.get(analysisId);
     if (!analysis || analysis.expires <= Date.now())
@@ -194,11 +230,18 @@ export class ProductionDownloaderService implements DownloaderService {
         '';
     }
     videoUrlSchema.parse(analysis.source.media.sourceUrl);
+    const photo =
+      downloadType === 'image'
+        ? this.authorizedPhoto(analysisId, formatId, capability)
+        : undefined;
     const format = analysis.source.media.formats.find(
       (candidate) => candidate.id === formatId,
     );
     const selector = analysis.source.selectors.get(formatId);
-    if (!format || !selector || !/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,199}$/.test(selector))
+    if (
+      !photo &&
+      (!format || !selector || !/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,199}$/.test(selector))
+    )
       throw new HttpError(
         400,
         'FORMAT_NOT_FOUND',
@@ -226,7 +269,11 @@ export class ProductionDownloaderService implements DownloaderService {
       filename:
         downloadType === 'mp3'
           ? audioFilename(analysis.source.media.creator, analysis.source.media.title)
-          : 'TikSaveMp4-video.mp4',
+          : downloadFilename(
+              analysis.source.media.title,
+              analysis.source.media.creator,
+              'mp4',
+            ),
       value,
       accessToken: token(),
       fileToken: null,
@@ -256,8 +303,10 @@ export class ProductionDownloaderService implements DownloaderService {
     record.done = this.execute(
       record,
       analysis.source.media.sourceUrl,
-      selector,
+      selector ?? '',
       format,
+      photo,
+      analysis.source.media,
     ).finally(() => {
       context?.signal.removeEventListener('abort', abort);
       this.activeJobs -= 1;
@@ -412,7 +461,9 @@ export class ProductionDownloaderService implements DownloaderService {
     record: Record,
     input: string,
     selector: string,
-    selected: Analysis['formats'][number],
+    selected: Analysis['formats'][number] | undefined,
+    photo?: { url: string; position: number },
+    media?: Analysis,
   ) {
     const deadline = setTimeout(() => {
       record.failure = new HttpError(
@@ -442,6 +493,40 @@ export class ProductionDownloaderService implements DownloaderService {
       record.controller.signal.throwIfAborted();
       record.value.status = 'downloading';
       this.publish(record);
+      if (photo && media) {
+        const image = await fetchPhotoImage(photo.url, record.controller.signal);
+        record.controller.signal.throwIfAborted();
+        await writeFile(path.join(record.directory, 'image.bin'), image.bytes, {
+          flag: 'wx',
+          mode: 0o600,
+          signal: record.controller.signal,
+        });
+        record.controller.signal.throwIfAborted();
+        record.filename = downloadFilename(
+          media.title,
+          media.creator,
+          image.extension,
+          photo.position,
+        );
+        record.imageContentType = image.contentType;
+        record.fileSize = image.bytes.length;
+        record.fileToken = token();
+        record.value.status = 'ready';
+        record.value.fileExpiresAt = Math.min(
+          record.expires,
+          Date.now() + this.config.FILE_ACCESS_TTL_MS,
+        );
+        record.value.fileUrl = `/api/v1/downloads/${record.value.id}/file?token=${record.fileToken}`;
+        record.value.progress = { sizeBytes: image.bytes.length };
+        this.publish(record);
+        return;
+      }
+      if (!selected)
+        throw new HttpError(
+          400,
+          'FORMAT_NOT_FOUND',
+          'Choose a format returned by analysis.',
+        );
       watcher = setInterval(() => {
         if (checking || !record.directory || record.controller.signal.aborted) return;
         checking = true;
@@ -644,7 +729,9 @@ export class ProductionDownloaderService implements DownloaderService {
             : new HttpError(
                 502,
                 'DOWNLOAD_FAILED',
-                'The video download failed. Please try again.',
+                record.value.downloadType === 'image'
+                  ? 'The image could not be downloaded. Please select another image or try again.'
+                  : 'The video download failed. Please try again.',
               ));
         record.value.status = 'error';
         this.removeFileAccess(record);
@@ -695,7 +782,11 @@ export class ProductionDownloaderService implements DownloaderService {
     this.removeFileAccess(record);
     const filename = path.join(
       record.directory,
-      record.value.downloadType === 'mp3' ? 'audio.mp3' : 'video.mp4',
+      record.value.downloadType === 'image'
+        ? 'image.bin'
+        : record.value.downloadType === 'mp3'
+          ? 'audio.mp3'
+          : 'video.mp4',
     );
     try {
       const info = await lstat(filename);
@@ -720,7 +811,9 @@ export class ProductionDownloaderService implements DownloaderService {
     let released = false;
     return {
       filename: record.filename,
-      contentType: record.value.downloadType === 'mp3' ? 'audio/mpeg' : 'video/mp4',
+      contentType:
+        record.imageContentType ??
+        (record.value.downloadType === 'mp3' ? 'audio/mpeg' : 'video/mp4'),
       path: filename,
       size: record.fileSize,
       signal: record.controller.signal,
@@ -815,5 +908,36 @@ export class ProductionDownloaderService implements DownloaderService {
   }
   getThumbnail(id: string, token: string) {
     return this.previews.get(id, token);
+  }
+  private authorizedPhoto(id: string, photoId: string, supplied: string | undefined) {
+    const analysis = this.analyses.get(id);
+    const photo = analysis?.source.photoSources?.get(photoId);
+    if (
+      !analysis ||
+      analysis.expires <= Date.now() ||
+      !photo ||
+      !analysis.source.media.capability ||
+      !sameToken(analysis.source.media.capability, supplied)
+    )
+      throw new HttpError(
+        403,
+        'PHOTO_ACCESS_DENIED',
+        'This image is unavailable or its authorization has expired.',
+      );
+    return photo;
+  }
+  async getPhotoPreview(
+    id: string,
+    photoId: string,
+    supplied: string,
+    signal: AbortSignal,
+  ) {
+    const photo = this.authorizedPhoto(id, photoId, supplied);
+    const release = this.acquire();
+    try {
+      return await fetchPhotoImage(photo.url, signal);
+    } finally {
+      release();
+    }
   }
 }

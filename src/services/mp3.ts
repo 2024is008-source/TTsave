@@ -1,17 +1,11 @@
+import { downloadFilename } from './filename.js';
 import { z } from 'zod';
 import type { Environment } from '../config/env.js';
 import { HttpError } from '../middleware/error-handler.js';
 import { runTool, type AnalysisContext } from './tool-process.js';
 
 export function audioFilename(creator: string | null, title: string): string {
-  const stem = `${creator ?? ''}-${title}`
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-zA-Z0-9_-]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 80);
-  return `${stem || 'TikSaveMp4-audio'}.mp3`;
+  return downloadFilename(title, creator, 'mp3');
 }
 
 export async function convertMp3(

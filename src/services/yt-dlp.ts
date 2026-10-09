@@ -9,6 +9,7 @@ import { runTool, type AnalysisContext } from './tool-process.js';
 import { remoteThumbnailSchema } from '../shared/thumbnail.js';
 import { publicExtractorOptions } from './extractor-options.js';
 import { resolveTikTokLink } from './tiktok-link.js';
+import { analyzePhoto } from './photo-metadata.js';
 
 const optionalNumber = z.number().nullable().optional();
 const extractorFormat = z.object({
@@ -79,6 +80,7 @@ const positiveInteger = (value: number | null | undefined): value is number =>
   value !== null && value !== undefined && Number.isSafeInteger(value) && value > 0;
 
 export type AnalyzedSource = {
+  photoSources?: Map<string, { url: string; position: number }>;
   media: Analysis;
   selectors: Map<string, string>;
   previewUrl?: string;
@@ -233,6 +235,7 @@ function normalizeSource(payload: unknown, sourceUrl: string): AnalyzedSource {
     ...(preview.success ? { previewUrl: preview.data } : {}),
     media: {
       id: randomUUID(),
+      postType: 'video',
       title: data.title.slice(0, 500),
       creator: (data.uploader ?? data.creator)?.slice(0, 200) ?? null,
       thumbnail: null,
@@ -279,6 +282,8 @@ export class YtDlpAnalyzer {
           'The public video analysis timed out. Please try again later.',
         );
       const tExtractStart = performance.now();
+      if (new URL(url).pathname.includes('/photo/'))
+        return await analyzePhoto(url, context.signal, remainingMs);
       const result = await runTool(
         this.config.YTDLP_PATH,
         [
@@ -307,6 +312,19 @@ export class YtDlpAnalyzer {
       const tExtraction = performance.now() - tExtractStart;
       if (result.code !== 0) {
         const error = extractorError(result.stderr);
+        // Some shared photo posts retain a /video/ path. Public hydration must
+        // actually contain a matching imagePost before it can become a photo.
+        const budget = this.config.ANALYSIS_TIMEOUT_MS - (performance.now() - t0);
+        if (
+          budget > 0 &&
+          ['EXTRACTOR_FAILED', 'VIDEO_UNAVAILABLE'].includes(error.code)
+        ) {
+          try {
+            return await analyzePhoto(url, context.signal, budget);
+          } catch {
+            context.signal.throwIfAborted();
+          }
+        }
         context.logger.warn(
           { requestId: context.requestId, code: error.code, exitCode: result.code },
           'TikTok extraction failed',
@@ -324,7 +342,24 @@ export class YtDlpAnalyzer {
         );
       }
       const tNormStart = performance.now();
-      const source = normalizeSource(payload, url);
+      let source: AnalyzedSource;
+      try {
+        source = normalizeSource(payload, url);
+      } catch (error) {
+        const budget = this.config.ANALYSIS_TIMEOUT_MS - (performance.now() - t0);
+        if (
+          budget > 0 &&
+          error instanceof HttpError &&
+          error.code === 'NO_DELIVERABLE_FORMATS'
+        ) {
+          try {
+            return await analyzePhoto(url, context.signal, budget);
+          } catch {
+            context.signal.throwIfAborted();
+          }
+        }
+        throw error;
+      }
       const tNormalization = performance.now() - tNormStart;
       const tTotal = performance.now() - t0;
       context.logger.info(

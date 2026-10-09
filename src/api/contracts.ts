@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { videoUrlSchema } from '../shared/video-url.js';
-import { thumbnailSchema } from '../shared/thumbnail.js';
+import { thumbnailSchema, photoItemSchema } from '../shared/thumbnail.js';
 
 export const analyzeInput = z.object({ url: videoUrlSchema }).strict();
 export const opaqueId = z.uuid();
@@ -13,6 +13,14 @@ export const downloadInput = z.discriminatedUnion('downloadType', [
     })
     .strict(),
   z.object({ analysisId: opaqueId, downloadType: z.literal('mp3') }).strict(),
+  z
+    .object({
+      analysisId: opaqueId,
+      photoId: opaqueId,
+      capability: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
+      downloadType: z.literal('image'),
+    })
+    .strict(),
 ]);
 export const compatibleDownloadInput = z.preprocess((value) => {
   if (value && typeof value === 'object' && !('downloadType' in value))
@@ -31,24 +39,49 @@ export const apiFormat = z.object({
   compatibility: z.enum(['broad', 'device-dependent']).optional(),
   bitrateKbps: z.number().positive().optional(),
 });
-export const analysisSchema = z.object({
-  id: opaqueId,
-  title: z.string().min(1).max(500),
-  creator: z.string().max(200).nullable(),
-  thumbnail: thumbnailSchema.nullable(),
-  durationSeconds: z.number().nonnegative().nullable(),
-  sourceUrl: videoUrlSchema,
-  formats: z
-    .array(apiFormat)
-    .min(1)
-    .max(30)
-    .refine(
-      (formats) => new Set(formats.map((format) => format.id)).size === formats.length,
-    ),
-  mock: z.boolean(),
-  downloadAvailable: z.boolean().default(false),
-  capabilities: z.object({ mp4: z.boolean(), mp3: z.boolean() }).optional(),
-});
+export const analysisSchema = z
+  .object({
+    postType: z.enum(['video', 'photo']).optional(),
+    photos: z.array(photoItemSchema).min(1).max(35).optional(),
+    capability: z
+      .string()
+      .regex(/^[A-Za-z0-9_-]{43}$/)
+      .optional(),
+    id: opaqueId,
+    title: z.string().min(1).max(500),
+    creator: z.string().max(200).nullable(),
+    thumbnail: thumbnailSchema.nullable(),
+    durationSeconds: z.number().nonnegative().nullable(),
+    sourceUrl: videoUrlSchema,
+    formats: z
+      .array(apiFormat)
+      .max(30)
+      .refine(
+        (formats) => new Set(formats.map((format) => format.id)).size === formats.length,
+      ),
+    mock: z.boolean(),
+    downloadAvailable: z.boolean().default(false),
+    capabilities: z
+      .object({ mp4: z.boolean(), mp3: z.boolean(), images: z.boolean().optional() })
+      .optional(),
+  })
+  .refine((value) =>
+    value.postType === 'photo'
+      ? value.formats.length === 0 &&
+        !!value.photos?.length &&
+        !!value.capability &&
+        value.capabilities?.images === true &&
+        !value.capabilities.mp4 &&
+        !value.capabilities.mp3 &&
+        new Set(value.photos.map((photo) => photo.id)).size === value.photos.length &&
+        value.photos.every(
+          (photo, index) =>
+            photo.position === index + 1 &&
+            photo.previewUrl ===
+              `/api/v1/analysis/${value.id}/photos/${photo.id}/preview?token=${value.capability ?? ''}`,
+        )
+      : value.formats.length > 0 && !value.photos && !value.capability,
+  );
 export const accessTokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
 export const fileQuery = z.object({ token: accessTokenSchema }).strict();
 export const apiProgressSchema = z.object({
@@ -76,7 +109,7 @@ export const jobErrorSchema = z.object({
   requestId: z.string(),
 });
 export const apiJobSchema = z.object({
-  downloadType: z.enum(['mp4', 'mp3']).optional(),
+  downloadType: z.enum(['mp4', 'mp3', 'image']).optional(),
   id: opaqueId,
   analysisId: opaqueId,
   formatId: z.string().min(1).max(200),

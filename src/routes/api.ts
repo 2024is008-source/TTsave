@@ -1,3 +1,4 @@
+import { attachmentHeader } from '../services/filename.js';
 import { Router, type Request } from 'express';
 import { z, type ZodType } from 'zod';
 import { createReadStream } from 'node:fs';
@@ -83,17 +84,57 @@ export function createApiRouter(service: DownloaderService) {
       apiJobSchema,
       service.createJob(
         input.analysisId,
-        input.downloadType === 'mp4' ? input.formatId : '',
+        input.downloadType === 'image'
+          ? input.photoId
+          : input.downloadType === 'mp4'
+            ? input.formatId
+            : '',
         {
           signal: controller.signal,
           requestId: typeof request.id === 'string' ? request.id : 'unknown-request',
           logger: request.log,
         },
         input.downloadType,
+        input.downloadType === 'image' ? input.capability : undefined,
       ),
     );
     response.location(`/api/v1/downloads/${job.id}`).status(201).json(job);
   });
+  router.get(
+    '/analysis/:analysisId/photos/:photoId/preview',
+    async (request, response) => {
+      const { analysisId, photoId } = z
+        .object({ analysisId: z.uuid(), photoId: z.uuid() })
+        .parse(request.params);
+      const { token } = fileQuery.parse(request.query);
+      if (!service.getPhotoPreview)
+        throw new HttpError(
+          404,
+          'PREVIEW_UNAVAILABLE',
+          'The image preview is unavailable.',
+        );
+      const controller = new AbortController();
+      const close = () => {
+        if (!response.writableEnded) controller.abort();
+      };
+      response.once('close', close);
+      try {
+        const image = await service.getPhotoPreview(
+          analysisId,
+          photoId,
+          token,
+          controller.signal,
+        );
+        if (controller.signal.aborted) return;
+        response.setHeader('Content-Type', image.contentType);
+        response.setHeader('Cache-Control', 'private, no-store');
+        response.setHeader('X-Content-Type-Options', 'nosniff');
+        response.send(image.bytes);
+      } finally {
+        response.off('close', close);
+      }
+    },
+  );
   router.get('/downloads/:jobId', (request, response) => {
     const { jobId } = jobParams.parse(request.params);
     authorize(request, jobId);
@@ -123,9 +164,10 @@ export function createApiRouter(service: DownloaderService) {
         response.setHeader('Content-Length', claim.size);
         response.setHeader(
           'Content-Disposition',
-          `attachment; filename="${claim.filename ?? 'TikSaveMp4-video.mp4'}"`,
+          attachmentHeader(claim.filename ?? 'tiktok-video.mp4'),
         );
         response.setHeader('Cache-Control', 'private, no-store');
+        response.setHeader('X-Content-Type-Options', 'nosniff');
         response.setHeader('Accept-Ranges', 'none');
         await pipeline(createReadStream(claim.path), response, { signal: claim.signal });
         delivered = true;

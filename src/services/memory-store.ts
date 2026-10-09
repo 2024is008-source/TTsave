@@ -17,7 +17,8 @@ export type DownloaderService = {
     analysisId: string,
     formatId: string,
     context?: AnalysisContext,
-    downloadType?: 'mp4' | 'mp3',
+    downloadType?: 'mp4' | 'mp3' | 'image',
+    capability?: string,
   ): ApiJob;
   getJob(id: string): ApiJob;
   cancel(id: string): ApiJob;
@@ -27,6 +28,12 @@ export type DownloaderService = {
   sweep?: () => Promise<void>;
   dispose?: () => Promise<void>;
   getThumbnail?: (id: string, token: string) => Promise<Buffer>;
+  getPhotoPreview?: (
+    id: string,
+    photoId: string,
+    token: string,
+    signal: AbortSignal,
+  ) => Promise<{ bytes: Buffer; contentType: string }>;
 };
 
 /** Bounded analysis and job storage; no timers simulate work or completion. */

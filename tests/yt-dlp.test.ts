@@ -11,6 +11,10 @@ const spawnMock = vi.hoisted(() =>
   vi.fn<(executable: string, args: string[], options: unknown) => unknown>(),
 );
 vi.mock('node:child_process', () => ({ spawn: spawnMock }));
+const photoMock = vi.hoisted(() =>
+  vi.fn().mockRejectedValue(new Error('Unsupported public photo metadata')),
+);
+vi.mock('../src/services/photo-metadata.js', () => ({ analyzePhoto: photoMock }));
 
 const url = 'https://www.tiktok.com/@creator/video/123';
 const config = parseEnvironment({});
@@ -63,6 +67,7 @@ function context(controller = new AbortController()) {
   };
 }
 afterEach(() => {
+  photoMock.mockReset().mockRejectedValue(new Error('Unsupported public photo metadata'));
   spawnMock.mockReset();
   vi.useRealTimers();
 });
@@ -339,6 +344,22 @@ describe('production yt-dlp analysis', () => {
     expect(log).toHaveBeenCalledWith(
       expect.objectContaining({ requestId: 'test-request-id', code }),
       expect.any(String),
+    );
+    if (['VIDEO_NOT_PUBLIC', 'REGION_RESTRICTED', 'SOURCE_RATE_LIMITED'].includes(code))
+      expect(photoMock).not.toHaveBeenCalled();
+  });
+  it('checks actual photo metadata when a video-path extractor returns no video formats', async () => {
+    launch(JSON.stringify({ ...fixture, formats: [] }));
+    photoMock.mockResolvedValueOnce({
+      media: { id: 'photo-source', postType: 'photo' },
+      selectors: new Map(),
+    });
+    const result = await new YtDlpAnalyzer().analyzeSource(url, context());
+    expect(result.media.postType).toBe('photo');
+    expect(photoMock).toHaveBeenCalledWith(
+      url,
+      expect.any(AbortSignal),
+      expect.any(Number),
     );
   });
   it.each(['not-json', '{}', '{"_type":"playlist"}'])(

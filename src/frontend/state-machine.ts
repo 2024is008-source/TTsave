@@ -24,7 +24,7 @@ export type Status =
   | 'download-requested'
   | 'error';
 export type State = {
-  downloadType: 'mp4' | 'mp3';
+  downloadType: 'mp4' | 'mp3' | 'image';
   status: Status;
   url: string;
   media: Media | null;
@@ -71,6 +71,7 @@ export function transition(state: State, event: Event): State {
   switch (event.type) {
     case 'SELECT_TYPE':
       return state.status === 'ready' &&
+        state.media?.postType !== 'photo' &&
         (event.downloadType === 'mp4' || state.media?.capabilities?.mp3 === true)
         ? {
             ...state,
@@ -106,14 +107,32 @@ export function transition(state: State, event: Event): State {
             ...state,
             status: 'ready',
             media: event.media,
-            formatId: event.media.formats[0]?.id ?? null,
-            message: 'Video details ready. Choose an available format.',
+            downloadType: event.media.postType === 'photo' ? 'image' : 'mp4',
+            formatId:
+              event.media.postType === 'photo'
+                ? (event.media.photos?.[0]?.id ?? null)
+                : (event.media.formats[0]?.id ?? null),
+            message:
+              event.media.postType === 'photo'
+                ? 'Select an image to download'
+                : 'Video details ready. Choose an available format.',
           }
         : state;
     case 'SELECT':
-      return state.status === 'ready' &&
-        state.media?.formats.some((format) => format.id === event.formatId)
-        ? { ...state, formatId: event.formatId }
+      return (state.status === 'ready' ||
+        (state.downloadType === 'image' &&
+          ['completed', 'download-requested'].includes(state.status))) &&
+        (state.media?.postType === 'photo'
+          ? state.media.photos?.some((photo) => photo.id === event.formatId)
+          : state.media?.formats.some((format) => format.id === event.formatId))
+        ? {
+            ...state,
+            status: 'ready',
+            formatId: event.formatId,
+            ...(state.downloadType === 'image'
+              ? { progress: null, download: null, message: 'Select an image to download' }
+              : {}),
+          }
         : state;
     case 'START':
       return state.status === 'ready' && state.formatId
@@ -122,9 +141,11 @@ export function transition(state: State, event: Event): State {
             status: 'starting-download',
             progress: null,
             message:
-              state.downloadType === 'mp3'
-                ? 'Preparing MP3…'
-                : 'Starting the download request…',
+              state.downloadType === 'image'
+                ? 'Preparing image…'
+                : state.downloadType === 'mp3'
+                  ? 'Preparing MP3…'
+                  : 'Starting the download request…',
           }
         : state;
     case 'DOWNLOADING':
@@ -132,7 +153,10 @@ export function transition(state: State, event: Event): State {
         ? {
             ...state,
             status: 'downloading',
-            message: 'Preparing the file. Progress is unknown.',
+            message:
+              state.downloadType === 'image'
+                ? 'Downloading image…'
+                : 'Preparing the file. Progress is unknown.',
           }
         : state;
     case 'PROGRESS':
@@ -141,14 +165,25 @@ export function transition(state: State, event: Event): State {
             ...state,
             progress: event.progress,
             message:
-              event.progress.phase === 'converting'
-                ? 'Converting audio to MP3…'
-                : event.progress.percent === undefined
-                  ? 'Preparing the file. Progress is unknown.'
-                  : `Preparing the file: ${String(event.progress.percent)}%.`,
+              state.downloadType === 'image'
+                ? 'Downloading image…'
+                : event.progress.phase === 'converting'
+                  ? 'Converting audio to MP3…'
+                  : event.progress.percent === undefined
+                    ? 'Preparing the file. Progress is unknown.'
+                    : `Preparing the file: ${String(event.progress.percent)}%.`,
           }
         : state;
     case 'REQUESTED':
+      if (state.status === 'completed' && state.downloadType === 'image')
+        return {
+          ...state,
+          status: 'ready',
+          download: null,
+          progress: null,
+          message:
+            'Download requested. Select another image to download. Your browser handles saving.',
+        };
       return state.status === 'completed'
         ? {
             ...state,
@@ -164,19 +199,27 @@ export function transition(state: State, event: Event): State {
             status: 'completed',
             download: event.download,
             message:
-              state.downloadType === 'mp3'
-                ? 'Your MP3 is ready. Select Save MP3 to request the file.'
-                : 'Your video is ready. Select Save MP4 to request the file.',
+              state.downloadType === 'image'
+                ? 'Your image is ready. Select Save image to request the file.'
+                : state.downloadType === 'mp3'
+                  ? 'Your MP3 is ready. Select Save MP3 to request the file.'
+                  : 'Your video is ready. Select Save MP4 to request the file.',
           }
         : state;
     case 'CHOOSE':
-      return state.status === 'error' && state.media
+      return (state.status === 'error' ||
+        (state.downloadType === 'image' &&
+          ['completed', 'download-requested'].includes(state.status))) &&
+        state.media
         ? {
             ...state,
             status: 'ready',
             progress: null,
             download: null,
-            message: 'Choose an available quality.',
+            message:
+              state.downloadType === 'image'
+                ? 'Select an image to download'
+                : 'Choose an available quality.',
           }
         : state;
     case 'FAIL':
@@ -254,12 +297,23 @@ export function createDownloaderController({
       dispatch({ type: 'RESET', url, message });
     },
     selectFormat(formatId: string) {
+      if (
+        state.downloadType === 'image' &&
+        ['completed', 'download-requested'].includes(state.status) &&
+        state.media?.photos?.some((photo) => photo.id === formatId)
+      )
+        invalidate();
       dispatch({ type: 'SELECT', formatId });
     },
     selectDownloadType(downloadType: 'mp4' | 'mp3') {
       dispatch({ type: 'SELECT_TYPE', downloadType });
     },
     chooseQuality() {
+      if (
+        state.downloadType === 'image' &&
+        ['completed', 'download-requested'].includes(state.status)
+      )
+        invalidate();
       dispatch({ type: 'CHOOSE' });
     },
     save() {
@@ -342,7 +396,13 @@ export function createDownloaderController({
       dispatch({ type: 'START' });
       try {
         const job = jobSchema.parse(
-          await adapter.startDownload(mediaId, formatId, signal, state.downloadType),
+          await adapter.startDownload(
+            mediaId,
+            formatId,
+            signal,
+            state.downloadType,
+            ...(state.downloadType === 'image' ? [state.media.capability] : []),
+          ),
         );
         if (current !== operation) return;
         dispatch({ type: 'DOWNLOADING' });

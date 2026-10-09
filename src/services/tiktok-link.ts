@@ -29,7 +29,7 @@ const timeout = () =>
     'The public video analysis timed out. Please try again later.',
   );
 const canonical = (url: URL) =>
-  /^\/@[a-zA-Z0-9._]+\/video\/\d+\/?$/.test(url.pathname)
+  /^\/@[a-zA-Z0-9._]+\/(?:video|photo)\/\d+\/?$/.test(url.pathname)
     ? `https://www.tiktok.com${url.pathname.replace(/\/$/, '')}`
     : null;
 

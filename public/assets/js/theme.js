@@ -1,6 +1,5 @@
 export function initializeTheme() {
   const button = document.querySelector('.theme-toggle');
-  const preference = window.matchMedia('(prefers-color-scheme: dark)');
   let savedTheme = null;
   try {
     savedTheme = localStorage.getItem('tiksavemp4-theme');
@@ -9,13 +8,13 @@ export function initializeTheme() {
   }
   const apply = (dark) => {
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', dark ? '#0d101a' : '#f8faff');
     button?.setAttribute('aria-pressed', String(dark));
     button?.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} theme`);
   };
-  apply(savedTheme ? savedTheme === 'dark' : preference.matches);
-  preference.addEventListener('change', (event) => {
-    if (!savedTheme) apply(event.matches);
-  });
+  apply(savedTheme === 'dark');
   button?.addEventListener('click', () => {
     const dark = document.documentElement.dataset.theme !== 'dark';
     savedTheme = dark ? 'dark' : 'light';

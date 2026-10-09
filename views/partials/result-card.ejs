@@ -37,31 +37,15 @@ state-panel children keep their existing IDs so downloader.ts works unchanged. %
     </div>
   </div>
 
-  <%# ── Ready state: status + quality + download ── %>
+  <%# ── Ready state: status + quality + download ── %> <%- include('photo-gallery') %>
   <div id="quality-card">
-    <div class="rp-status-row">
-      <span class="result-success" role="status" tabindex="-1">
-        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none">
-          <circle cx="7" cy="7" r="7" fill="rgba(16,185,129,0.15)" />
-          <path
-            d="M4 7l2.3 2.3L10 5"
-            stroke="#10b981"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        Video ready
-      </span>
-    </div>
-
     <div class="rp-container-section">
       <h3 class="rp-section-label" id="container-label">Download format</h3>
       <fieldset class="rp-media-types" aria-labelledby="container-label">
         <label class="rp-media-choice">
           <input type="radio" name="download-type" value="mp4" checked />
           <%- include('icon', { name: 'video' }) %>
-          <span><strong>MP4 Video</strong><small>Video with audio</small></span>
+          <span><strong>MP4 Video</strong></span>
           <span class="rp-type-check" aria-hidden="true">✓</span>
         </label>
         <label class="rp-media-choice" id="mp3-choice">
@@ -86,7 +70,7 @@ state-panel children keep their existing IDs so downloader.ts works unchanged. %
             <ellipse cx="6" cy="18" rx="3" ry="2" />
             <ellipse cx="17" cy="16" rx="3" ry="2" />
           </svg>
-          <span><strong>MP3 Audio</strong><small>Audio only</small></span>
+          <span><strong>MP3 Audio</strong></span>
           <span class="rp-type-check" aria-hidden="true">✓</span>
         </label>
       </fieldset>

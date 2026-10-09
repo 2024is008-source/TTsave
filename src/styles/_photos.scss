@@ -1,0 +1,131 @@
+.photo-gallery {
+  min-width: 0;
+  margin-top: 8px;
+  #photo-count {
+    font-size: 0.8125rem;
+    margin-bottom: 6px;
+  }
+  .photo-preview {
+    position: relative;
+    text-align: center;
+  }
+  #photo-selected {
+    display: block;
+    width: 100%;
+    height: clamp(80px, calc(100svh - 570px), 240px);
+    object-fit: contain;
+    border-radius: 16px;
+  }
+  .photo-thumbnails {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    max-width: 100%;
+    padding: 6px 0;
+  }
+  .photo-thumbnails button {
+    flex: 0 1 52px;
+    min-width: 0;
+    min-height: 60px;
+    padding: 3px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: var(--glass);
+    color: var(--ink);
+    scroll-snap-align: center;
+    cursor: pointer;
+  }
+  .photo-thumbnails button[aria-pressed='true'] {
+    border-color: #8a35ff;
+  }
+  .photo-thumbnails img {
+    width: 40px;
+    height: 32px;
+    object-fit: contain;
+  }
+  .photo-thumbnails small {
+    display: block;
+    font-size: 0.75rem;
+    line-height: 18px;
+  }
+  .photo-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 6px 0;
+    button {
+      width: auto;
+      flex: 1;
+      margin-top: 0;
+    }
+    #photo-position {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+  }
+  button {
+    min-height: 44px;
+  }
+  button:disabled {
+    cursor: default;
+  }
+  #photo-download,
+  #photo-another {
+    width: 100%;
+    margin-top: 8px;
+  }
+}
+.result-panel:has(.photo-gallery:not([hidden])) {
+  padding: 14px 18px;
+  .rp-creator-header {
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+  .rp-creator-avatar {
+    flex-basis: 32px;
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+  .rp-creator-header p,
+  .rp-meta-row {
+    display: none;
+  }
+  .rp-header {
+    padding-bottom: 8px;
+    margin-bottom: 0;
+  }
+  .rp-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+  .rp-dl-btn,
+  .rp-ghost-btn {
+    min-height: 44px;
+    padding: 8px 12px;
+    margin-top: 6px;
+  }
+  .rp-completed-header {
+    margin-bottom: 4px;
+  }
+  .rp-done-size {
+    margin-bottom: 4px;
+  }
+  #completed-quality {
+    display: none;
+  }
+  .save-button:disabled {
+    cursor: default;
+  }
+  .rp-thumb-wrap {
+    display: none;
+  }
+}
+.result-workspace-inner:has(.photo-gallery:not([hidden])) {
+  padding-block: 12px 24px;
+}

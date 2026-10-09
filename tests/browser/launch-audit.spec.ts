@@ -72,7 +72,7 @@ for (const [width, height] of viewports) {
       };
       await capture('idle');
       await page.evaluate(async () => {
-        const modulePath = '/assets/js/downloader.js';
+        const modulePath = '/assets/js/downloader.js?v=simple-panels-4';
         const module = (await import(
           modulePath
         )) as typeof import('../../src/frontend/downloader.js');

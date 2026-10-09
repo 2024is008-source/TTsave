@@ -62,5 +62,5 @@ export const videoUrlSchema = tiktokUrlSchema.refine((value) => {
   const url = new URL(value);
   return url.hostname === 'vm.tiktok.com' || url.hostname === 'vt.tiktok.com'
     ? /^\/[a-zA-Z0-9]+\/?$/.test(url.pathname)
-    : /^\/@[a-zA-Z0-9._]+\/video\/\d+\/?$/.test(url.pathname);
+    : /^\/@[a-zA-Z0-9._]+\/(?:video|photo)\/\d+\/?$/.test(url.pathname);
 }, URL_MESSAGES.invalid);

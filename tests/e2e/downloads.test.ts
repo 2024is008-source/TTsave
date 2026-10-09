@@ -195,7 +195,7 @@ describe('production download endpoints', () => {
     const response = await request(app).get(file).buffer(true).expect(200);
     expect(response.headers['x-robots-tag']).toBe('noindex, nofollow, noarchive');
     expect(response.headers['content-disposition']).toBe(
-      'attachment; filename="TikSaveMp4-video.mp4"',
+      'attachment; filename="Test-creator-Test-source.mp4"; filename*=UTF-8\'\'Test-creator-Test-source.mp4',
     );
     expect(response.headers['content-type']).toBe('video/mp4');
     expect(response.headers['cache-control']).toBe('private, no-store');

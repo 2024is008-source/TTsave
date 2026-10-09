@@ -35,3 +35,15 @@ export const thumbnailSchema = z
       ),
     'Unsupported preview image.',
   );
+
+export const photoPreviewSchema = z
+  .string()
+  .max(512)
+  .regex(
+    /^\/api\/v1\/analysis\/[a-f0-9-]{36}\/photos\/[a-f0-9-]{36}\/preview\?token=[A-Za-z0-9_-]{43}$/,
+  );
+export const photoItemSchema = z.object({
+  id: z.uuid(),
+  previewUrl: photoPreviewSchema,
+  position: z.number().int().min(1).max(35),
+});

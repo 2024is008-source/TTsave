@@ -1,6 +1,7 @@
 import { createApiAdapter } from './api-adapter.js';
 import { createDownloaderController, isBusy, type State } from './state-machine.js';
 import type { DownloaderAdapter } from './contracts.js';
+import { initializePhotoGallery } from './photo-gallery.js';
 
 type Options = {
   adapter?: DownloaderAdapter;
@@ -102,14 +103,17 @@ export function initializeDownloader(root: Document = document, options: Options
     adapter: options.adapter ?? createApiAdapter(),
     requestDownload,
   });
+  const renderGallery = initializePhotoGallery(root, controller, eventController.signal);
 
   const render = (state: State) => {
+    const photoMode = state.media?.postType === 'photo';
+    renderGallery(state);
     const busy = isBusy(state.status);
     const downloading = ['starting-download', 'downloading'].includes(state.status);
     get('#downloader').dataset.state = state.status;
     // Drive idle vs active layout via the hero section's data attribute
     if (hero) hero.dataset.downloaderState = state.status;
-    preview.hidden = !state.media;
+    preview.hidden = !state.media || photoMode;
     form.setAttribute('aria-busy', String(busy));
     input.disabled = busy;
     input.setAttribute('aria-invalid', String(state.invalidUrl));
@@ -134,7 +138,7 @@ export function initializeDownloader(root: Document = document, options: Options
       'download-requested',
       'error',
     ].includes(state.status);
-    qualityCard.hidden = state.status !== 'ready';
+    qualityCard.hidden = state.status !== 'ready' || photoMode;
     completedCard.hidden = !['completed', 'download-requested'].includes(state.status);
     errorCard.hidden = state.status !== 'error';
     get('#error-message').textContent = state.message;
@@ -143,7 +147,9 @@ export function initializeDownloader(root: Document = document, options: Options
     save.textContent =
       state.status === 'download-requested'
         ? 'Save requested'
-        : `Save ${state.downloadType.toUpperCase()}`;
+        : photoMode
+          ? 'Save image'
+          : `Save ${state.downloadType.toUpperCase()}`;
     const audioMode = state.downloadType === 'mp3';
     get('#video-quality-panel').hidden = audioMode;
     get('#audio-quality-panel').hidden = !audioMode;
@@ -159,9 +165,11 @@ export function initializeDownloader(root: Document = document, options: Options
     get('.rp-helper').textContent = audioMode
       ? 'The audio is converted to MP3. Audio quality depends on the source.'
       : 'Choose an available source quality. Video and audio are saved together.';
-    get('#completed-title').textContent = audioMode
-      ? 'Your MP3 is ready'
-      : 'Download ready';
+    get('#completed-title').textContent = photoMode
+      ? 'Your image is ready'
+      : audioMode
+        ? 'Your MP3 is ready'
+        : 'Download ready';
     const selected = state.media?.formats.find((format) => format.id === state.formatId);
     const creatorInitial = root.querySelector<HTMLElement>('#result-creator-initial');
     if (creatorInitial)
@@ -169,15 +177,38 @@ export function initializeDownloader(root: Document = document, options: Options
         state.media?.creator?.replace(/^@/, '').slice(0, 1).toUpperCase() ?? '';
     const creatorHeader = root.querySelector<HTMLElement>('.rp-creator-header');
     if (creatorHeader) creatorHeader.hidden = !state.media?.creator;
+    const postLabel = creatorHeader?.querySelector('p');
+    if (postLabel)
+      postLabel.textContent = photoMode
+        ? 'Public TikTok photo post'
+        : 'Public TikTok video';
+    const badge = result.querySelector('.rp-format-badge');
+    if (badge) badge.textContent = photoMode ? 'Photos' : 'Video';
+    result.setAttribute(
+      'aria-label',
+      photoMode ? 'Photo download workspace' : 'Video download workspace',
+    );
+    get<HTMLButtonElement>('.choose-button').textContent = photoMode
+      ? 'Choose another image'
+      : 'Choose another quality';
+    get<HTMLButtonElement>('.another-button').textContent = photoMode
+      ? 'Download another post'
+      : 'Download another video';
     const containerLabel = root.querySelector<HTMLElement>('#result-container-label');
     if (containerLabel)
-      containerLabel.textContent = selected?.container?.toUpperCase() ?? 'Video';
-    get('#progress-quality').textContent = audioMode
-      ? 'MP3 Audio'
-      : (selected?.label ?? '');
-    get('#completed-quality').textContent = audioMode
-      ? 'MP3 Audio'
-      : (state.download?.qualityLabel ?? selected?.label ?? '');
+      containerLabel.textContent = photoMode
+        ? 'Image'
+        : (selected?.container?.toUpperCase() ?? 'Video');
+    get('#progress-quality').textContent = photoMode
+      ? 'Selected image'
+      : audioMode
+        ? 'MP3 Audio'
+        : (selected?.label ?? '');
+    get('#completed-quality').textContent = photoMode
+      ? 'Selected image'
+      : audioMode
+        ? 'MP3 Audio'
+        : (state.download?.qualityLabel ?? selected?.label ?? '');
     get('#completed-size').textContent =
       state.download?.sizeBytes === undefined || state.download.sizeBytes === 0
         ? ''
@@ -238,42 +269,6 @@ export function initializeDownloader(root: Document = document, options: Options
         name.textContent = format.label;
         text.append(name);
         label.append(radio, text);
-        // Build a single readable detail line: "1080 × 1920 · MP4"
-        const detailParts: string[] = [];
-        if (format.width !== undefined && format.height !== undefined)
-          detailParts.push(`${String(format.width)} \u00d7 ${String(format.height)}`);
-        if (format.container) detailParts.push(format.container.toUpperCase());
-        if (format.compatibility === 'device-dependent')
-          detailParts.push('Limited compatibility');
-        if (detailParts.length) {
-          const resolution = root.createElement('span');
-          resolution.className = 'quality-detail';
-          resolution.textContent = detailParts.join(' \u00b7 ');
-          text.append(resolution);
-        }
-        // Optional size line (only when genuinely known)
-        if (format.sizeBytes !== undefined && format.sizeBytes > 0) {
-          const sizeMb = Math.round(format.sizeBytes / (1024 * 1024));
-          const sizeLabel =
-            sizeMb > 0
-              ? `~${String(sizeMb)} MB`
-              : `~${String(Math.round(format.sizeBytes / 1024))} KB`;
-          const sizeEl = root.createElement('span');
-          sizeEl.className = 'quality-detail';
-          sizeEl.textContent = sizeLabel;
-          text.append(sizeEl);
-        }
-        // Right-side badges
-        const badges = root.createElement('span');
-        badges.style.display = 'grid';
-        badges.style.gap = '4px';
-        badges.style.justifyItems = 'end';
-        const selectedEl = root.createElement('span');
-        selectedEl.className = 'selected-indicator';
-        selectedEl.textContent = 'Selected';
-        selectedEl.setAttribute('aria-hidden', 'true');
-        badges.append(selectedEl);
-        label.append(badges);
         (index < 4 ? formats : extraFormats).append(label);
       });
     }
@@ -283,8 +278,11 @@ export function initializeDownloader(root: Document = document, options: Options
     });
     progressCard.hidden = !downloading;
     // Progress heading: distinguish start from active and 100%
-    progressHeading.textContent =
-      audioMode && state.progress?.phase === 'converting'
+    progressHeading.textContent = photoMode
+      ? state.status === 'starting-download'
+        ? 'Preparing image…'
+        : 'Downloading image…'
+      : audioMode && state.progress?.phase === 'converting'
         ? 'Converting audio to MP3…'
         : audioMode && state.status === 'starting-download'
           ? 'Preparing MP3…'
@@ -335,7 +333,7 @@ export function initializeDownloader(root: Document = document, options: Options
         // keyboard focus to the analyzed video's heading. We set
         // preventScroll:true so that the focus() call does NOT trigger a
         // second, competing scroll event.
-        if (lastStatus !== 'ready' && resultWorkspace) {
+        if ((!photoMode || lastStatus === 'analyzing') && resultWorkspace) {
           const win = root.defaultView;
           const prefersReduced =
             typeof win?.matchMedia === 'function'
@@ -348,10 +346,14 @@ export function initializeDownloader(root: Document = document, options: Options
             });
           }
         }
-        resultHeading.focus({ preventScroll: true });
+        if (!photoMode || lastStatus === 'analyzing')
+          resultHeading.focus({ preventScroll: true });
+        else if (state.message.startsWith('Download requested.'))
+          get('#photo-download').focus({ preventScroll: true });
       } else if (state.status === 'analyzing') analyzing.focus();
-      else if (downloading) progressHeading.focus();
-      else if (state.status === 'completed') get('#completed-title').focus();
+      else if (downloading) progressHeading.focus({ preventScroll: photoMode });
+      else if (state.status === 'completed')
+        get('#completed-title').focus({ preventScroll: photoMode });
       else if (state.status === 'download-requested') status.focus();
       else if (state.status === 'idle' && lastStatus !== 'idle') input.focus();
     }

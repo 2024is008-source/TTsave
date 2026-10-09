@@ -1,0 +1,26 @@
+<section
+  id="photo-gallery"
+  class="photo-gallery"
+  aria-label="Photo gallery"
+  tabindex="0"
+  hidden
+>
+  <p id="photo-count"></p>
+  <div class="photo-preview">
+    <img id="photo-selected" alt="" decoding="async" />
+    <p id="photo-loading" role="status">Loading image…</p>
+    <p id="photo-unavailable" role="status" hidden>
+      Preview unavailable. You can select another image or try downloading this image.
+    </p>
+  </div>
+  <div id="photo-thumbnails" class="photo-thumbnails" aria-label="Select an image"></div>
+  <div class="photo-navigation">
+    <button type="button" id="photo-previous" class="rp-ghost-btn">Previous</button>
+    <span id="photo-position" aria-live="polite" aria-atomic="true"></span>
+    <button type="button" id="photo-next" class="rp-ghost-btn">Next</button>
+  </div>
+  <button type="button" id="photo-download" class="rp-dl-btn">Download image</button>
+  <button type="button" id="photo-another" class="rp-ghost-btn">
+    Download another post
+  </button>
+</section>
