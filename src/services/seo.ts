@@ -28,9 +28,23 @@ export function webApplication(baseUrl: string) {
     name: 'TikSaveMp4',
     url: baseUrl + '/',
     applicationCategory: 'MultimediaApplication',
-    operatingSystem: 'Any',
+    operatingSystem: 'Web-based',
+    inLanguage: 'en-US',
     browserRequirements: 'Requires a modern web browser',
     description:
-      'A web application for processing supported public TikTok video links and downloading available MP4 formats.',
+      'Convert supported public TikTok videos to available MP4 video or MP3 audio using a web browser.',
+  };
+}
+
+export function faqPage(faqs: readonly { question: string; answer: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: 'en-US',
+    mainEntity: faqs.map(({ question, answer }) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
   };
 }

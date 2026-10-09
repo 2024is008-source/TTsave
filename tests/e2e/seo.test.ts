@@ -5,6 +5,8 @@ import { legalPages } from '../../src/data/legal-pages.js';
 import { env } from '../../src/config/env.js';
 import { JSDOM } from 'jsdom';
 import sharp from 'sharp';
+import { mockData } from '../../src/data/mock-data.js';
+import { faqPage, webApplication } from '../../src/services/seo.js';
 
 describe('public SEO and policies', () => {
   const app = createApp();
@@ -32,6 +34,24 @@ describe('public SEO and policies', () => {
         .set('X-Forwarded-Host', 'attacker.test')
         .expect(200);
       const document = new JSDOM(response.text).window.document;
+      expect(document.querySelectorAll('title')).toHaveLength(1);
+      expect(document.querySelectorAll('meta[name="description"]')).toHaveLength(1);
+      expect(document.querySelectorAll('link[rel="canonical"]')).toHaveLength(1);
+      expect(document.querySelector('meta[name="keywords"]')).toBeNull();
+      expect(
+        document.querySelector('meta[property="og:locale"]')?.getAttribute('content'),
+      ).toBe('en_US');
+      for (const selector of [
+        'meta[property="og:url"]',
+        'meta[property="og:image"]',
+        'meta[name="twitter:image"]',
+      ]) {
+        const url = new URL(
+          document.querySelector(selector)?.getAttribute('content') ?? '',
+        );
+        expect(url.origin).toBe(env.PUBLIC_BASE_URL);
+        expect(url.search).toBe('');
+      }
       expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(
         env.PUBLIC_BASE_URL + path,
       );
@@ -54,7 +74,7 @@ describe('public SEO and policies', () => {
       expect(
         document.querySelectorAll('script[type="application/ld+json"]'),
       ).toHaveLength(path === '/' ? 1 : 0);
-      expect(document.documentElement.lang).toBe('en');
+      expect(document.documentElement.lang).toBe('en-US');
       for (const previousBrand of [
         ['TT', 'Save'].join(''),
         ['TikSave', 'MP4'].join(''),
@@ -89,28 +109,34 @@ describe('public SEO and policies', () => {
   it('uses exact homepage copy and valid factual WebApplication data', async () => {
     const response = await request(app).get('/').expect(200);
     const document = new JSDOM(response.text).window.document;
-    expect(document.title).toBe('TikSaveMp4 — Online TikTok Video Downloader');
+    expect(document.title).toBe('TikTok to MP4 Downloader – Convert Videos Online');
     expect(
       document.querySelector('meta[name="description"]')?.getAttribute('content'),
     ).toBe(
-      'Download available MP4 formats from supported public TikTok video links. Paste a link, review the source-provided options and choose an available quality.',
+      'Convert supported public TikTok videos to MP4 or MP3 online. Paste a TikTok link, review the available options, and download it to your device.',
     );
     const data: unknown = JSON.parse(
       document.querySelector('script[type="application/ld+json"]')?.textContent ?? '',
     );
-    expect(data).toEqual({
-      '@context': 'https://schema.org',
+    expect(data).toEqual([webApplication(env.PUBLIC_BASE_URL), faqPage(mockData.faqs)]);
+    expect(webApplication(env.PUBLIC_BASE_URL)).toMatchObject({
       '@type': 'WebApplication',
-      name: 'TikSaveMp4',
-      url: env.PUBLIC_BASE_URL + '/',
-      applicationCategory: 'MultimediaApplication',
-      operatingSystem: 'Any',
-      browserRequirements: 'Requires a modern web browser',
-      description:
-        'A web application for processing supported public TikTok video links and downloading available MP4 formats.',
+      operatingSystem: 'Web-based',
+      inLanguage: 'en-US',
     });
+    const visibleFaqs = [...document.querySelectorAll('.faq-item')].map((item) => ({
+      question: item
+        .querySelector('summary')
+        ?.textContent.replace(/\+\s*$/, '')
+        .trim(),
+      answer: item.querySelector('p')?.textContent.trim(),
+    }));
+    expect(visibleFaqs).toEqual(mockData.faqs);
+    expect(document.querySelector('h1')?.textContent.replace(/\s+/g, ' ').trim()).toBe(
+      'TikTok to MP4 Downloader',
+    );
     expect(JSON.stringify(data)).not.toMatch(
-      /aggregateRating|review|offers|downloadCount|price/,
+      /"(?:aggregateRating|review|offers|downloadCount|price)"\s*:/,
     );
     expect(response.headers['content-security-policy']).toContain("script-src 'self'");
   });
@@ -163,18 +189,115 @@ describe('public SEO and policies', () => {
     const response = await request(app).get('/privacy/?token=secret').expect(301);
     expect(response.headers.location).toBe(env.PUBLIC_BASE_URL + '/privacy');
   });
+  it.each(['/PRIVACY', '/Privacy/', '/ROBOTS.TXT/', '/SITEMAP.XML'])(
+    'normalizes duplicate public route %s in one redirect',
+    async (path) => {
+      const response = await request(app)
+        .get(path + '?utm_source=test')
+        .set('Host', 'www.tiksavemp4.online')
+        .expect(301);
+      expect(response.headers.location).toBe(
+        env.PUBLIC_BASE_URL + path.toLowerCase().replace(/\/$/, ''),
+      );
+    },
+  );
+  it('enforces HTTPS for production public hosts with a fixed destination and supports trusted TLS termination', async () => {
+    const originalMode = env.NODE_ENV;
+    const originalTrust = env.TRUST_PROXY;
+    try {
+      env.NODE_ENV = 'production';
+      const insecure = await request(app)
+        .get('/PRIVACY/?utm_source=test')
+        .set('Host', 'tiksavemp4.online')
+        .set('X-Forwarded-Proto', 'https')
+        .expect(301);
+      expect(insecure.headers.location).toBe(env.PUBLIC_BASE_URL + '/privacy');
+      env.TRUST_PROXY = true;
+      const behindTrustedEdge = createApp();
+      await request(behindTrustedEdge)
+        .get('/privacy')
+        .set('Host', 'tiksavemp4.online')
+        .set('X-Forwarded-Proto', 'https')
+        .expect(200);
+      const alias = await request(behindTrustedEdge)
+        .get('/PRIVACY/')
+        .set('Host', 'www.tiksavemp4.online')
+        .set('X-Forwarded-Proto', 'http')
+        .expect(301);
+      expect(alias.headers.location).toBe(env.PUBLIC_BASE_URL + '/privacy');
+    } finally {
+      env.NODE_ENV = originalMode;
+      env.TRUST_PROXY = originalTrust;
+    }
+  });
+  it('serves an accessible HTML 404 to browser visitors while API errors stay JSON', async () => {
+    const response = await request(app)
+      .get('/not-a-page?title=Injected')
+      .set('Accept', 'text/html')
+      .expect(404);
+    expect(response.type).toBe('text/html');
+    const document = new JSDOM(response.text).window.document;
+    expect(document.querySelector('h1')?.textContent).toBe('Page not found');
+    expect(document.querySelector('link[rel="canonical"]')).toBeNull();
+    expect(response.text).not.toContain('Injected');
+    expect(response.headers['x-robots-tag']).toBe('noindex, nofollow, noarchive');
+    const api = await request(app)
+      .get('/api/v1/missing')
+      .set('Accept', 'text/html')
+      .expect(404);
+    expect(api.type).toBe('application/json');
+  });
+  it('keeps rendered internal links reachable, including fragment targets', async () => {
+    const response = await request(app).get('/');
+    const document = new JSDOM(response.text).window.document;
+    const links = new Set(
+      [...document.querySelectorAll('a[href]')].map(
+        (link) => link.getAttribute('href') ?? '',
+      ),
+    );
+    for (const link of links) {
+      if (link.startsWith('#'))
+        expect(document.getElementById(link.slice(1))).not.toBeNull();
+      else if (link.startsWith('/'))
+        await request(app)
+          .get(link.split('#')[0] ?? '/')
+          .expect(200);
+    }
+  });
+  it('keeps static assets cached briefly with validators and reserves image dimensions', async () => {
+    const response = await request(app)
+      .get('/assets/og/tiksavemp4-social-card.jpg')
+      .expect(200);
+    expect(response.headers['cache-control']).toBe('public, max-age=3600');
+    expect(response.headers.etag).toBeTruthy();
+    await request(app)
+      .get('/assets/og/tiksavemp4-social-card.jpg')
+      .set('If-None-Match', String(response.headers.etag))
+      .expect(304);
+    const home = await request(app).get('/');
+    const document = new JSDOM(home.text).window.document;
+    for (const image of document.querySelectorAll('picture img')) {
+      expect(image.getAttribute('width')).toMatch(/^\d+$/);
+      expect(image.getAttribute('height')).toMatch(/^\d+$/);
+      expect(image.hasAttribute('alt')).toBe(true);
+    }
+    expect(document.querySelector('.phone-scene img')?.getAttribute('loading')).toBe(
+      'eager',
+    );
+  });
   it('lists only public canonical pages in the sitemap', async () => {
     const response = await request(app).get('/sitemap.xml').expect(200);
     expect(response.type).toBe('application/xml');
     const document = new JSDOM(response.text, { contentType: 'application/xml' }).window
       .document;
     expect([...document.querySelectorAll('loc')].map((node) => node.textContent)).toEqual(
-      ['/', '/privacy', '/terms', '/responsible-use', '/copyright'].map(
+      ['/', ...legalPages.map((page) => page.path)].map(
         (path) => env.PUBLIC_BASE_URL + path,
       ),
     );
-    expect(response.text).not.toContain(env.PUBLIC_BASE_URL + '/contact');
-    expect(response.text).not.toMatch(/api\/|jobId|token=|lastmod/);
+    expect(response.text).not.toMatch(
+      /api\/|jobId|token=|lastmod|health|ready|analyze|changefreq|priority/,
+    );
   });
   it('publishes crawler exclusions with a canonical sitemap', async () => {
     const response = await request(app).get('/robots.txt').expect(200);

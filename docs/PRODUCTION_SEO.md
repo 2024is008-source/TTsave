@@ -1,5 +1,7 @@
 # Production SEO, legal pages and responsible use
 
+Historical Command 11 record. The October 9 USA SEO changes, current metadata/schema, sitemap and verification are documented in [SEO_RESULTS.md](SEO_RESULTS.md), with owner setup in [SEO_SETUP.md](SEO_SETUP.md) and outreach in [OFFSITE_SEO.md](OFFSITE_SEO.md). Those current results supersede the earlier metadata and five-URL sitemap descriptions below.
+
 ## Canonical configuration
 
 The permanent public origin is `https://tiksavemp4.online`. Zod validates and normalizes `PUBLIC_BASE_URL` without a trailing slash. Production startup requires it explicitly; missing values, HTTP, alternate hosts, credentials, ports, paths, queries and fragments fail validation. Development and tests default to the canonical production origin, avoiding local metadata. Host and forwarding headers never generate public metadata.

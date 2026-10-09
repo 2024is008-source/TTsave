@@ -2,19 +2,19 @@ import { Router } from 'express';
 import { env } from '../config/env.js';
 import { legalPages } from '../data/legal-pages.js';
 import { mockData } from '../data/mock-data.js';
-import { escapeXml, serializeJsonLd, webApplication } from '../services/seo.js';
+import { escapeXml, faqPage, serializeJsonLd, webApplication } from '../services/seo.js';
 
 export const publicRouter = Router();
 const pages = [
   {
     path: '/',
-    title: 'TikSaveMp4 — Online TikTok Video Downloader',
+    title: 'TikTok to MP4 Downloader – Convert Videos Online',
     description:
-      'Download available MP4 formats from supported public TikTok video links. Paste a link, review the source-provided options and choose an available quality.',
+      'Convert supported public TikTok videos to MP4 or MP3 online. Paste a TikTok link, review the available options, and download it to your device.',
   },
   ...legalPages,
 ];
-const sitemapPaths = ['/', '/privacy', '/terms', '/responsible-use', '/copyright'];
+const sitemapPaths = pages.map((page) => page.path);
 
 publicRouter.use((request, response, next) => {
   const publicPath = pages.find(
@@ -23,13 +23,17 @@ publicRouter.use((request, response, next) => {
       (page.path === '/' && request.path === '/'),
   )?.path;
   const crawlerPath = ['/robots.txt', '/sitemap.xml'].find(
-    (path) => path === request.path,
+    (path) => path === request.path.toLowerCase().replace(/\/$/, ''),
   );
   const destination = publicPath ?? crawlerPath;
   if (
     ['GET', 'HEAD'].includes(request.method) &&
     destination &&
-    /^www\.tiksavemp4\.online(?::443)?$/i.test(request.get('Host') ?? '')
+    (/^www\.tiksavemp4\.online(?::(?:80|443))?$/i.test(request.get('Host') ?? '') ||
+      request.path !== destination ||
+      (env.NODE_ENV === 'production' &&
+        !request.secure &&
+        /^tiksavemp4\.online(?::(?:80|443))?$/i.test(request.get('Host') ?? '')))
   ) {
     response.redirect(301, env.PUBLIC_BASE_URL + destination);
     return;
@@ -50,7 +54,9 @@ for (const page of pages) {
       page,
       contactEmail: env.LEGAL_CONTACT_EMAIL ?? env.PUBLIC_CONTACT_EMAIL,
       structuredData:
-        page.path === '/' ? serializeJsonLd(webApplication(env.PUBLIC_BASE_URL)) : null,
+        page.path === '/'
+          ? serializeJsonLd([webApplication(env.PUBLIC_BASE_URL), faqPage(mockData.faqs)])
+          : null,
       jobRetentionMinutes: env.JOB_TTL_MS / 60_000,
       sweepSeconds: env.JOB_SWEEP_INTERVAL_MS / 1000,
       fileAccessSeconds: env.FILE_ACCESS_TTL_MS / 1000,

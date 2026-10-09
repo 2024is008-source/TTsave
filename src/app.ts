@@ -69,7 +69,14 @@ export function createApp(
   });
   app.use(createHealthRouter(isReady));
   // Static artwork must not consume the request budget for application routes.
-  app.use('/assets', express.static(path.join(projectRoot, 'public', 'assets')));
+  app.use(
+    '/assets',
+    express.static(path.join(projectRoot, 'public', 'assets'), {
+      maxAge: '1h',
+      // Filenames are stable, so revalidate after a short freshness window.
+      immutable: false,
+    }),
+  );
   app.use(
     rateLimit({
       windowMs: 60_000,
