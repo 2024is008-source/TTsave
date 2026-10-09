@@ -1,0 +1,8 @@
+{
+  "source": "Offline synthetic 440Hz tone in MP4",
+  "encoder": "libmp3lame",
+  "setting": "VBR q:a 2",
+  "verifiedCodec": "mp3",
+  "fullDecodePassed": true,
+  "outputBytes": 10865
+}

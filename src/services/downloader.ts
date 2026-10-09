@@ -1,5 +1,14 @@
 import { randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
-import { mkdir, mkdtemp, readdir, lstat, open, realpath, rm } from 'node:fs/promises';
+import {
+  mkdir,
+  mkdtemp,
+  readdir,
+  lstat,
+  open,
+  realpath,
+  rm,
+  statfs,
+} from 'node:fs/promises';
 import path from 'node:path';
 import { env, type Environment } from '../config/env.js';
 import { logger } from '../config/logger.js';
@@ -13,11 +22,13 @@ import { videoUrlSchema } from '../shared/video-url.js';
 import { publicExtractorOptions } from './extractor-options.js';
 import { PreviewStore } from './previews.js';
 import { verifyVideo } from './verify-video.js';
+import { audioFilename, convertMp3, verifyMp3 } from './mp3.js';
 
 type MetadataProvider = {
   analyzeSource: (url: string, context: AnalysisContext) => Promise<AnalyzedSource>;
 };
 type Record = {
+  filename: string;
   value: ApiJob;
   accessToken: string;
   fileToken: string | null;
@@ -63,6 +74,7 @@ export class ProductionDownloaderService implements DownloaderService {
     private readonly analyzer: MetadataProvider = new YtDlpAnalyzer(),
     private readonly config: Environment = env,
     previews?: PreviewStore,
+    private readonly mp3Available = false,
   ) {
     this.previews = previews ?? new PreviewStore(config);
     this.sweepTimer = setInterval(() => {
@@ -77,7 +89,7 @@ export class ProductionDownloaderService implements DownloaderService {
       throw new HttpError(
         503,
         'APPLICATION_BUSY',
-        'TTSave is busy. Please try again shortly.',
+        'TikSaveMp4 is busy. Please try again shortly.',
       );
     this.activeOperations += 1;
     let released = false;
@@ -121,6 +133,10 @@ export class ProductionDownloaderService implements DownloaderService {
           'No supported video format within the download limits is available.',
         );
       source.media.downloadAvailable = true;
+      source.media.capabilities = {
+        mp4: true,
+        mp3: this.mp3Available && source.media.formats.some((format) => format.hasAudio),
+      };
       await this.previews.sweep();
       for (const [id, entry] of this.analyses)
         if (entry.expires <= Date.now()) this.analyses.delete(id);
@@ -128,7 +144,7 @@ export class ProductionDownloaderService implements DownloaderService {
         throw new HttpError(
           503,
           'SERVICE_CAPACITY',
-          'TTSave is busy. Please try again later.',
+          'TikSaveMp4 is busy. Please try again later.',
         );
       const expires = Date.now() + this.config.JOB_TTL_MS;
       source.media.thumbnail = await this.previews.create(
@@ -148,7 +164,14 @@ export class ProductionDownloaderService implements DownloaderService {
       release();
     }
   }
-  createJob(analysisId: string, formatId: string, context?: AnalysisContext): ApiJob {
+  createJob(
+    analysisId: string,
+    formatId: string,
+    context?: AnalysisContext,
+    downloadType: 'mp4' | 'mp3' = 'mp4',
+  ): ApiJob {
+    if (!['mp4', 'mp3'].includes(downloadType))
+      throw new HttpError(400, 'INVALID_DOWNLOAD_TYPE', 'Choose MP4 video or MP3 audio.');
     const analysis = this.analyses.get(analysisId);
     if (!analysis || analysis.expires <= Date.now())
       throw new HttpError(
@@ -156,6 +179,21 @@ export class ProductionDownloaderService implements DownloaderService {
         'ANALYSIS_NOT_FOUND',
         'The analysis was not found or has expired.',
       );
+    if (downloadType === 'mp3') {
+      if (!analysis.source.media.capabilities?.mp3)
+        throw new HttpError(
+          422,
+          'AUDIO_UNAVAILABLE',
+          'MP3 audio is not available for this post.',
+        );
+      formatId =
+        analysis.source.media.formats.find(
+          (format) => format.id === analysis.source.audioFormatId && format.hasAudio,
+        )?.id ??
+        analysis.source.media.formats.find((format) => format.hasAudio)?.id ??
+        '';
+    }
+    videoUrlSchema.parse(analysis.source.media.sourceUrl);
     const format = analysis.source.media.formats.find(
       (candidate) => candidate.id === formatId,
     );
@@ -177,6 +215,7 @@ export class ProductionDownloaderService implements DownloaderService {
     this.activeJobs += 1;
     const controller = new AbortController();
     const value: ApiJob = {
+      downloadType,
       id: randomUUID(),
       analysisId,
       formatId,
@@ -184,6 +223,10 @@ export class ProductionDownloaderService implements DownloaderService {
       mock: false,
     };
     const record: Record = {
+      filename:
+        downloadType === 'mp3'
+          ? audioFilename(analysis.source.media.creator, analysis.source.media.title)
+          : 'TikSaveMp4-video.mp4',
       value,
       accessToken: token(),
       fileToken: null,
@@ -375,7 +418,9 @@ export class ProductionDownloaderService implements DownloaderService {
       record.failure = new HttpError(
         504,
         'DOWNLOAD_TIMEOUT',
-        'The download took too long. Please try again.',
+        record.value.downloadType === 'mp3'
+          ? 'The audio conversion took too long. Please try again.'
+          : 'The download took too long. Please try again.',
       );
       record.controller.abort();
     }, this.config.DOWNLOAD_TIMEOUT_MS);
@@ -384,6 +429,15 @@ export class ProductionDownloaderService implements DownloaderService {
     let checking = false;
     try {
       const root = await this.temporaryRoot();
+      if (record.value.downloadType === 'mp3') {
+        const disk = await statfs(root);
+        if (disk.bavail * disk.bsize < this.config.DOWNLOAD_MAX_BYTES * 2)
+          throw new HttpError(
+            503,
+            'DISK_CAPACITY',
+            'Audio processing is busy. Please try again later.',
+          );
+      }
       record.directory = await mkdtemp(path.join(root, 'job-'));
       record.controller.signal.throwIfAborted();
       record.value.status = 'downloading';
@@ -515,7 +569,34 @@ export class ProductionDownloaderService implements DownloaderService {
       record.context.stage = 'verification';
       const verified = await verifyVideo(filename, selected, this.config, record.context);
       record.controller.signal.throwIfAborted();
-      record.fileSize = info.size;
+      let outputSize = info.size;
+      if (record.value.downloadType === 'mp3') {
+        record.value.progress = { phase: 'converting' };
+        record.context.stage = 'conversion';
+        this.publish(record);
+        const output = path.join(record.directory, 'audio.mp3');
+        await convertMp3(filename, output, this.config, record.context);
+        record.controller.signal.throwIfAborted();
+        const audio = await lstat(output);
+        if (
+          !audio.isFile() ||
+          audio.isSymbolicLink() ||
+          audio.size <= 0 ||
+          audio.size > this.config.DOWNLOAD_MAX_BYTES ||
+          (await this.directoryBytes(record.directory)) > this.config.DOWNLOAD_MAX_BYTES
+        )
+          throw new HttpError(
+            502,
+            'AUDIO_CONVERSION_FAILED',
+            'The audio could not be converted within the download limits.',
+          );
+        record.context.stage = 'verification';
+        await verifyMp3(output, this.config, record.context);
+        record.controller.signal.throwIfAborted();
+        outputSize = audio.size;
+        await rm(filename);
+      }
+      record.fileSize = outputSize;
       const deliveredQualityLabel =
         verified.width && verified.height
           ? `${String(Math.min(verified.width, verified.height))}p`
@@ -528,6 +609,13 @@ export class ProductionDownloaderService implements DownloaderService {
         ...(verified.width === undefined ? {} : { width: verified.width }),
         ...(verified.height === undefined ? {} : { height: verified.height }),
       };
+      if (record.value.downloadType === 'mp3')
+        record.value.deliveredFormat = {
+          id: 'audio-mp3',
+          container: 'mp3',
+          hasAudio: true,
+          qualityLabel: 'MP3 Audio',
+        };
       record.fileToken = token();
       record.value.status = 'ready';
       record.value.fileExpiresAt = Math.min(
@@ -535,14 +623,14 @@ export class ProductionDownloaderService implements DownloaderService {
         Date.now() + this.config.FILE_ACCESS_TTL_MS,
       );
       record.value.fileUrl = `/api/v1/downloads/${record.value.id}/file?token=${record.fileToken}`;
-      record.value.progress = { sizeBytes: info.size };
+      record.value.progress = { sizeBytes: outputSize };
       record.context.logger.info(
         {
           requestId: record.context.requestId,
           jobId: record.value.id,
           downloadMs: tDownloadMs,
-          fileSizeBytes: info.size,
-          qualityLabel: deliveredQualityLabel,
+          fileSizeBytes: outputSize,
+          qualityLabel: record.value.deliveredFormat.qualityLabel,
         },
         'Download job ready',
       );
@@ -605,7 +693,10 @@ export class ProductionDownloaderService implements DownloaderService {
     });
     record.value.status = 'delivering';
     this.removeFileAccess(record);
-    const filename = path.join(record.directory, 'video.mp4');
+    const filename = path.join(
+      record.directory,
+      record.value.downloadType === 'mp3' ? 'audio.mp3' : 'video.mp4',
+    );
     try {
       const info = await lstat(filename);
       if (
@@ -628,6 +719,8 @@ export class ProductionDownloaderService implements DownloaderService {
     }
     let released = false;
     return {
+      filename: record.filename,
+      contentType: record.value.downloadType === 'mp3' ? 'audio/mpeg' : 'video/mp4',
       path: filename,
       size: record.fileSize,
       signal: record.controller.signal,

@@ -33,7 +33,9 @@ for (const width of [390, 1440]) {
     await expect(page.locator('.analyzing-spinner')).toHaveCSS('animation-name', 'none');
     await page
       .locator('#analyzing-indicator')
-      .screenshot({ path: `docs/screenshots/fetching-panel-${String(width)}.png` });
+      .screenshot({
+        path: `docs/screenshots/mp3-regression-fetching-panel-${String(width)}.png`,
+      });
     await page.getByRole('button', { name: 'Cancel analysis' }).click();
     await expect(page.locator('#analyzing-indicator')).toBeHidden();
     await page.evaluate(async () => {
@@ -65,13 +67,9 @@ for (const width of [390, 1440]) {
       });
     });
     await page.getByRole('button', { name: 'Get video' }).click();
-    await expect(page.getByRole('tab', { name: 'MP4' })).toHaveAttribute(
-      'aria-selected',
-      'true',
-    );
-    await expect(page.getByRole('tab')).toHaveCount(1);
+    await expect(page.getByRole('radio', { name: /MP4 Video/ })).toBeChecked();
+    await expect(page.getByRole('radio', { name: /MP3 Audio/ })).toBeDisabled();
     await expect(page.locator('#result-creator-initial')).toHaveText('T');
-    await expect(page.locator('#result-card')).not.toContainText('MP3');
     await expect(page.locator('#result-card')).not.toContainText('4K');
     await expect(page.locator('#result-card')).not.toContainText('views');
     await expect(page.locator('#result-card')).not.toContainText('Best');
@@ -91,10 +89,14 @@ for (const width of [390, 1440]) {
     await page.evaluate(() => (document.activeElement as HTMLElement).blur());
     await page
       .locator('#result-card')
-      .screenshot({ path: `docs/screenshots/download-panel-${String(width)}.png` });
+      .screenshot({
+        path: `docs/screenshots/mp3-regression-download-panel-${String(width)}.png`,
+      });
     await page.getByRole('button', { name: 'Switch to dark theme' }).click();
     await page
       .locator('#result-card')
-      .screenshot({ path: `docs/screenshots/download-panel-dark-${String(width)}.png` });
+      .screenshot({
+        path: `docs/screenshots/mp3-regression-download-panel-dark-${String(width)}.png`,
+      });
   });
 }

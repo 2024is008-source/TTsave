@@ -3,7 +3,7 @@ export function initializeTheme() {
   const preference = window.matchMedia('(prefers-color-scheme: dark)');
   let savedTheme = null;
   try {
-    savedTheme = localStorage.getItem('ttsave-theme');
+    savedTheme = localStorage.getItem('tiksavemp4-theme');
   } catch {
     /* Storage can be disabled. */
   }
@@ -21,7 +21,7 @@ export function initializeTheme() {
     savedTheme = dark ? 'dark' : 'light';
     apply(dark);
     try {
-      localStorage.setItem('ttsave-theme', savedTheme);
+      localStorage.setItem('tiksavemp4-theme', savedTheme);
     } catch {
       /* Keep theme for this page. */
     }

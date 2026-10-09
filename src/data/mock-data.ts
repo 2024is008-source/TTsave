@@ -1,6 +1,6 @@
 // Server-rendered presentation copy. Media is populated only by the API.
 export const mockData = {
-  title: 'TTSave — Online TikTok Video Downloader',
+  title: 'TikSaveMp4 — Online TikTok Video Downloader',
   availability:
     'Publicly accessible TikTok video links are supported. Available quality depends on the source.',
   result: null,
@@ -96,17 +96,17 @@ export const mockData = {
     {
       question: 'How do I copy a TikTok video link?',
       answer:
-        'Open TikTok and navigate to any public video. Tap the Share button (arrow icon), then choose Copy link. The link is now on your clipboard ready to paste into TTSave.',
+        'Open TikTok and navigate to any public video. Tap the Share button (arrow icon), then choose Copy link. The link is now on your clipboard ready to paste into TikSaveMp4.',
     },
     {
       question: 'Which TikTok links are supported?',
       answer:
-        'TTSave supports publicly accessible TikTok video links only. Private posts, content behind a login, and regionally restricted videos cannot be processed.',
+        'TikSaveMp4 supports publicly accessible TikTok video links only. Private posts, content behind a login, and regionally restricted videos cannot be processed.',
     },
     {
       question: 'Which qualities are available?',
       answer:
-        'Available resolutions depend on the source video. TTSave shows only the formats the source actually provides — no invented quality claims or upscaling.',
+        'Available resolutions depend on the source video. TikSaveMp4 shows only the formats the source actually provides — no invented quality claims or upscaling.',
     },
     {
       question: 'Where will the downloaded file be saved?',
@@ -116,22 +116,22 @@ export const mockData = {
     {
       question: 'Can private videos be downloaded?',
       answer:
-        'No. TTSave only processes publicly accessible TikTok video links. Private-video access, login bypasses, cookies and regional restriction workarounds are not supported.',
+        'No. TikSaveMp4 only processes publicly accessible TikTok video links. Private-video access, login bypasses, cookies and regional restriction workarounds are not supported.',
     },
     {
-      question: 'Does TTSave work on iPhone and Android?',
+      question: 'Does TikSaveMp4 work on iPhone and Android?',
       answer:
-        'Yes. TTSave is designed for modern phones, tablets, laptops and desktop browsers. The interface adapts to every screen size.',
+        'Yes. TikSaveMp4 is designed for modern phones, tablets, laptops and desktop browsers. The interface adapts to every screen size.',
     },
     {
-      question: 'Does TTSave improve the original quality?',
+      question: 'Does TikSaveMp4 improve the original quality?',
       answer:
-        'No. TTSave does not upscale, restore or improve video quality. Available formats and resolutions depend on what the source actually provides.',
+        'No. TikSaveMp4 does not upscale, restore or improve video quality. Available formats and resolutions depend on what the source actually provides.',
     },
     {
-      question: 'Is TTSave affiliated with TikTok?',
+      question: 'Is TikSaveMp4 affiliated with TikTok?',
       answer:
-        'No. TTSave is an independent tool and is not affiliated with, endorsed by, or connected to TikTok or ByteDance in any way.',
+        'No. TikSaveMp4 is an independent tool and is not affiliated with, endorsed by, or connected to TikTok or ByteDance in any way.',
     },
   ],
 };

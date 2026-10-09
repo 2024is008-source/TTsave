@@ -55,17 +55,24 @@ describe('public SEO and policies', () => {
         document.querySelectorAll('script[type="application/ld+json"]'),
       ).toHaveLength(path === '/' ? 1 : 0);
       expect(document.documentElement.lang).toBe('en');
+      for (const previousBrand of [
+        ['TT', 'Save'].join(''),
+        ['TikSave', 'MP4'].join(''),
+      ]) {
+        expect(response.text).not.toContain(previousBrand);
+      }
+      expect(document.querySelector('.wordmark')?.textContent.replace(/\s+/g, '')).toBe(
+        'TikSaveMp4',
+      );
       expect(
         document.querySelector('.footer-bottom')?.textContent.replace(/\s+/g, ' '),
       ).toContain(
-        'TikSaveMP4 is an independent service and is not affiliated with, endorsed by or sponsored by TikTok or ByteDance. TikTok is a trademark of its respective owner.',
+        'TikSaveMp4 is an independent service and is not affiliated with, endorsed by or sponsored by TikTok or ByteDance. TikTok is a trademark of its respective owner.',
       );
       expect(
         document.querySelector('meta[property="og:site_name"]')?.getAttribute('content'),
-      ).toBe('TikSaveMP4');
-      expect(response.text).not.toMatch(
-        /https?:\/\/(?:localhost|127\.0\.0\.1|ttsave\.(?:com|online|test))/,
-      );
+      ).toBe('TikSaveMp4');
+      expect(response.text).not.toMatch(/https?:\/\/(?:localhost|127\.0\.0\.1)/);
       expect(response.headers['content-security-policy']).toContain("img-src 'self'");
       expect(response.headers['x-content-type-options']).toBe('nosniff');
       for (const target of legalPages)
@@ -82,7 +89,7 @@ describe('public SEO and policies', () => {
   it('uses exact homepage copy and valid factual WebApplication data', async () => {
     const response = await request(app).get('/').expect(200);
     const document = new JSDOM(response.text).window.document;
-    expect(document.title).toBe('TikSaveMP4 — Online TikTok Video Downloader');
+    expect(document.title).toBe('TikSaveMp4 — Online TikTok Video Downloader');
     expect(
       document.querySelector('meta[name="description"]')?.getAttribute('content'),
     ).toBe(
@@ -94,7 +101,7 @@ describe('public SEO and policies', () => {
     expect(data).toEqual({
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
-      name: 'TikSaveMP4',
+      name: 'TikSaveMp4',
       url: env.PUBLIC_BASE_URL + '/',
       applicationCategory: 'MultimediaApplication',
       operatingSystem: 'Any',

@@ -25,7 +25,7 @@ export function webApplication(baseUrl: string) {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'TikSaveMP4',
+    name: 'TikSaveMp4',
     url: baseUrl + '/',
     applicationCategory: 'MultimediaApplication',
     operatingSystem: 'Any',

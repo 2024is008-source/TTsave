@@ -3,9 +3,9 @@ export const legalPages = [
     path: '/privacy',
     title: 'Privacy Policy',
     description:
-      'How TTSave processes public TikTok links, temporary downloads, request logs and browser preferences.',
+      'How TikSaveMp4 processes public TikTok links, temporary downloads, request logs and browser preferences.',
     introduction:
-      'TTSave, also identified as TikSaveMP4 at tiksavemp4.online, processes a public video link to prepare a download you request. This policy describes the current application; it does not promise anonymous or completely private use.',
+      'TikSaveMp4 at tiksavemp4.online processes a public video link to prepare a download you request. This policy describes the current application; it does not promise anonymous or completely private use.',
     sections: [
       {
         heading: 'Information used to provide a download',
@@ -60,22 +60,22 @@ export const legalPages = [
     path: '/terms',
     title: 'Terms of Use',
     description:
-      'Conditions for using TTSave to download authorized public TikTok videos in available MP4 formats.',
+      'Conditions for using TikSaveMp4 to download authorized public TikTok videos in available MP4 formats.',
     introduction:
-      'These terms describe permitted use of the TTSave / TikSaveMP4 service at tiksavemp4.online. Read them together with the Privacy Policy and Responsible Use page before submitting a link.',
+      'These terms describe permitted use of the TikSaveMp4 service at tiksavemp4.online. Read them together with the Privacy Policy and Responsible Use page before submitting a link.',
     sections: [
       {
         heading: 'Acceptance and eligibility',
         paragraphs: [
-          'By using TikSaveMP4, you agree to these terms. If you do not agree, do not submit links or use the downloader. Use the service only if you have the legal capacity to accept these terms and meet the age and permission requirements applicable to you. A parent or guardian must authorize use where the applicable law requires it. The service offers no account or age-verification mechanism; this does not waive those requirements.',
-          'You may use TikSaveMP4 only for content you own, content you have permission to save, or content you are otherwise legally permitted to use.',
+          'By using TikSaveMp4, you agree to these terms. If you do not agree, do not submit links or use the downloader. Use the service only if you have the legal capacity to accept these terms and meet the age and permission requirements applicable to you. A parent or guardian must authorize use where the applicable law requires it. The service offers no account or age-verification mechanism; this does not waive those requirements.',
+          'You may use TikSaveMp4 only for content you own, content you have permission to save, or content you are otherwise legally permitted to use.',
         ],
       },
       {
         heading: 'Scope of the service',
         paragraphs: [
-          'TTSave analyzes supported public TikTok video links and prepares available MP4 video formats with audio. Availability depends on the source, extractor compatibility, service capacity and configured limits. A publicly accessible URL is not a grant of permission to copy or reuse its content.',
-          'The service does not provide account login, private-video access, cookie-based access or regional-restriction bypasses. It does not improve, upscale or restore quality. Photo, slideshow and standalone audio downloads are not offered. Watermark removal, a particular resolution or a completion speed is not guaranteed.',
+          'TikSaveMp4 analyzes supported public TikTok video links and prepares available MP4 video formats with audio. When source audio and server processing tools are available, you can also request an MP3 audio conversion. Audio quality depends on the source. Availability depends on extractor compatibility, service capacity and configured limits. A publicly accessible URL is not a grant of permission to copy or reuse its content.',
+          'The service does not provide account login, private-video access, cookie-based access or regional-restriction bypasses. It does not improve, upscale or restore quality. Photo and slideshow downloads are not offered. MP3 conversion is lossy and is not a promise of studio or lossless quality. Watermark removal, a particular resolution or a completion speed is not guaranteed.',
         ],
       },
       {
@@ -88,14 +88,14 @@ export const legalPages = [
       {
         heading: 'Availability and downloads',
         paragraphs: [
-          'Requests can fail or expire. Keep the page open while preparing a download; file links are authorized, short-lived and intended for one delivery. Save the file promptly. TTSave is not a permanent media archive and cannot recover a file deleted after delivery or expiry.',
+          'Requests can fail or expire. Keep the page open while preparing a download; file links are authorized, short-lived and intended for one delivery. Save the file promptly. TikSaveMp4 is not a permanent media archive and cannot recover a file deleted after delivery or expiry.',
           'Source formats and metadata are displayed as returned by the backend. Missing information is not a guarantee about the source. Review the resulting file before relying on it.',
         ],
       },
       {
         heading: 'Ownership and independence',
         paragraphs: [
-          'Creators and other rights holders retain rights in their content. TTSave grants no license to downloaded media. TTSave / TikSaveMP4 is an independent service and is not affiliated with, endorsed by or sponsored by TikTok or ByteDance.',
+          'Creators and other rights holders retain rights in their content. TikSaveMp4 grants no license to downloaded media. TikSaveMp4 is an independent service and is not affiliated with, endorsed by or sponsored by TikTok or ByteDance.',
         ],
       },
       {
@@ -117,9 +117,9 @@ export const legalPages = [
     path: '/responsible-use',
     title: 'Responsible Use',
     description:
-      'Respect creators, permissions and public-access limits when saving TikTok videos with TTSave.',
+      'Respect creators, permissions and public-access limits when saving TikTok videos with TikSaveMp4.',
     introduction:
-      'A video being public does not mean every use of it is permitted. Use TTSave to save content responsibly and respect the people who made or appear in it.',
+      'A video being public does not mean every use of it is permitted. Use TikSaveMp4 to save content responsibly and respect the people who made or appear in it.',
     sections: [
       {
         heading: 'Before downloading',
@@ -133,13 +133,14 @@ export const legalPages = [
         paragraphs: [
           'Keep creator attribution and any license information. Do not misrepresent authorship, impersonate a creator, harass people shown in a video or use content to violate privacy. Seek separate permission before reuse where required. Delete copies if you discover you lack the necessary permission.',
           'Downloading does not transfer copyright, privacy rights or any other rights to you. Respect creators, applicable law and platform rules; do not use downloaded content to exploit others or deceive viewers.',
+          'Extracting or downloading audio does not grant ownership, redistribution rights or commercial-use permission. Music, recordings and performances may have separate rights holders. Obtain the permissions required for your intended use; MP3 conversion does not make music copyright-free or royalty-free.',
         ],
       },
       {
         heading: 'Respect service limits',
         paragraphs: [
           'Choose only a format offered for your analyzed video. Do not automate bulk scraping or work around rate, concurrency, duration or size limits. Unknown sizes and progress are shown as unknown; available source quality is never enhanced by this service.',
-          'Available formats and quality depend on the source. TikSaveMP4 does not improve, upscale or restore source quality. Watermark behavior depends on the media source supplied by TikTok. The service does not crop, blur, paint over or artificially remove ownership marks; do not remove ownership information to misrepresent authorship.',
+          'Available formats and quality depend on the source. TikSaveMp4 does not improve, upscale or restore source quality. Watermark behavior depends on the media source supplied by TikTok. The service does not crop, blur, paint over or artificially remove ownership marks; do not remove ownership information to misrepresent authorship.',
         ],
       },
       {
@@ -152,7 +153,7 @@ export const legalPages = [
       {
         heading: 'Report a concern',
         paragraphs: [
-          'See the Copyright page for what to include in a rights complaint and the Contact page for the current reporting channel. TTSave does not host a public library of submitted videos and cannot remove the original video from TikTok or recall copies already saved to another person’s device.',
+          'See the Copyright page for what to include in a rights complaint and the Contact page for the current reporting channel. TikSaveMp4 does not host a public library of submitted videos and cannot remove the original video from TikTok or recall copies already saved to another person’s device.',
         ],
       },
     ],
@@ -161,21 +162,21 @@ export const legalPages = [
     path: '/copyright',
     title: 'Copyright and DMCA',
     description:
-      'How to document a copyright concern involving TTSave’s temporary download service or website content.',
+      'How to document a copyright concern involving TikSaveMp4’s temporary download service or website content.',
     introduction:
-      'TTSave respects creators’ rights. This is an operational reporting procedure, not a claim that a statutory agent has been registered or that a particular safe-harbor regime applies.',
+      'TikSaveMp4 respects creators’ rights. This is an operational reporting procedure, not a claim that a statutory agent has been registered or that a particular safe-harbor regime applies.',
     sections: [
       {
         heading: 'What the service can address',
         paragraphs: [
-          'TTSave processes public links on request, temporarily prepares files and removes temporary data through delivery and expiry cleanup. It does not publish a searchable video library. The owner can investigate service misuse and website content, but cannot delete the original TikTok post or recall a downloaded copy. Report the original post to TikTok as well when appropriate.',
-          'TikSaveMP4 does not own third-party videos or grant a license to them. Rights remain with the creator and other rights holders.',
+          'TikSaveMp4 processes public links on request, temporarily prepares files and removes temporary data through delivery and expiry cleanup. It does not publish a searchable video library. The owner can investigate service misuse and website content, but cannot delete the original TikTok post or recall a downloaded copy. Report the original post to TikTok as well when appropriate.',
+          'TikSaveMp4 does not own third-party videos or grant a license to them. Rights remain with the creator and other rights holders.',
         ],
       },
       {
         heading: 'Information to include',
         paragraphs: [
-          'Provide your name and a reply address, identify the work and your relationship to the rights holder, include the exact TikTok URL or TTSave page involved, and explain the concern and requested action. If available, include the request ID and approximate time. Do not send private access tokens, passwords or unnecessary identity documents.',
+          'Provide your name and a reply address, identify the work and your relationship to the rights holder, include the exact TikTok URL or TikSaveMp4 page involved, and explain the concern and requested action. If available, include the request ID and approximate time. Do not send private access tokens, passwords or unnecessary identity documents.',
           'For a notice intended to meet US DMCA requirements, identify the protected work and the allegedly infringing material or activity with enough information to locate it. Provide a mailing address, telephone number and email for contact. Include a good-faith belief that the disputed use is not authorized by the rights holder, their agent or the law. State that the notice is accurate and, under penalty of perjury, that you are authorized to act for the owner of the exclusive right concerned. Sign physically or electronically; an electronic signature should identify the authorized sender. The owner must obtain legal advice about applicable notice requirements and designated-agent obligations.',
         ],
       },
@@ -198,7 +199,7 @@ export const legalPages = [
     path: '/contact',
     title: 'Contact and Support',
     description:
-      'Support, privacy and copyright reporting for TTSave / TikSaveMP4 at tiksavemp4.online.',
+      'Support, privacy and copyright reporting for TikSaveMp4 at tiksavemp4.online.',
     introduction:
       'Use the published contact channel for a download problem, privacy question, security concern or copyright report. The website currently has no contact form, account dashboard or ticket-tracking system.',
     sections: [

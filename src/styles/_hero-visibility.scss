@@ -2,25 +2,25 @@
 @media (min-width: 1024px) {
   .hero[data-downloader-state] {
     .hero-intro {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 48px;
+      grid-template-columns: minmax(0, 0.96fr) minmax(420px, 1.04fr);
+      gap: clamp(40px, 5vw, 72px);
       padding-block: 48px;
     }
     .hero-art {
-      display: grid;
+      display: block;
     }
     .hero-description {
       max-width: 600px;
     }
     h1 {
-      font-size: clamp(3.25rem, 5.5vw, 5.25rem);
-      line-height: 1.06;
+      font-size: clamp(3.625rem, 5vw, 4.5rem);
+      line-height: 0.99;
     }
   }
   .input-capsule {
-    border-radius: 999px;
-    padding: 8px 8px 8px 22px;
-    min-height: 76px;
+    border-radius: 22px;
+    padding: 7px 8px 7px 20px;
+    min-height: 70px;
     border-color: var(--rim);
   }
   .input-capsule .analyze-button {
@@ -29,7 +29,7 @@
     margin: 0;
     padding: 14px 22px;
     width: auto;
-    border-radius: 999px;
+    border-radius: 17px;
   }
   .input-capsule input {
     min-width: 0;

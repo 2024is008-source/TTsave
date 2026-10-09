@@ -11,8 +11,8 @@ test('active phone and result panel persist through download states', async ({
     await expect(page.locator('.hero-art')).toBeVisible();
     await expect(page.locator('.phone:visible')).toHaveCount(1);
     await page.locator('.hero').screenshot({
-      path: `docs/screenshots/state-${state}.png`,
-        style: '.site-header, .skip-link { visibility: hidden !important; }',
+      path: `docs/screenshots/mp3-regression-state-${state}.png`,
+      style: '.site-header, .skip-link { visibility: hidden !important; }',
     });
   };
   await capture('idle');

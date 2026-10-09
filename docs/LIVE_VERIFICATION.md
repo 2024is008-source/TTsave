@@ -38,7 +38,7 @@ The public `hankgreen1` video `7047596209028074758` passed:
 - Browser and HTTP deliveries have matching SHA-256:
   `63f444f662f20504fe76c8175398945e4641c1fab0d2209421907d4409904c4b`.
 - The inspected frame contains a visible TikTok watermark. No clean variant was
-  established for this source. TTSave did not alter it or claim watermark removal.
+  established for this source. TikSaveMp4 did not alter it or claim watermark removal.
 
 The public `patroxofficial` video `6742501081818877190` also served its thumbnail.
 Its reported 576p option was safely rejected for the dimension discrepancy above.

@@ -141,7 +141,27 @@ export function initializeDownloader(root: Document = document, options: Options
     get<HTMLButtonElement>('.choose-button').hidden = !state.media;
     save.disabled = state.status !== 'completed';
     save.textContent =
-      state.status === 'download-requested' ? 'Save requested' : 'Save MP4';
+      state.status === 'download-requested'
+        ? 'Save requested'
+        : `Save ${state.downloadType.toUpperCase()}`;
+    const audioMode = state.downloadType === 'mp3';
+    get('#video-quality-panel').hidden = audioMode;
+    get('#audio-quality-panel').hidden = !audioMode;
+    get('#audio-unavailable').hidden = state.media?.capabilities?.mp3 === true;
+    result
+      .querySelectorAll<HTMLInputElement>('input[name="download-type"]')
+      .forEach((radio) => {
+        radio.checked = radio.value === state.downloadType;
+        radio.disabled =
+          state.status !== 'ready' ||
+          (radio.value === 'mp3' && state.media?.capabilities?.mp3 !== true);
+      });
+    get('.rp-helper').textContent = audioMode
+      ? 'The audio is converted to MP3. Audio quality depends on the source.'
+      : 'Choose an available source quality. Video and audio are saved together.';
+    get('#completed-title').textContent = audioMode
+      ? 'Your MP3 is ready'
+      : 'Download ready';
     const selected = state.media?.formats.find((format) => format.id === state.formatId);
     const creatorInitial = root.querySelector<HTMLElement>('#result-creator-initial');
     if (creatorInitial)
@@ -152,9 +172,12 @@ export function initializeDownloader(root: Document = document, options: Options
     const containerLabel = root.querySelector<HTMLElement>('#result-container-label');
     if (containerLabel)
       containerLabel.textContent = selected?.container?.toUpperCase() ?? 'Video';
-    get('#progress-quality').textContent = selected?.label ?? '';
-    get('#completed-quality').textContent =
-      state.download?.qualityLabel ?? selected?.label ?? '';
+    get('#progress-quality').textContent = audioMode
+      ? 'MP3 Audio'
+      : (selected?.label ?? '');
+    get('#completed-quality').textContent = audioMode
+      ? 'MP3 Audio'
+      : (state.download?.qualityLabel ?? selected?.label ?? '');
     get('#completed-size').textContent =
       state.download?.sizeBytes === undefined || state.download.sizeBytes === 0
         ? ''
@@ -163,7 +186,8 @@ export function initializeDownloader(root: Document = document, options: Options
       !['ready', 'starting-download'].includes(state.status) ||
       state.status === 'starting-download' ||
       !state.formatId ||
-      state.media?.downloadAvailable === false;
+      state.media?.downloadAvailable === false ||
+      (audioMode && state.media?.capabilities?.mp3 !== true);
     downloadLabel.textContent =
       state.media?.downloadAvailable === false
         ? 'Download unavailable'
@@ -171,7 +195,7 @@ export function initializeDownloader(root: Document = document, options: Options
           ? 'Preparing download\u2026'
           : downloading && state.status === 'downloading'
             ? 'Preparing download\u2026'
-            : 'Download MP4';
+            : `Download ${state.downloadType.toUpperCase()}`;
     if (state.media !== renderedMedia) {
       formats.replaceChildren();
       extraFormats.replaceChildren();
@@ -260,9 +284,13 @@ export function initializeDownloader(root: Document = document, options: Options
     progressCard.hidden = !downloading;
     // Progress heading: distinguish start from active and 100%
     progressHeading.textContent =
-      state.status === 'starting-download' || state.progress?.percent === 100
-        ? 'Preparing your download\u2026'
-        : 'Downloading\u2026';
+      audioMode && state.progress?.phase === 'converting'
+        ? 'Converting audio to MP3…'
+        : audioMode && state.status === 'starting-download'
+          ? 'Preparing MP3…'
+          : state.status === 'starting-download' || state.progress?.percent === 100
+            ? 'Preparing your download\u2026'
+            : 'Downloading\u2026';
     const percent = state.progress?.percent;
     const isIndeterminate = percent === undefined;
     if (isIndeterminate) progress.removeAttribute('value');
@@ -396,7 +424,14 @@ export function initializeDownloader(root: Document = document, options: Options
     'change',
     (event) => {
       const target = event.target;
-      if (target instanceof HTMLInputElement) controller.selectFormat(target.value);
+      if (target instanceof HTMLInputElement) {
+        if (
+          target.name === 'download-type' &&
+          (target.value === 'mp4' || target.value === 'mp3')
+        )
+          controller.selectDownloadType(target.value);
+        else if (target.name === 'format') controller.selectFormat(target.value);
+      }
     },
     events,
   );

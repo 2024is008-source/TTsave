@@ -1,4 +1,4 @@
-# TTSave image audit and replacement requirements
+# TikSaveMp4 image audit and replacement requirements
 
 ## Current asset status
 
@@ -32,14 +32,14 @@ aspect ratio when supplying replacements.
 | `copy-link-step.webp`      | 800 × 600 (4:3)         | `copy-link-step-400.webp`, 400 × 300      | Copy/share-link concept illustration.                                                                                                                           |
 | `paste-link-step.webp`     | 800 × 600 (4:3)         | `paste-link-step-400.webp`, 400 × 300     | Clipboard and link-entry concept illustration.                                                                                                                  |
 | `download-video-step.webp` | 800 × 600 (4:3)         | `download-video-step-400.webp`, 400 × 300 | Video-file concept illustration, no completion or download-progress numbers. This illustrates a future workflow, not an implemented download.                   |
-| `og-image.webp`            | 1200 × 630              | `og-image-600.webp`, 600 × 315            | TTSave branding, concise headline and interface-preview label; keep text inside a 60px safe margin.                                                             |
+| `og-image.webp`            | 1200 × 630              | `og-image-600.webp`, 600 × 315            | TikSaveMp4 branding, concise headline and interface-preview label; keep text inside a 60px safe margin.                                                         |
 
 ## Poster composition and rights
 
 - Use an adult subject with a documented model release and rights covering
   commercial web display and social previews. Record the source, photographer,
   licence and permitted edits before replacing the illustration. Do not use a
-  scraped creator image or imply a real creator endorses TTSave.
+  scraped creator image or imply a real creator endorses TikSaveMp4.
 - Place the face within x=350–600, y=430–690 in the 1080 × 1920 master. Keep the
   top 280px, rightmost 180px below y=700, and bottom 440px free of facial detail
   and essential scene content. These areas accommodate camera, navigation,

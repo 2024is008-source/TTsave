@@ -24,6 +24,7 @@ export type Status =
   | 'download-requested'
   | 'error';
 export type State = {
+  downloadType: 'mp4' | 'mp3';
   status: Status;
   url: string;
   media: Media | null;
@@ -34,6 +35,7 @@ export type State = {
   download: Download | null;
 };
 export type Event =
+  | { type: 'SELECT_TYPE'; downloadType: 'mp4' | 'mp3' }
   | { type: 'RESET'; url: string; message?: string }
   | { type: 'VALIDATE' }
   | { type: 'ANALYZE'; url: string }
@@ -50,6 +52,7 @@ export type Event =
 
 export function initialState(url = ''): State {
   return {
+    downloadType: 'mp4',
     status: 'idle',
     url,
     media: null,
@@ -66,6 +69,18 @@ export const isBusy = (status: Status): boolean =>
 /** Invalid or stale events leave state untouched. All transitions are event-driven. */
 export function transition(state: State, event: Event): State {
   switch (event.type) {
+    case 'SELECT_TYPE':
+      return state.status === 'ready' &&
+        (event.downloadType === 'mp4' || state.media?.capabilities?.mp3 === true)
+        ? {
+            ...state,
+            downloadType: event.downloadType,
+            message:
+              event.downloadType === 'mp3'
+                ? 'MP3 audio selected. Audio quality depends on the source.'
+                : 'MP4 video selected. Choose an available source quality.',
+          }
+        : state;
     case 'RESET':
       return { ...initialState(event.url), message: event.message ?? '' };
     case 'VALIDATE':
@@ -106,7 +121,10 @@ export function transition(state: State, event: Event): State {
             ...state,
             status: 'starting-download',
             progress: null,
-            message: 'Starting the download request…',
+            message:
+              state.downloadType === 'mp3'
+                ? 'Preparing MP3…'
+                : 'Starting the download request…',
           }
         : state;
     case 'DOWNLOADING':
@@ -123,9 +141,11 @@ export function transition(state: State, event: Event): State {
             ...state,
             progress: event.progress,
             message:
-              event.progress.percent === undefined
-                ? 'Preparing the file. Progress is unknown.'
-                : `Preparing the file: ${String(event.progress.percent)}%.`,
+              event.progress.phase === 'converting'
+                ? 'Converting audio to MP3…'
+                : event.progress.percent === undefined
+                  ? 'Preparing the file. Progress is unknown.'
+                  : `Preparing the file: ${String(event.progress.percent)}%.`,
           }
         : state;
     case 'REQUESTED':
@@ -143,7 +163,10 @@ export function transition(state: State, event: Event): State {
             ...state,
             status: 'completed',
             download: event.download,
-            message: 'Your video is ready. Select Save MP4 to request the file.',
+            message:
+              state.downloadType === 'mp3'
+                ? 'Your MP3 is ready. Select Save MP3 to request the file.'
+                : 'Your video is ready. Select Save MP4 to request the file.',
           }
         : state;
     case 'CHOOSE':
@@ -233,6 +256,9 @@ export function createDownloaderController({
     selectFormat(formatId: string) {
       dispatch({ type: 'SELECT', formatId });
     },
+    selectDownloadType(downloadType: 'mp4' | 'mp3') {
+      dispatch({ type: 'SELECT_TYPE', downloadType });
+    },
     chooseQuality() {
       dispatch({ type: 'CHOOSE' });
     },
@@ -303,7 +329,8 @@ export function createDownloaderController({
         state.status !== 'ready' ||
         !state.media ||
         !state.formatId ||
-        state.media.downloadAvailable === false
+        state.media.downloadAvailable === false ||
+        (state.downloadType === 'mp3' && state.media.capabilities?.mp3 !== true)
       )
         return;
       invalidate();
@@ -315,7 +342,7 @@ export function createDownloaderController({
       dispatch({ type: 'START' });
       try {
         const job = jobSchema.parse(
-          await adapter.startDownload(mediaId, formatId, signal),
+          await adapter.startDownload(mediaId, formatId, signal, state.downloadType),
         );
         if (current !== operation) return;
         dispatch({ type: 'DOWNLOADING' });

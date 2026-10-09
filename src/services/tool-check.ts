@@ -31,9 +31,14 @@ export async function checkTools(context: AnalysisContext, config: Environment =
       ['--ignore-config', '--no-plugin-dirs', '--list-impersonate-targets'],
       /^Chrome(?:-\d+)?\s+\S+\s+curl_cffi\s*$/im,
     ));
+  const mp3 =
+    ffmpeg &&
+    ffprobe &&
+    ytDlp &&
+    (await check(config.FFMPEG_PATH, ['-hide_banner', '-encoders'], /\blibmp3lame\b/));
   context.logger.info(
-    { requestId: context.requestId, ytDlp, ffmpeg, ffprobe, chrome },
+    { requestId: context.requestId, ytDlp, ffmpeg, ffprobe, chrome, mp3 },
     'Startup tool availability',
   );
-  return { ytDlp, ffmpeg, ffprobe, chrome };
+  return { ytDlp, ffmpeg, ffprobe, chrome, mp3 };
 }

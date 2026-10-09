@@ -15,14 +15,14 @@ const tools = await checkTools({
   requestId: randomUUID(),
   logger,
 });
-const downloads = new ProductionDownloaderService();
+const downloads = new ProductionDownloaderService(undefined, env, undefined, tools.mp3);
 const app = createApp(
   downloads,
   () => tools.ytDlp && tools.ffmpeg && tools.ffprobe && tools.chrome && !shuttingDown,
 );
 
 const server: Server = app.listen(env.PORT, env.HOST, () => {
-  logger.info({ host: env.HOST, port: env.PORT }, 'TTSave server listening');
+  logger.info({ host: env.HOST, port: env.PORT }, 'TikSaveMp4 server listening');
 });
 
 server.on('error', (error) => {

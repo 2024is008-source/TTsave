@@ -42,6 +42,41 @@ function makeAdapter(): DownloaderAdapter {
 }
 
 describe('downloader state machine', () => {
+  it('defaults to MP4, preserves quality across MP3 switching, sends an audio intent and resets on new URLs', async () => {
+    const adapter = makeAdapter();
+    adapter.analyze = vi.fn(() =>
+      Promise.resolve({ ...media, capabilities: { mp4: true, mp3: true } }),
+    );
+    const controller = createDownloaderController({ adapter, requestDownload: vi.fn() });
+    controller.setUrl('https://www.tiktok.com/@creator/video/123');
+    await controller.analyze();
+    expect(controller.getState().downloadType).toBe('mp4');
+    controller.selectFormat('alternate');
+    controller.selectDownloadType('mp3');
+    expect(controller.getState().formatId).toBe('alternate');
+    controller.selectDownloadType('mp4');
+    expect(controller.getState().formatId).toBe('alternate');
+    controller.selectDownloadType('mp3');
+    await controller.download();
+    expect(adapter.startDownload).toHaveBeenCalledWith(
+      media.id,
+      'alternate',
+      expect.any(AbortSignal),
+      'mp3',
+    );
+    expect(controller.getState().message).toContain('Your MP3 is ready');
+    expect(adapter.analyze).toHaveBeenCalledOnce();
+    controller.setUrl('https://vt.tiktok.com/another/');
+    expect(controller.getState()).toMatchObject({ downloadType: 'mp4', media: null });
+  });
+  it('refuses MP3 selection when the backend has not enabled it', async () => {
+    const adapter = makeAdapter();
+    const controller = createDownloaderController({ adapter, requestDownload: vi.fn() });
+    controller.setUrl('https://vt.tiktok.com/abc/');
+    await controller.analyze();
+    controller.selectDownloadType('mp3');
+    expect(controller.getState().downloadType).toBe('mp4');
+  });
   it('keeps valid analyzed metadata on failure and allows another quality without analysis', async () => {
     const adapter = makeAdapter();
     adapter.startDownload = vi.fn().mockRejectedValue(new Error('Source unavailable'));

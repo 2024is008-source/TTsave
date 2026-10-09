@@ -422,11 +422,13 @@ describe('startup tools', () => {
     launch('ffmpeg version test');
     launch('ffprobe version test');
     launch('Chrome-150 Windows-11 curl_cffi');
+    launch(' A....D libmp3lame MP3 encoder');
     await expect(checkTools(context())).resolves.toEqual({
       ytDlp: true,
       ffmpeg: true,
       ffprobe: true,
       chrome: true,
+      mp3: true,
     });
     expect(spawnMock.mock.calls[1]?.slice(0, 2)).toEqual(['ffmpeg', ['-version']]);
   });
@@ -439,6 +441,7 @@ describe('startup tools', () => {
       ffmpeg: false,
       ffprobe: false,
       chrome: false,
+      mp3: false,
     });
   });
   it('rejects executables that return the wrong version banner', async () => {
@@ -450,6 +453,7 @@ describe('startup tools', () => {
       ffmpeg: false,
       ffprobe: false,
       chrome: false,
+      mp3: false,
     });
   });
 });

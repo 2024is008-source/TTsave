@@ -2,6 +2,35 @@ import { expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { createApiAdapter } from '../src/frontend/api-adapter.js';
 
+it('submits MP3 intent without the saved MP4 selection or source URL', async () => {
+  const analysisId = randomUUID();
+  const jobId = randomUUID();
+  const fetcher = vi.fn<typeof fetch>(() =>
+    Promise.resolve(
+      Response.json({
+        id: jobId,
+        analysisId,
+        formatId: 'source-audio',
+        downloadType: 'mp3',
+        status: 'queued',
+        mock: false,
+      }),
+    ),
+  );
+  await createApiAdapter(fetcher).startDownload(
+    analysisId,
+    'previous-video-quality',
+    new AbortController().signal,
+    'mp3',
+  );
+  expect(fetcher).toHaveBeenCalledWith(
+    '/api/v1/downloads',
+    expect.objectContaining({
+      body: JSON.stringify({ analysisId, downloadType: 'mp3' }),
+    }),
+  );
+});
+
 it('maps only API formats and known metrics into the frontend model', async () => {
   const id = randomUUID();
   const fetcher = vi.fn<typeof fetch>(() =>

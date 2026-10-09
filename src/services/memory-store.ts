@@ -3,6 +3,8 @@ import type { Analysis, ApiJob } from '../api/contracts.js';
 import { HttpError } from '../middleware/error-handler.js';
 import type { AnalysisContext } from './tool-process.js';
 export type FileClaim = {
+  contentType?: string;
+  filename?: string;
   path: string;
   size: number;
   signal: AbortSignal;
@@ -11,7 +13,12 @@ export type FileClaim = {
 
 export type DownloaderService = {
   analyze(url: string, context?: AnalysisContext): Analysis | Promise<Analysis>;
-  createJob(analysisId: string, formatId: string, context?: AnalysisContext): ApiJob;
+  createJob(
+    analysisId: string,
+    formatId: string,
+    context?: AnalysisContext,
+    downloadType?: 'mp4' | 'mp3',
+  ): ApiJob;
   getJob(id: string): ApiJob;
   cancel(id: string): ApiJob;
   subscribe(id: string, listener: (job: ApiJob) => void): () => void;

@@ -1,4 +1,4 @@
-# TTSave API v1
+# TikSaveMp4 API v1
 
 Zod validates requests and responses. API responses disable caching, carry
 `X-Request-ID` and are rate limited. Production extracts public TikTok sources.
@@ -16,7 +16,7 @@ Zod validates requests and responses. API responses disable caching, carry
 | `GET /ready`                                         | None                                                     | 200 ready or 503 not ready       |
 
 Analysis contains `id`, `title`, `creator`, `thumbnail`, `durationSeconds`,
-`sourceUrl`, `formats`, `mock`, `downloadAvailable`. Formats contain `id`,
+`sourceUrl`, `formats`, `mock`, `downloadAvailable`, and `capabilities: { mp4, mp3 }`. Formats contain `id`,
 `container`, `qualityLabel`, `hasAudio` and optional dimensions and `estimatedBytes`.
 Unknown size is omitted. Thumbnails use the authorized local image policy in
 `RESULT_WORKSPACE.md`; unavailable or unapproved thumbnails are `null`. Eligible responses
@@ -24,7 +24,7 @@ have `mock: false`, `downloadAvailable: true` and known duration within the limi
 
 Jobs contain `id`, `analysisId`, `formatId`, `status`, `mock` and optional
 `progress`, `fileUrl`, `fileExpiresAt`, `deliveredFormat`, `error`. `deliveredFormat`
-contains only verified MP4 dimensions, quality label and audio availability.
+contains verified MP4 dimensions or an MP3 audio descriptor, quality label and audio availability.
 Only creation returns `accessToken`;
 send `Authorization: Bearer <accessToken>` for lookup, events and cancellation.
 States are `queued`, `downloading`, `ready`, `delivering`, `delivered`, `cancelled`,
@@ -37,7 +37,7 @@ Terminal events close the stream; the last subscriber disconnect cancels active
 work. Up to five subscribers are allowed per job.
 
 Ready jobs supply a separate expiring one-use file URL. Delivery uses
-`Content-Disposition: attachment; filename="TTSave-video.mp4"`. HEAD and Range
+`Content-Disposition: attachment; filename="TikSaveMp4-video.mp4"`. HEAD and Range
 requests are rejected. Successful or disconnected delivery consumes the token
 and deletes temporary data. Filesystem paths never appear in responses.
 
@@ -47,6 +47,16 @@ Validation returns 400; missing records 404; missing authorization 401; incorrec
 tokens 403; unavailable files 409; expired records 410; oversized output 413;
 capacity exhaustion 503; timeout 504. Failed job snapshots carry the same safe
 error fields. Errors before SSE opens use JSON.
+
+For audio, submit `{ "analysisId": "<UUID>", "downloadType": "mp3" }` without
+`formatId`. The server chooses an eligible source; MP3 must be advertised as
+available by analysis. Other download types and extra request fields are rejected.
+Explicit MP4 requests may include `downloadType: "mp4"`; existing MP4 request bodies
+remain valid. Jobs include `downloadType`. Conversion progress has
+`phase: "converting"` and no invented metrics. MP3 delivery uses `audio/mpeg` and
+a sanitized metadata-based `.mp3` attachment name with the same authorization,
+expiry and private caching policy. See [MP3_DOWNLOADS.md](MP3_DOWNLOADS.md) for
+conversion settings, cleanup, verification and limitations.
 
 Only approved HTTPS TikTok hosts are accepted. Credentials, ports, encoded hosts,
 lookalikes and extra request fields are rejected. Clients cannot supply paths or

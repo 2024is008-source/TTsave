@@ -23,7 +23,7 @@ const context = () => ({
 let root: string;
 let store: PreviewStore | undefined;
 beforeEach(async () => {
-  root = await mkdtemp(path.join(tmpdir(), 'ttsave-preview-test-'));
+  root = await mkdtemp(path.join(tmpdir(), 'tiksavemp4-preview-test-'));
   mocks.lookup.mockResolvedValue([{ address: '8.8.8.8', family: 4 }]);
 });
 afterEach(async () => {
@@ -33,7 +33,7 @@ afterEach(async () => {
   mocks.request.mockReset();
   if (
     path.dirname(root) !== path.resolve(tmpdir()) ||
-    !path.basename(root).startsWith('ttsave-preview-test-')
+    !path.basename(root).startsWith('tiksavemp4-preview-test-')
   )
     throw new Error('Unsafe test cleanup');
   await rm(root, { recursive: true, force: true });
@@ -137,7 +137,7 @@ it('stores a decoded WebP behind a random capability, expires it and cleans temp
   expect(thumbnailSchema.safeParse(local).success).toBe(true);
   expect(local).not.toContain('secret');
   const token =
-    new URL(local ?? '', 'https://ttsave.test').searchParams.get('token') ?? '';
+    new URL(local ?? '', 'https://tiksavemp4.test').searchParams.get('token') ?? '';
   await expect(store.get(id, 'x'.repeat(43))).rejects.toMatchObject({ status: 403 });
   const bytes = await store.get(id, token);
   expect((await sharp(bytes).metadata()).format).toBe('webp');

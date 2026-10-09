@@ -5,7 +5,7 @@ import { env } from './env.js';
 export function createLogger(options: LoggerOptions = {}) {
   return pino({
     level: env.LOG_LEVEL,
-    base: { service: 'ttsave' },
+    base: { service: 'tiksavemp4' },
     ...options,
   });
 }

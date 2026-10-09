@@ -43,6 +43,7 @@ export function createApiAdapter(transport: typeof fetch = fetch): DownloaderAda
         durationSeconds: data.durationSeconds,
         thumbnail: data.thumbnail,
         downloadAvailable: data.downloadAvailable,
+        ...(data.capabilities ? { capabilities: data.capabilities } : {}),
         formats: data.formats.map((format) => ({
           id: format.id,
           label: format.qualityLabel,
@@ -62,9 +63,15 @@ export function createApiAdapter(transport: typeof fetch = fetch): DownloaderAda
         })),
       };
     },
-    async startDownload(analysisId, formatId, signal) {
+    async startDownload(analysisId, formatId, signal, downloadType = 'mp4') {
       const job = apiJobSchema.parse(
-        await read('/downloads', signal, { analysisId, formatId }),
+        await read(
+          '/downloads',
+          signal,
+          downloadType === 'mp3'
+            ? { analysisId, downloadType }
+            : { analysisId, formatId },
+        ),
       );
       if (signal.aborted) {
         await cancel(job);

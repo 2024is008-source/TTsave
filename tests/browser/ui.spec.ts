@@ -2,9 +2,15 @@
 
 import { expect, test } from '@playwright/test';
 
-for (const width of [390, 768, 1024, 1440]) {
+for (const [width, height] of [
+  [390, 844],
+  [768, 1024],
+  [1024, 900],
+  [1440, 1000],
+  [1920, 1080],
+] as const) {
   test(`layout and interactions at ${String(width)}px`, async ({ page }, testInfo) => {
-    await page.setViewportSize({ width, height: 1000 });
+    await page.setViewportSize({ width, height });
     await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
     const browserErrors: string[] = [];
     page.on('pageerror', (error) => browserErrors.push(error.message));
@@ -41,7 +47,9 @@ for (const width of [390, 768, 1024, 1440]) {
         /\.webp \d+w, .*\.webp \d+w/,
       );
     }
-    await expect(page.locator('.art-sphere')).toHaveCount(3);
+    await expect(page.locator('.art-sphere')).toHaveCount(2);
+    await expect(page.locator('.phone-action')).toHaveCount(4);
+    await expect(page.locator('.tiktok-tile')).toHaveCount(1);
     await expect(page.locator('.feature-card')).toHaveCount(4);
     await expect(page.locator('.step-card')).toHaveCount(3);
     await expect(page.locator('.moment-card')).toHaveCount(3);
@@ -57,13 +65,16 @@ for (const width of [390, 768, 1024, 1440]) {
       expect((bounds?.x ?? 0) + (bounds?.width ?? 0)).toBeLessThanOrEqual(width);
     }
     await page.locator('.landing-showcase').screenshot({
-      path: `docs/screenshots/showcase-light-${String(width)}.png`,
+      path: `docs/screenshots/mp3-regression-showcase-light-${String(width)}.png`,
       style: '.site-header, .skip-link { visibility: hidden !important; }',
     });
     await expect(
       page.locator('.social-actions button, .floating-artwork button'),
     ).toHaveCount(0);
     await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({
+      path: `docs/screenshots/mp3-regression-hero-idle-${String(width)}.png`,
+    });
     await page.screenshot({
       path: testInfo.outputPath(`light-${String(width)}.png`),
       fullPage: true,
@@ -81,7 +92,7 @@ for (const width of [390, 768, 1024, 1440]) {
       .filter({ hasText: 'Which TikTok links are supported?' })
       .click();
     await expect(
-      page.getByText('TTSave supports publicly accessible TikTok video links only', {
+      page.getByText('TikSaveMp4 supports publicly accessible TikTok video links only', {
         exact: false,
       }),
     ).toBeVisible();
@@ -154,7 +165,7 @@ for (const width of [390, 768, 1024, 1440]) {
       fullPage: true,
     });
     await page.locator('.landing-showcase').screenshot({
-      path: `docs/screenshots/showcase-dark-${String(width)}.png`,
+      path: `docs/screenshots/mp3-regression-showcase-dark-${String(width)}.png`,
       style: '.site-header, .skip-link { visibility: hidden !important; }',
     });
     expect(browserErrors).toEqual([]);

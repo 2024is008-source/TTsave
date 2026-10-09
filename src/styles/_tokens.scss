@@ -14,6 +14,8 @@
   --violet: #8a35ff;
   --blue: #287cff;
   --cyan: #25f4ee;
+  --page-max-width: 1240px;
+  --page-gutter: clamp(20px, 4vw, 48px);
   --gradient: linear-gradient(110deg, #ff2f8e 0%, #b635f2 42%, #5a4fff 70%, #168bff 100%);
   --gradient-alt: linear-gradient(
     135deg,
@@ -138,11 +140,17 @@ h3 {
   -webkit-background-clip: text;
 }
 .wordmark {
-  font-size: 1.75rem;
+  font-size: 1.65rem;
   font-weight: 900;
   letter-spacing: -0.06em;
   display: inline-flex;
   align-items: center;
+}
+.brand-suffix {
+  margin-left: 0.08em;
+  font-size: 0.72em;
+  font-weight: 800;
+  letter-spacing: -0.035em;
 }
 .brand-dot {
   width: 6px;

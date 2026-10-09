@@ -21,6 +21,7 @@ const extractorFormat = z.object({
   height: optionalNumber,
   filesize: optionalNumber,
   tbr: optionalNumber,
+  abr: optionalNumber,
   has_drm: z.boolean().nullable().optional(),
   format_note: z.string().nullable().optional(),
 });
@@ -52,7 +53,7 @@ export function extractorError(stderr: string): HttpError {
     return new HttpError(
       422,
       'REGION_RESTRICTED',
-      'This video is unavailable in the server’s region. TTSave cannot bypass that restriction.',
+      'This video is unavailable in the server’s region. TikSaveMp4 cannot bypass that restriction.',
     );
   if (/404|not found|unavailable|removed|deleted/i.test(stderr))
     return new HttpError(
@@ -81,6 +82,7 @@ export type AnalyzedSource = {
   selectors: Map<string, string>;
   previewUrl?: string;
   preferred?: Set<string>;
+  audioFormatId?: string;
 };
 export function normalizeMetadata(payload: unknown, sourceUrl: string): Analysis {
   return normalizeSource(payload, sourceUrl).media;
@@ -217,7 +219,14 @@ function normalizeSource(payload: unknown, sourceUrl: string): AnalyzedSource {
       'No supported single-file MP4 video with audio is available.',
     );
   const preview = remoteThumbnailSchema.safeParse(data.thumbnail);
+  const bestAudio = [...distinct.slice(0, 30)].sort(
+    (a, b) => (b.format.abr ?? 0) - (a.format.abr ?? 0),
+  )[0];
+  const audioFormatId = [...selectors].find(
+    ([, selector]) => selector === bestAudio?.format.format_id,
+  )?.[0];
   return {
+    ...(audioFormatId ? { audioFormatId } : {}),
     selectors,
     preferred,
     ...(preview.success ? { previewUrl: preview.data } : {}),

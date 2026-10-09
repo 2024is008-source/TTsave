@@ -100,16 +100,16 @@ for (const [width, height] of [
     await page.locator('#video-url').focus();
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
     await page.screenshot({
-      path: `docs/screenshots/ready-${String(width)}-viewport.png`,
+      path: `docs/screenshots/mp3-regression-ready-${String(width)}-viewport.png`,
     });
     await page.locator('.hero').screenshot({
-      path: `docs/screenshots/ready-${String(width)}.png`,
+      path: `docs/screenshots/mp3-regression-ready-${String(width)}.png`,
       style: '.site-header, .skip-link { visibility: hidden !important; }',
     });
     if (width === 390)
       await page
         .locator('.hero')
-        .screenshot({ path: 'docs/screenshots/state-mobile-ready.png' });
+        .screenshot({ path: 'docs/screenshots/mp3-regression-state-mobile-ready.png' });
     await page.locator('#more-formats summary').click();
     await page
       .locator('.format-option')

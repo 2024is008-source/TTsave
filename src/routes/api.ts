@@ -6,7 +6,7 @@ import {
   analyzeInput,
   analysisSchema,
   apiJobSchema,
-  downloadInput,
+  compatibleDownloadInput,
   jobParams,
   fileQuery,
 } from '../api/contracts.js';
@@ -72,7 +72,7 @@ export function createApiRouter(service: DownloaderService) {
     response.send(bytes);
   });
   router.post('/downloads', (request, response) => {
-    const input = downloadInput.parse(request.body as unknown);
+    const input = compatibleDownloadInput.parse(request.body as unknown);
     const controller = new AbortController();
     const close = () => {
       if (!response.writableEnded) controller.abort();
@@ -81,11 +81,16 @@ export function createApiRouter(service: DownloaderService) {
     response.once('finish', () => response.off('close', close));
     const job = validateOutput(
       apiJobSchema,
-      service.createJob(input.analysisId, input.formatId, {
-        signal: controller.signal,
-        requestId: typeof request.id === 'string' ? request.id : 'unknown-request',
-        logger: request.log,
-      }),
+      service.createJob(
+        input.analysisId,
+        input.downloadType === 'mp4' ? input.formatId : '',
+        {
+          signal: controller.signal,
+          requestId: typeof request.id === 'string' ? request.id : 'unknown-request',
+          logger: request.log,
+        },
+        input.downloadType,
+      ),
     );
     response.location(`/api/v1/downloads/${job.id}`).status(201).json(job);
   });
@@ -114,11 +119,11 @@ export function createApiRouter(service: DownloaderService) {
       const claim = await service.claimFile(jobId, token);
       let delivered = false;
       try {
-        response.setHeader('Content-Type', 'video/mp4');
+        response.setHeader('Content-Type', claim.contentType ?? 'video/mp4');
         response.setHeader('Content-Length', claim.size);
         response.setHeader(
           'Content-Disposition',
-          'attachment; filename="TTSave-video.mp4"',
+          `attachment; filename="${claim.filename ?? 'TikSaveMp4-video.mp4'}"`,
         );
         response.setHeader('Cache-Control', 'private, no-store');
         response.setHeader('Accept-Ranges', 'none');

@@ -35,7 +35,7 @@ let app: ReturnType<typeof createApp>;
 let server: Server | undefined;
 const children: ReturnType<typeof downloadChild>[] = [];
 beforeEach(async () => {
-  root = await mkdtemp(path.join(tmpdir(), 'ttsave-http-test-'));
+  root = await mkdtemp(path.join(tmpdir(), 'tiksavemp4-http-test-'));
   service = new ProductionDownloaderService(
     { analyzeSource: () => Promise.resolve(sourceFixture()) },
     parseEnvironment({ DOWNLOAD_TEMP_ROOT: root }),
@@ -64,7 +64,7 @@ afterEach(async () => {
   vi.restoreAllMocks();
   if (
     path.dirname(root) !== path.resolve(tmpdir()) ||
-    !path.basename(root).startsWith('ttsave-http-test-')
+    !path.basename(root).startsWith('tiksavemp4-http-test-')
   )
     throw new Error('Unsafe test cleanup directory');
   await rm(root, { recursive: true, force: true });
@@ -195,7 +195,7 @@ describe('production download endpoints', () => {
     const response = await request(app).get(file).buffer(true).expect(200);
     expect(response.headers['x-robots-tag']).toBe('noindex, nofollow, noarchive');
     expect(response.headers['content-disposition']).toBe(
-      'attachment; filename="TTSave-video.mp4"',
+      'attachment; filename="TikSaveMp4-video.mp4"',
     );
     expect(response.headers['content-type']).toBe('video/mp4');
     expect(response.headers['cache-control']).toBe('private, no-store');
@@ -215,10 +215,10 @@ describe('production download endpoints', () => {
     expect(events.headers.get('content-type')).toContain('text/event-stream');
     expect(events.headers.get('x-robots-tag')).toBe('noindex, nofollow, noarchive');
     child.stdout.write(
-      'TTSave:{"downloadedBytes":16,"totalBytes":null,"speedBytesPerSecond":null}\n',
+      'TikSaveMp4:{"downloadedBytes":16,"totalBytes":null,"speedBytesPerSecond":null}\n',
     );
     child.stdout.write(
-      'TTSave:{"downloadedBytes":16,"totalBytes":32,"speedBytesPerSecond":128}\n',
+      'TikSaveMp4:{"downloadedBytes":16,"totalBytes":32,"speedBytesPerSecond":128}\n',
     );
     await child.complete();
     const text = await events.text();

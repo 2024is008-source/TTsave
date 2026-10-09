@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -7,6 +7,14 @@ import sharp from 'sharp';
 const source = new URL('../src/artwork/', import.meta.url);
 const output = new URL('../public/assets/images/', import.meta.url);
 await mkdir(output, { recursive: true });
+
+async function writeChanged(filename, bytes) {
+  const existing = await readFile(filename).catch((error) => {
+    if (error.code === 'ENOENT') return null;
+    throw error;
+  });
+  if (!existing?.equals(bytes)) await writeFile(filename, bytes);
+}
 
 const assets = [
   ['preview-unavailable', 1080, 1920, 540],
@@ -54,7 +62,7 @@ for (const [name, width, height, smallWidth] of assets) {
       })
       .webp({ quality: 87, effort: 5 })
       .toBuffer();
-    await writeFile(fileURLToPath(destination), encoded);
+    await writeChanged(fileURLToPath(destination), encoded);
     built++;
   }
 }
@@ -69,7 +77,7 @@ const socialCard = await sharp(fileURLToPath(new URL('og-image.svg', source)))
   .resize(1200, 630)
   .jpeg({ quality: 85, mozjpeg: true })
   .toBuffer();
-await writeFile(
+await writeChanged(
   fileURLToPath(new URL('tiksavemp4-social-card.jpg', socialOutput)),
   socialCard,
 );

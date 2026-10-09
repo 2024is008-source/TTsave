@@ -38,7 +38,7 @@ References used for draft review: [FTC consumer privacy guidance](https://www.ft
 
 ## Claims and domain audit
 
-Searched repository-authored source, templates, scripts, JSON/CSS/public assets and documentation, excluding dependencies and historical Git data. Active interface copy already omitted the prototype’s unsupported watermark, 4K, privacy, speed and usage claims. No new fabricated metrics or guarantees were found. Legal denial statements and historical UI audit records remain as accurate explanations, not promotional promises. The former social artwork’s “Interface preview” wording was replaced with current public-link/MP4 language. The UI brand remains TTSave; SEO identity is TikSaveMP4 as requested. Downloader routes, selection, API contracts and state behavior are unchanged.
+Searched repository-authored source, templates, scripts, JSON/CSS/public assets and documentation, excluding dependencies, historical Git data and the immutable `reference` directory. Active interface copy omits the prototype’s unsupported watermark, 4K, privacy, speed and usage claims. No fabricated metrics or guarantees were found. Legal denial statements and historical UI audit records remain accurate explanations, not promotional promises. The former social artwork’s “Interface preview” wording was replaced with current public-link/MP4 language. TikSaveMp4 is now the single brand across the UI, metadata, application code and documentation. Downloader routes, selection, API contracts and state behavior are unchanged.
 
 ## Verification and launch commands
 

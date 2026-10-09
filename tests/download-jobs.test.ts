@@ -27,7 +27,7 @@ const context = () => ({
 });
 const metadata = { analyzeSource: vi.fn(() => Promise.resolve(sourceFixture())) };
 beforeEach(async () => {
-  root = await mkdtemp(path.join(tmpdir(), 'ttsave-jobs-test-'));
+  root = await mkdtemp(path.join(tmpdir(), 'tiksavemp4-jobs-test-'));
   service = new ProductionDownloaderService(
     metadata,
     parseEnvironment({
@@ -52,7 +52,7 @@ afterEach(async () => {
   spawnMock.mockReset();
   if (
     path.dirname(root) !== path.resolve(tmpdir()) ||
-    !path.basename(root).startsWith('ttsave-jobs-test-')
+    !path.basename(root).startsWith('tiksavemp4-jobs-test-')
   )
     throw new Error('Unsafe test cleanup directory');
   await rm(root, { recursive: true, force: true });
@@ -149,11 +149,11 @@ describe('production download jobs', () => {
     child.stdout.write('[download] 99% at 100MB/s\n');
     expect(update).not.toHaveBeenCalled();
     child.stdout.write(
-      'TTSave:{"downloadedBytes":10,"totalBytes":null,"speedBytesPerSecond":null}\n',
+      'TikSaveMp4:{"downloadedBytes":10,"totalBytes":null,"speedBytesPerSecond":null}\n',
     );
     expect(service.getJob(job.id).progress).toEqual({ downloadedBytes: 10 });
     child.stdout.write(
-      'TTSave:{"downloadedBytes":16,"totalBytes":32,"speedBytesPerSecond":128}\n',
+      'TikSaveMp4:{"downloadedBytes":16,"totalBytes":32,"speedBytesPerSecond":128}\n',
     );
     expect(service.getJob(job.id).progress).toEqual({
       percent: 50,
@@ -196,7 +196,7 @@ describe('production download jobs', () => {
     );
     const analysis = service.analyze(publicUrl, context());
     expect(() => service.createJob(media.id, 'source-1', context())).toThrow(
-      'TTSave is busy',
+      'TikSaveMp4 is busy',
     );
     release(sourceFixture());
     await analysis;
@@ -241,7 +241,7 @@ describe('production download jobs', () => {
   });
   it('terminates and cleans up when structured progress exceeds the size limit', async () => {
     const { job, child } = await start();
-    child.stdout.write('TTSave:{"downloadedBytes":2048,"totalBytes":null}\n');
+    child.stdout.write('TikSaveMp4:{"downloadedBytes":2048,"totalBytes":null}\n');
     await vi.waitFor(() => expect(service.getJob(job.id).status).toBe('error'));
     await service.sweep();
     expect(service.getJob(job.id).error?.code).toBe('VIDEO_TOO_LARGE');
@@ -284,7 +284,7 @@ describe('production download jobs', () => {
     const url = service.getJob(job.id).fileUrl;
     expect(url).toMatch(/\/file\?token=[A-Za-z0-9_-]{43}$/);
     const fileToken =
-      new URL(url ?? '', 'https://ttsave.invalid').searchParams.get('token') ?? '';
+      new URL(url ?? '', 'https://tiksavemp4.invalid').searchParams.get('token') ?? '';
     await expect(service.claimFile(job.id, 'x'.repeat(43))).rejects.toMatchObject({
       code: 'FILE_ACCESS_DENIED',
     });
@@ -302,7 +302,7 @@ describe('production download jobs', () => {
     const fileToken =
       new URL(
         service.getJob(job.id).fileUrl ?? '',
-        'https://ttsave.invalid',
+        'https://tiksavemp4.invalid',
       ).searchParams.get('token') ?? '';
     const claim = await service.claimFile(job.id, fileToken);
     await claim.release(false);
@@ -335,17 +335,17 @@ describe('production download jobs', () => {
 describe('structured extractor progress', () => {
   it('does not parse normal console text, estimates, invalid JSON or invalid numbers', () => {
     expect(parseDownloadProgress('50% at 1 MB/s', 1024)).toBeNull();
-    expect(parseDownloadProgress('TTSave:garbage', 1024)).toBeNull();
-    expect(parseDownloadProgress('TTSave:{"downloadedBytes":-1}', 1024)).toBeNull();
+    expect(parseDownloadProgress('TikSaveMp4:garbage', 1024)).toBeNull();
+    expect(parseDownloadProgress('TikSaveMp4:{"downloadedBytes":-1}', 1024)).toBeNull();
     expect(
       parseDownloadProgress(
-        'TTSave:{"downloadedBytes":16,"totalBytes":"NA","total_bytes_estimate":32}',
+        'TikSaveMp4:{"downloadedBytes":16,"totalBytes":"NA","total_bytes_estimate":32}',
         1024,
       ),
     ).toEqual({ downloadedBytes: 16 });
     expect(
       parseDownloadProgress(
-        'TTSave:{"downloadedBytes":0,"totalBytes":32,"speedBytesPerSecond":0}',
+        'TikSaveMp4:{"downloadedBytes":0,"totalBytes":32,"speedBytesPerSecond":0}',
         1024,
       ),
     ).toEqual({ percent: 0, downloadedBytes: 0, sizeBytes: 32, speedBytesPerSecond: 0 });

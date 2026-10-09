@@ -34,28 +34,11 @@ error ════════════════════════�
         <div class="iridescent-ribbon" aria-hidden="true"></div>
         <div class="art-sphere sphere-one" aria-hidden="true"></div>
         <div class="art-sphere sphere-two" aria-hidden="true"></div>
-        <div class="art-sphere sphere-three" aria-hidden="true"></div>
-
-        <!-- Floating TikTok icon cube -->
-        <div class="floating-tiktok-icon" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.26a8.16 8.16 0 0 0 4.77 1.52V7.31a4.85 4.85 0 0 1-1-.62z"
-              fill="#25F4EE"
-            />
-            <path
-              d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.26a8.16 8.16 0 0 0 4.77 1.52V7.31a4.85 4.85 0 0 1-1-.62z"
-              fill="#FE2C55"
-              style="mix-blend-mode: screen"
-            />
-          </svg>
-        </div>
-
         <div class="phone idle-phone">
           <div class="phone-screen">
             <%- include('picture', { imageClass: 'phone-scene', imageName:
             'hero-video-poster', imageWidth: 1080, imageHeight: 1920, smallWidth: 540,
-            imageSizes: '(max-width: 480px) 258px, (max-width: 1100px) 270px, 310px',
+            imageSizes: '(max-width: 480px) 248px, (max-width: 1100px) 260px, 290px',
             imageAlt: heroArtwork.alt, imageLoading: 'eager' }) %>
             <!-- Top gradient overlay -->
             <div class="phone-overlay-top" aria-hidden="true"></div>
@@ -99,6 +82,38 @@ error ════════════════════════�
                   <path d="M13 3.5v3c.83-.4 1.5-1.5 0-3z" fill="white" />
                 </svg>
               </div>
+            </div>
+            <div class="phone-action-rail" aria-hidden="true">
+              <span class="phone-action phone-action--heart">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12 20.4 10.55 19.08C5.4 14.4 2 11.3 2 7.5A5.45 5.45 0 0 1 7.5 2 6 6 0 0 1 12 4.08 6 6 0 0 1 16.5 2 5.45 5.45 0 0 1 22 7.5c0 3.8-3.4 6.9-8.55 11.58Z"
+                  />
+                </svg>
+              </span>
+              <span class="phone-action phone-action--comment">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M21 11.5a8.4 8.4 0 0 1-9 8.5 9.8 9.8 0 0 1-3.6-.72L3 21l1.65-4.83A8.23 8.23 0 0 1 3 11.5a8.4 8.4 0 0 1 9-8.5 8.4 8.4 0 0 1 9 8.5Z"
+                  />
+                  <circle cx="8" cy="11.5" r="1" />
+                  <circle cx="12" cy="11.5" r="1" />
+                  <circle cx="16" cy="11.5" r="1" />
+                </svg>
+              </span>
+              <span class="phone-action phone-action--share">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m21 3-8.2 18-2.1-7.7L3 10.8 21 3Z" />
+                  <path d="m10.7 13.3 5.1-5.1" />
+                </svg>
+              </span>
+              <span class="phone-action phone-action--sound">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 18V6l10-3v12" />
+                  <ellipse cx="6" cy="18" rx="3" ry="2" />
+                  <ellipse cx="16" cy="15" rx="3" ry="2" />
+                </svg>
+              </span>
             </div>
             <div class="phone-caption" aria-hidden="true">
               <div class="creator-line">
@@ -144,6 +159,21 @@ error ════════════════════════�
             <path d="M9 18V6l11-3v13M9 10l11-3" />
             <ellipse cx="6" cy="18" rx="3" ry="2" />
             <ellipse cx="17" cy="16" rx="3" ry="2" />
+          </svg>
+        </div>
+        <div class="tiktok-tile" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.26a8.16 8.16 0 0 0 4.77 1.52V7.31a4.85 4.85 0 0 1-1-.62Z"
+              fill="#25F4EE"
+              transform="translate(-1 0)"
+            />
+            <path
+              d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.26a8.16 8.16 0 0 0 4.77 1.52V7.31a4.85 4.85 0 0 1-1-.62Z"
+              fill="#FE2C55"
+              transform="translate(1 0)"
+              style="mix-blend-mode: screen"
+            />
           </svg>
         </div>
       </div>

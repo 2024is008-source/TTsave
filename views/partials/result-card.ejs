@@ -57,22 +57,44 @@ state-panel children keep their existing IDs so downloader.ts works unchanged. %
 
     <div class="rp-container-section">
       <h3 class="rp-section-label" id="container-label">Download format</h3>
-      <div class="rp-container-tabs" role="tablist" aria-labelledby="container-label">
-        <button
-          type="button"
-          class="rp-container-tab"
-          id="video-format-tab"
-          role="tab"
-          aria-selected="true"
-          aria-controls="video-quality-panel"
-        >
-          <%- include('icon', { name: 'video' }) %><span
-            id="result-container-label"
-          ></span>
-        </button>
-      </div>
+      <fieldset class="rp-media-types" aria-labelledby="container-label">
+        <label class="rp-media-choice">
+          <input type="radio" name="download-type" value="mp4" checked />
+          <%- include('icon', { name: 'video' }) %>
+          <span><strong>MP4 Video</strong><small>Video with audio</small></span>
+          <span class="rp-type-check" aria-hidden="true">✓</span>
+        </label>
+        <label class="rp-media-choice" id="mp3-choice">
+          <input
+            type="radio"
+            name="download-type"
+            value="mp3"
+            disabled
+            aria-describedby="audio-unavailable"
+          />
+          <svg
+            class="icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            aria-hidden="true"
+          >
+            <path d="M9 18V6l11-3v13M9 10l11-3" />
+            <ellipse cx="6" cy="18" rx="3" ry="2" />
+            <ellipse cx="17" cy="16" rx="3" ry="2" />
+          </svg>
+          <span><strong>MP3 Audio</strong><small>Audio only</small></span>
+          <span class="rp-type-check" aria-hidden="true">✓</span>
+        </label>
+      </fieldset>
+      <p id="audio-unavailable" class="rp-audio-notice">
+        MP3 audio is not available for this post.
+      </p>
     </div>
-    <div id="video-quality-panel" role="tabpanel" aria-labelledby="video-format-tab">
+    <div id="video-quality-panel">
       <fieldset class="rp-format-fieldset">
         <legend class="rp-section-label">Video quality</legend>
         <div id="format-options" class="rp-tile-grid"></div>
@@ -81,6 +103,16 @@ state-panel children keep their existing IDs so downloader.ts works unchanged. %
           <div id="extra-format-options" class="rp-tile-grid rp-tile-grid--extra"></div>
         </details>
       </fieldset>
+    </div>
+    <div id="audio-quality-panel" hidden>
+      <h3 class="rp-section-label">Audio format</h3>
+      <div class="rp-audio-card">
+        <div>
+          <strong>MP3 Audio</strong>
+          <p>Audio extracted from the selected public video</p>
+        </div>
+        <span class="rp-audio-badge">MP3 · Selected</span>
+      </div>
     </div>
 
     <button class="rp-dl-btn download-button" type="button" disabled>

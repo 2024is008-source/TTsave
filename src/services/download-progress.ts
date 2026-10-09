@@ -2,9 +2,9 @@ import { z } from 'zod';
 import type { ApiJob } from '../api/contracts.js';
 import { HttpError } from '../middleware/error-handler.js';
 
-export const PROGRESS_PREFIX = 'TTSave:';
+export const PROGRESS_PREFIX = 'TikSaveMp4:';
 export const PROGRESS_TEMPLATE =
-  'download:TTSave:{"downloadedBytes":%(progress.downloaded_bytes)j,"totalBytes":%(progress.total_bytes)j,"speedBytesPerSecond":%(progress.speed)j}';
+  'download:TikSaveMp4:{"downloadedBytes":%(progress.downloaded_bytes)j,"totalBytes":%(progress.total_bytes)j,"speedBytesPerSecond":%(progress.speed)j}';
 const unknownNumber = z
   .union([z.number().nonnegative(), z.literal('NA'), z.literal('N/A'), z.null()])
   .optional();

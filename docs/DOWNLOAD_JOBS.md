@@ -4,17 +4,17 @@ The production service owns bounded in-memory Maps for analyses and jobs. Deploy
 one process; there is no distributed queue or restart persistence. Requests over
 capacity fail. Analysis, active downloads and transfers share an operation budget.
 
-| Environment variable         | Default                      | Purpose                       |
-| ---------------------------- | ---------------------------- | ----------------------------- |
-| `DOWNLOAD_MAX_CONCURRENT`    | 2                            | Active download limit         |
-| `APPLICATION_MAX_CONCURRENT` | 4                            | Shared operation limit        |
-| `DOWNLOAD_TIMEOUT_MS`        | 120000                       | Whole-job deadline            |
-| `MAX_VIDEO_DURATION_SECONDS` | 600                          | Maximum known duration        |
-| `DOWNLOAD_MAX_BYTES`         | 104857600                    | Maximum output bytes          |
-| `JOB_TTL_MS`                 | 600000                       | Job retention and orphan age  |
-| `FILE_ACCESS_TTL_MS`         | 60000                        | Completed file access window  |
-| `JOB_SWEEP_INTERVAL_MS`      | 30000                        | Periodic cleanup interval     |
-| `DOWNLOAD_TEMP_ROOT`         | OS temp directory + `ttsave` | Operator-owned temporary root |
+| Environment variable         | Default                          | Purpose                       |
+| ---------------------------- | -------------------------------- | ----------------------------- |
+| `DOWNLOAD_MAX_CONCURRENT`    | 2                                | Active download limit         |
+| `APPLICATION_MAX_CONCURRENT` | 4                                | Shared operation limit        |
+| `DOWNLOAD_TIMEOUT_MS`        | 120000                           | Whole-job deadline            |
+| `MAX_VIDEO_DURATION_SECONDS` | 600                              | Maximum known duration        |
+| `DOWNLOAD_MAX_BYTES`         | 104857600                        | Maximum output bytes          |
+| `JOB_TTL_MS`                 | 600000                           | Job retention and orphan age  |
+| `FILE_ACCESS_TTL_MS`         | 60000                            | Completed file access window  |
+| `JOB_SWEEP_INTERVAL_MS`      | 30000                            | Periodic cleanup interval     |
+| `DOWNLOAD_TEMP_ROOT`         | OS temp directory + `tiksavemp4` | Operator-owned temporary root |
 
 Configuration is validated. Each job uses `mkdtemp` beneath a local absolute root.
 IDs are random UUIDs; job and separate file capabilities each contain 256 random

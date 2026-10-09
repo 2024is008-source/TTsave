@@ -4,9 +4,21 @@ import { thumbnailSchema } from '../shared/thumbnail.js';
 
 export const analyzeInput = z.object({ url: videoUrlSchema }).strict();
 export const opaqueId = z.uuid();
-export const downloadInput = z
-  .object({ analysisId: opaqueId, formatId: z.string().min(1).max(200) })
-  .strict();
+export const downloadInput = z.discriminatedUnion('downloadType', [
+  z
+    .object({
+      analysisId: opaqueId,
+      formatId: z.string().min(1).max(200),
+      downloadType: z.literal('mp4'),
+    })
+    .strict(),
+  z.object({ analysisId: opaqueId, downloadType: z.literal('mp3') }).strict(),
+]);
+export const compatibleDownloadInput = z.preprocess((value) => {
+  if (value && typeof value === 'object' && !('downloadType' in value))
+    return { ...value, downloadType: 'mp4' };
+  return value;
+}, downloadInput);
 export const jobParams = z.object({ jobId: opaqueId });
 export const apiFormat = z.object({
   id: z.string().min(1).max(200),
@@ -35,10 +47,12 @@ export const analysisSchema = z.object({
     ),
   mock: z.boolean(),
   downloadAvailable: z.boolean().default(false),
+  capabilities: z.object({ mp4: z.boolean(), mp3: z.boolean() }).optional(),
 });
 export const accessTokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
 export const fileQuery = z.object({ token: accessTokenSchema }).strict();
 export const apiProgressSchema = z.object({
+  phase: z.enum(['downloading', 'converting']).optional(),
   downloadedBytes: z.number().int().nonnegative().optional(),
   percent: z.number().min(0).max(100).optional(),
   speedBytesPerSecond: z.number().nonnegative().optional(),
@@ -62,6 +76,7 @@ export const jobErrorSchema = z.object({
   requestId: z.string(),
 });
 export const apiJobSchema = z.object({
+  downloadType: z.enum(['mp4', 'mp3']).optional(),
   id: opaqueId,
   analysisId: opaqueId,
   formatId: z.string().min(1).max(200),
@@ -80,7 +95,9 @@ export const apiJobSchema = z.object({
   progress: apiProgressSchema.optional(),
   fileUrl: safeFileUrlSchema.optional(),
   fileExpiresAt: z.number().int().positive().optional(),
-  deliveredFormat: apiFormat.optional(),
+  deliveredFormat: apiFormat
+    .extend({ container: z.enum(['mp4', 'webm', 'mp3']) })
+    .optional(),
   error: jobErrorSchema.optional(),
 });
 export const apiErrorSchema = z.object({

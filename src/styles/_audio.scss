@@ -1,0 +1,105 @@
+.rp-media-types {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  border: 0;
+  padding: 0;
+  margin: 0 0 12px;
+}
+.rp-media-choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 78px;
+  padding: 14px 12px;
+  border: 1px solid var(--line-solid);
+  border-radius: 17px;
+  background: var(--glass);
+  cursor: pointer;
+  color: var(--muted);
+  min-width: 0;
+}
+.rp-media-choice input {
+  position: absolute;
+  opacity: 0;
+}
+.rp-media-choice strong,
+.rp-media-choice small {
+  display: block;
+  line-height: 1.4;
+}
+.rp-media-choice strong {
+  font-size: 14px;
+  color: var(--ink);
+}
+.rp-media-choice small {
+  font-size: 12px;
+}
+.rp-type-check {
+  visibility: hidden;
+  margin-left: auto;
+  font-weight: 800;
+}
+.rp-media-choice:has(input:checked) {
+  border-color: var(--violet);
+  background: rgba(138, 53, 255, 0.07);
+  color: var(--violet);
+}
+.rp-media-choice:has(input:checked) .rp-type-check {
+  visibility: visible;
+}
+.rp-media-choice:has(input:focus-visible) {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+.rp-media-choice:has(input:disabled) {
+  opacity: 0.55;
+  cursor: default;
+}
+.rp-audio-notice {
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+.rp-audio-card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--violet);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 20px;
+  background: rgba(138, 53, 255, 0.06);
+}
+.rp-audio-card strong {
+  font-size: 16px;
+}
+.rp-audio-card p {
+  font-size: 13px;
+  margin-top: 5px;
+}
+.rp-audio-badge {
+  font-size: 12px;
+  color: var(--violet);
+  white-space: nowrap;
+  font-weight: 700;
+}
+@media (max-width: 480px) {
+  .rp-media-choice {
+    gap: 7px;
+    padding: 12px 9px;
+  }
+  .rp-media-choice .icon {
+    width: 20px;
+    height: 20px;
+  }
+  .rp-audio-card {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 359px) {
+  .rp-media-types {
+    grid-template-columns: 1fr;
+  }
+}

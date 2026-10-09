@@ -63,6 +63,30 @@ afterEach(() => {
 });
 
 describe('downloader form', () => {
+  it('switches audio mode without reanalysis or stale video resolutions and restores MP4 quality', async () => {
+    const adapter = makeAdapter();
+    adapter.analyze = vi.fn(() =>
+      Promise.resolve({ ...media, capabilities: { mp4: true, mp3: true } }),
+    );
+    ui = initializeDownloader(document, { adapter });
+    setInput('https://vt.tiktok.com/abc/');
+    submit();
+    await vi.waitFor(() => expect(ui?.controller.getState().status).toBe('ready'));
+    ui?.controller.selectFormat('two');
+    const mp3 = element<HTMLInputElement>('input[name="download-type"][value="mp3"]');
+    mp3.checked = true;
+    mp3.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(element('#video-quality-panel').hidden).toBe(true);
+    expect(element('#audio-quality-panel').hidden).toBe(false);
+    expect(element('.download-label').textContent).toBe('Download MP3');
+    expect(element('.rp-helper').textContent).toContain(
+      'Audio quality depends on the source',
+    );
+    ui?.controller.selectDownloadType('mp4');
+    expect(element('#video-quality-panel').hidden).toBe(false);
+    expect(element<HTMLInputElement>('#format-1').checked).toBe(true);
+    expect(adapter.analyze).toHaveBeenCalledOnce();
+  });
   it('connects safe preview metadata, falls back on image failure and removes stale results immediately', async () => {
     const source = {
       ...media,

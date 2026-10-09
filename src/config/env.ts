@@ -91,7 +91,7 @@ const envSchema = z.object({
         !value.startsWith('//'),
       'Use a local absolute temporary root.',
     )
-    .default(path.join(tmpdir(), 'ttsave')),
+    .default(path.join(tmpdir(), 'tiksavemp4')),
 });
 
 export type Environment = z.infer<typeof envSchema>;

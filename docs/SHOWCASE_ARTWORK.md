@@ -31,7 +31,7 @@ static and respects reduced motion.
 
 ### showcase-left
 
-Create a premium polished 3D decorative artwork asset for TTSave, a luminous
+Create a premium polished 3D decorative artwork asset for TikSaveMp4, a luminous
 Apple-inspired creator-video website. Tall portrait composition, transparent
 background, isolated objects, no background panel. A wide flowing pearlescent
 satin glass ribbon makes two loose elegant loops vertically, with beautiful
@@ -49,7 +49,7 @@ along the far left edge of a website; tall 2:3 composition.
 
 ### showcase-right
 
-Premium 3D product-render decorative artwork for luminous Apple-inspired TTSave
+Premium 3D product-render decorative artwork for luminous Apple-inspired TikSaveMp4
 website, tall portrait 2:3 composition, fully transparent background. Isolated
 opalescent ribbon sculpture making two airy flowing loops vertically;
 translucent pearl glass ribbon glowing icy blue, lavender and soft blush pink at

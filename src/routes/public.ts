@@ -8,7 +8,7 @@ export const publicRouter = Router();
 const pages = [
   {
     path: '/',
-    title: 'TikSaveMP4 — Online TikTok Video Downloader',
+    title: 'TikSaveMp4 — Online TikTok Video Downloader',
     description:
       'Download available MP4 formats from supported public TikTok video links. Paste a link, review the source-provided options and choose an available quality.',
   },
@@ -55,7 +55,7 @@ for (const page of pages) {
       sweepSeconds: env.JOB_SWEEP_INTERVAL_MS / 1000,
       fileAccessSeconds: env.FILE_ACCESS_TTL_MS / 1000,
       seo: {
-        title: page.path === '/' ? page.title : `${page.title} | TikSaveMP4`,
+        title: page.path === '/' ? page.title : `${page.title} | TikSaveMp4`,
         description: page.description,
         canonical: env.PUBLIC_BASE_URL + page.path,
         image: env.PUBLIC_BASE_URL + '/assets/og/tiksavemp4-social-card.jpg',

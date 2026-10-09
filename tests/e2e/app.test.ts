@@ -25,11 +25,12 @@ describe('application routes', () => {
     expect(response.body).toEqual({ status: 'ready' });
   });
 
-  it('renders the TTSave interface without fabricated media or inline scripts', async () => {
+  it('renders the TikSaveMp4 interface without fabricated media or inline scripts', async () => {
     const response = await request(app).get('/').expect(200);
 
     expect(response.type).toBe('text/html');
-    expect(response.text).toContain('TT<span class="brand">Save</span>');
+    expect(response.text).toContain('Tik<span class="brand">Save</span>');
+    expect(response.text).toContain('<span class="brand-suffix">Mp4</span>');
     expect(response.text).toContain('/assets/js/app.js');
     expect(response.text).toContain('Preview unavailable');
     expect(response.text).toContain('/assets/images/showcase-left.webp');

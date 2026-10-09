@@ -19,6 +19,7 @@ export const mediaSchema = z.object({
   id: z.string().min(1).max(200),
   title: z.string().min(1).max(500).optional(),
   downloadAvailable: z.boolean().optional(),
+  capabilities: z.object({ mp4: z.boolean(), mp3: z.boolean() }).optional(),
   creator: z.string().max(200).nullable().optional(),
   durationSeconds: z.number().nonnegative().nullable().optional(),
   thumbnail: thumbnailSchema.nullable().optional(),
@@ -32,6 +33,7 @@ export const mediaSchema = z.object({
     ),
 });
 export const progressSchema = z.object({
+  phase: z.enum(['downloading', 'converting']).optional(),
   downloadedBytes: z.number().int().nonnegative().optional(),
   percent: z.number().min(0).max(100).optional(),
   speedBytesPerSecond: z.number().nonnegative().optional(),
@@ -59,6 +61,7 @@ export type DownloaderAdapter = {
     mediaId: string,
     formatId: string,
     signal: AbortSignal,
+    downloadType?: 'mp4' | 'mp3',
   ) => Promise<DownloadJob>;
   waitForDownload: (
     job: DownloadJob,
