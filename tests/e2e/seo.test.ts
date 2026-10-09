@@ -11,6 +11,22 @@ import { faqPage, webApplication } from '../../src/services/seo.js';
 describe('public SEO and policies', () => {
   const app = createApp();
   const paths = ['/', ...legalPages.map((page) => page.path)];
+  it('serves a crawlable square PNG favicon for Googlebot-Image', async () => {
+    const response = await request(app)
+      .get('/assets/favicon.png')
+      .set('User-Agent', 'Googlebot-Image/1.0')
+      .buffer(true)
+      .expect(200);
+    expect(response.type).toBe('image/png');
+    expect(response.headers['x-robots-tag']).toBeUndefined();
+    expect(await sharp(response.body as Buffer).metadata()).toMatchObject({
+      width: 96,
+      height: 96,
+      format: 'png',
+    });
+    const robots = await request(app).get('/robots.txt').expect(200);
+    expect(robots.text).not.toMatch(/Disallow:\s*\/assets/i);
+  });
   it('serves a small local 1200x630 JPEG social preview', async () => {
     const response = await request(app)
       .get('/assets/og/tiksavemp4-social-card.jpg')
@@ -34,6 +50,13 @@ describe('public SEO and policies', () => {
         .set('X-Forwarded-Host', 'attacker.test')
         .expect(200);
       const document = new JSDOM(response.text).window.document;
+      expect(document.querySelectorAll('link[rel="icon"]')).toHaveLength(1);
+      expect(document.querySelector('link[rel="icon"]')?.getAttribute('href')).toBe(
+        '/assets/favicon.png',
+      );
+      expect(document.querySelector('link[rel="icon"]')?.getAttribute('sizes')).toBe(
+        '96x96',
+      );
       expect(document.querySelectorAll('title')).toHaveLength(1);
       expect(document.querySelectorAll('meta[name="description"]')).toHaveLength(1);
       expect(document.querySelectorAll('link[rel="canonical"]')).toHaveLength(1);

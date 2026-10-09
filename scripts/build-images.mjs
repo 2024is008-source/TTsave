@@ -81,3 +81,16 @@ await writeChanged(
   fileURLToPath(new URL('tiksavemp4-social-card.jpg', socialOutput)),
   socialCard,
 );
+
+// Keep the existing vector design as the source; provide Google's supported raster format.
+const favicon = await sharp(
+  fileURLToPath(new URL('../public/assets/favicon.svg', import.meta.url)),
+  { density: 216 },
+)
+  .resize(96, 96)
+  .png()
+  .toBuffer();
+await writeChanged(
+  fileURLToPath(new URL('../public/assets/favicon.png', import.meta.url)),
+  favicon,
+);
