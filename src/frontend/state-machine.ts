@@ -24,6 +24,8 @@ export type Status =
   | 'download-requested'
   | 'error';
 export type State = {
+  selectedPhotoIds: string[];
+  preparedPhotoCount: number;
   downloadType: 'mp4' | 'mp3' | 'image';
   status: Status;
   url: string;
@@ -35,13 +37,14 @@ export type State = {
   download: Download | null;
 };
 export type Event =
+  | { type: 'PHOTO_SELECTION'; ids: string[] }
   | { type: 'SELECT_TYPE'; downloadType: 'mp4' | 'mp3' }
   | { type: 'RESET'; url: string; message?: string }
   | { type: 'VALIDATE' }
   | { type: 'ANALYZE'; url: string }
   | { type: 'READY'; media: Media }
   | { type: 'SELECT'; formatId: string }
-  | { type: 'START' }
+  | { type: 'START'; photoCount?: number }
   | { type: 'DOWNLOADING' }
   | { type: 'PROGRESS'; progress: Progress }
   | { type: 'REQUESTED' }
@@ -52,6 +55,8 @@ export type Event =
 
 export function initialState(url = ''): State {
   return {
+    selectedPhotoIds: [],
+    preparedPhotoCount: 1,
     downloadType: 'mp4',
     status: 'idle',
     url,
@@ -69,6 +74,23 @@ export const isBusy = (status: Status): boolean =>
 /** Invalid or stale events leave state untouched. All transitions are event-driven. */
 export function transition(state: State, event: Event): State {
   switch (event.type) {
+    case 'PHOTO_SELECTION': {
+      if (state.status !== 'ready' || state.media?.postType !== 'photo') return state;
+      const ids = new Set(event.ids);
+      if (
+        ids.size !== event.ids.length ||
+        !event.ids.every((id) => state.media?.photos?.some((photo) => photo.id === id))
+      )
+        return state;
+      const selectedPhotoIds = (state.media.photos ?? [])
+        .filter((photo) => ids.has(photo.id))
+        .map((photo) => photo.id);
+      return {
+        ...state,
+        selectedPhotoIds,
+        message: `${String(selectedPhotoIds.length)} of ${String(state.media.photos?.length ?? 0)} selected`,
+      };
+    }
     case 'SELECT_TYPE':
       return state.status === 'ready' &&
         state.media?.postType !== 'photo' &&
@@ -139,10 +161,13 @@ export function transition(state: State, event: Event): State {
         ? {
             ...state,
             status: 'starting-download',
+            preparedPhotoCount: event.photoCount ?? 1,
             progress: null,
             message:
               state.downloadType === 'image'
-                ? 'Preparing image…'
+                ? event.photoCount && event.photoCount > 1
+                  ? 'Preparing your images…'
+                  : 'Preparing image…'
                 : state.downloadType === 'mp3'
                   ? 'Preparing MP3…'
                   : 'Starting the download request…',
@@ -200,7 +225,9 @@ export function transition(state: State, event: Event): State {
             download: event.download,
             message:
               state.downloadType === 'image'
-                ? 'Your image is ready. Select Save image to request the file.'
+                ? state.preparedPhotoCount > 1
+                  ? 'Your selected images are ready. Select Save selected images to request the ZIP.'
+                  : 'Your image is ready. Select Save image to request the file.'
                 : state.downloadType === 'mp3'
                   ? 'Your MP3 is ready. Select Save MP3 to request the file.'
                   : 'Your video is ready. Select Save MP4 to request the file.',
@@ -308,6 +335,13 @@ export function createDownloaderController({
     selectDownloadType(downloadType: 'mp4' | 'mp3') {
       dispatch({ type: 'SELECT_TYPE', downloadType });
     },
+    selectPhotos(ids: string[]) {
+      dispatch({ type: 'PHOTO_SELECTION', ids });
+    },
+    async downloadSelected(): Promise<void> {
+      if (state.status !== 'ready' || !state.selectedPhotoIds.length) return;
+      await this.download([...state.selectedPhotoIds]);
+    },
     chooseQuality() {
       if (
         state.downloadType === 'image' &&
@@ -378,7 +412,7 @@ export function createDownloaderController({
         if (current === operation) abortController = null;
       }
     },
-    async download() {
+    async download(photoIds?: string[]): Promise<void> {
       if (
         state.status !== 'ready' ||
         !state.media ||
@@ -390,10 +424,10 @@ export function createDownloaderController({
       invalidate();
       const current = operation;
       const mediaId = state.media.id;
-      const formatId = state.formatId;
+      const formatId = photoIds?.[0] ?? state.formatId;
       abortController = new AbortController();
       const signal = abortController.signal;
-      dispatch({ type: 'START' });
+      dispatch({ type: 'START', ...(photoIds ? { photoCount: photoIds.length } : {}) });
       try {
         const job = jobSchema.parse(
           await adapter.startDownload(
@@ -401,7 +435,11 @@ export function createDownloaderController({
             formatId,
             signal,
             state.downloadType,
-            ...(state.downloadType === 'image' ? [state.media.capability] : []),
+            ...((state.downloadType === 'image'
+              ? photoIds
+                ? [state.media.capability, photoIds]
+                : [state.media.capability]
+              : []) as [string?, string[]?]),
           ),
         );
         if (current !== operation) return;

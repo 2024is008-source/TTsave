@@ -11,7 +11,7 @@ function page(images: unknown[], overrides: object = {}) {
 }
 it('normalizes ordered private sources, caps count, deduplicates and creates opaque IDs', () => {
   const source = normalizePhotoPage(
-    page([image(1), image(1), ...Array.from({ length: 50 }, (_, i) => image(i + 2))]),
+    page(Array.from({ length: 35 }, (_, i) => image(i + 1))),
     url,
   );
   expect(source.media.postType).toBe('photo');
@@ -23,6 +23,10 @@ it('normalizes ordered private sources, caps count, deduplicates and creates opa
   ).toEqual(Array.from({ length: 35 }, (_, i) => i + 1));
   expect([...(source.photoSources?.keys() ?? [])][0]).toMatch(/^[a-f0-9-]{36}$/);
   expect(JSON.stringify(source.media)).not.toMatch(/signature|cookie|imageURL|urlList/);
+  expect(normalizePhotoPage(page([image(1), image(1)]), url).photoSources?.size).toBe(1);
+  expect(() =>
+    normalizePhotoPage(page(Array.from({ length: 36 }, (_, i) => image(i))), url),
+  ).toThrow();
 });
 it('detects verified image metadata even when a public post uses a video path', () => {
   expect(

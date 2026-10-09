@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import { screenshotRoot } from './evidence.js';
 import { test, expect } from '@playwright/test';
 import { writeFile } from 'node:fs/promises';
 
@@ -55,7 +56,7 @@ for (const width of [390, 1440]) {
         })),
     }));
     await writeFile(
-      `docs/screenshots/launch/${String(width)}-performance.json`,
+      `${screenshotRoot}/launch/${String(width)}-performance.json`,
       JSON.stringify(
         {
           scope:

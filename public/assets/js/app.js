@@ -1,6 +1,6 @@
 import { initializeTheme } from './theme.js';
 import { initializeNavigation } from './navigation.js';
-import { initializeDownloader } from './downloader.js?v=simple-panels-4';
+import { initializeDownloader } from './downloader.js?v=photo-selection-6';
 
 initializeTheme();
 initializeNavigation();

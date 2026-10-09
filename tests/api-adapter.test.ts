@@ -2,6 +2,40 @@ import { expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { createApiAdapter } from '../src/frontend/api-adapter.js';
 
+it('sends selected opaque photo IDs and capability without source data', async () => {
+  const analysisId = randomUUID();
+  const photoIds = [randomUUID(), randomUUID()];
+  const transport = vi.fn<typeof fetch>(() =>
+    Promise.resolve(
+      Response.json({
+        id: randomUUID(),
+        analysisId,
+        formatId: photoIds[0],
+        downloadType: 'image',
+        status: 'queued',
+        mock: false,
+        accessToken: 'b'.repeat(43),
+      }),
+    ),
+  );
+  await createApiAdapter(transport).startDownload(
+    analysisId,
+    photoIds[0] ?? '',
+    new AbortController().signal,
+    'image',
+    'a'.repeat(43),
+    photoIds,
+  );
+  const options = transport.mock.calls[0]?.[1];
+  if (typeof options?.body !== 'string') throw new Error('Missing JSON request');
+  expect(JSON.parse(options.body)).toEqual({
+    analysisId,
+    photoIds,
+    downloadType: 'image',
+    capability: 'a'.repeat(43),
+  });
+});
+
 it('handles HTML proxy failures without exposing parser text or response bodies', async () => {
   const transport = vi.fn<typeof fetch>(() =>
     Promise.resolve(

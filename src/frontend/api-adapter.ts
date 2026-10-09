@@ -73,13 +73,25 @@ export function createApiAdapter(transport: typeof fetch = fetch): DownloaderAda
         })),
       };
     },
-    async startDownload(analysisId, formatId, signal, downloadType = 'mp4', capability) {
+    async startDownload(
+      analysisId,
+      formatId,
+      signal,
+      downloadType = 'mp4',
+      capability,
+      photoIds,
+    ) {
       const job = apiJobSchema.parse(
         await read(
           '/downloads',
           signal,
           downloadType === 'image'
-            ? { analysisId, photoId: formatId, downloadType, capability }
+            ? {
+                analysisId,
+                ...(photoIds ? { photoIds } : { photoId: formatId }),
+                downloadType,
+                capability,
+              }
             : downloadType === 'mp3'
               ? { analysisId, downloadType }
               : { analysisId, formatId },

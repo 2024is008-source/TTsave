@@ -32,7 +32,7 @@ export function webApplication(baseUrl: string) {
     inLanguage: 'en-US',
     browserRequirements: 'Requires a modern web browser',
     description:
-      'Convert supported public TikTok videos to available MP4 video or MP3 audio using a web browser.',
+      'Download supported public TikTok videos as MP4, convert usable audio to MP3, or save photos individually or as a selected-image ZIP. Available options depend on the source.',
   };
 }
 

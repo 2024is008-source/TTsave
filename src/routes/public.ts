@@ -8,9 +8,9 @@ export const publicRouter = Router();
 const pages = [
   {
     path: '/',
-    title: 'TikTok to MP4 Downloader – Convert Videos Online',
+    title: 'TikTok Downloader – Download MP4, MP3 & Photos | TikSaveMP4',
     description:
-      'Convert supported public TikTok videos to MP4 or MP3 online. Paste a TikTok link, review the available options, and download it to your device.',
+      'Download supported public TikTok videos as MP4, convert available audio to MP3, or save photos from supported image posts. Available options depend on the source.',
   },
   ...legalPages,
 ];

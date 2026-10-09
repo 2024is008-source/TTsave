@@ -75,10 +75,7 @@ describe('public SEO and policies', () => {
         document.querySelectorAll('script[type="application/ld+json"]'),
       ).toHaveLength(path === '/' ? 1 : 0);
       expect(document.documentElement.lang).toBe('en-US');
-      for (const previousBrand of [
-        ['TT', 'Save'].join(''),
-        ['TikSave', 'MP4'].join(''),
-      ]) {
+      for (const previousBrand of [['TT', 'Save'].join('')]) {
         expect(response.text).not.toContain(previousBrand);
       }
       expect(document.querySelector('.wordmark')?.textContent.replace(/\s+/g, '')).toBe(
@@ -109,11 +106,13 @@ describe('public SEO and policies', () => {
   it('uses exact homepage copy and valid factual WebApplication data', async () => {
     const response = await request(app).get('/').expect(200);
     const document = new JSDOM(response.text).window.document;
-    expect(document.title).toBe('TikTok to MP4 Downloader – Convert Videos Online');
+    expect(document.title).toBe(
+      'TikTok Downloader – Download MP4, MP3 & Photos | TikSaveMP4',
+    );
     expect(
       document.querySelector('meta[name="description"]')?.getAttribute('content'),
     ).toBe(
-      'Convert supported public TikTok videos to MP4 or MP3 online. Paste a TikTok link, review the available options, and download it to your device.',
+      'Download supported public TikTok videos as MP4, convert available audio to MP3, or save photos from supported image posts. Available options depend on the source.',
     );
     const data: unknown = JSON.parse(
       document.querySelector('script[type="application/ld+json"]')?.textContent ?? '',

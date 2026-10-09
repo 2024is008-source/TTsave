@@ -1,5 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
+process.env.UI_EVIDENCE_ROOT ??= `docs/screenshots/browser-${String(Date.now())}`;
+
 export default defineConfig({
   testDir: './tests/browser',
   fullyParallel: false,

@@ -20,6 +20,25 @@
     <button type="button" id="photo-next" class="rp-ghost-btn">Next</button>
   </div>
   <button type="button" id="photo-download" class="rp-dl-btn">Download image</button>
+  <details id="photo-multi" class="photo-multi">
+    <summary class="rp-more-summary">Choose images</summary>
+    <p>Select the photos you want to save from this public TikTok post.</p>
+    <div class="photo-selection-actions">
+      <button type="button" id="photo-select-all" class="rp-ghost-btn">Select all</button>
+      <button type="button" id="photo-clear-selection" class="rp-ghost-btn">
+        Clear selection
+      </button>
+    </div>
+    <p id="photo-selection-count" role="status" aria-live="polite" aria-atomic="true"></p>
+    <ul
+      id="photo-selection-list"
+      class="photo-selection-list"
+      aria-label="Images to save"
+    ></ul>
+    <button type="button" id="photo-download-selected" class="rp-dl-btn" disabled>
+      Download selected
+    </button>
+  </details>
   <button type="button" id="photo-another" class="rp-ghost-btn">
     Download another post
   </button>

@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import { screenshotRoot } from './evidence.js';
 import { expect, test } from '@playwright/test';
 
 test('active phone and result panel persist through download states', async ({
@@ -11,13 +12,13 @@ test('active phone and result panel persist through download states', async ({
     await expect(page.locator('.hero-art')).toBeVisible();
     await expect(page.locator('.phone:visible')).toHaveCount(1);
     await page.locator('.hero').screenshot({
-      path: `docs/screenshots/mp3-regression-state-${state}.png`,
+      path: `${screenshotRoot}/mp3-regression-state-${state}.png`,
       style: '.site-header, .skip-link { visibility: hidden !important; }',
     });
   };
   await capture('idle');
   await page.evaluate(async () => {
-    const modulePath = '/assets/js/downloader.js?v=simple-panels-4';
+    const modulePath = '/assets/js/downloader.js?v=photo-selection-6';
     const module = (await import(
       modulePath
     )) as typeof import('../../src/frontend/downloader.js');

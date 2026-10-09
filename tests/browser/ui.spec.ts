@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import { screenshotRoot } from './evidence.js';
 
 import { expect, test } from '@playwright/test';
 
@@ -65,7 +66,7 @@ for (const [width, height] of [
       expect((bounds?.x ?? 0) + (bounds?.width ?? 0)).toBeLessThanOrEqual(width);
     }
     await page.locator('.landing-showcase').screenshot({
-      path: `docs/screenshots/mp3-regression-showcase-light-${String(width)}.png`,
+      path: `${screenshotRoot}/mp3-regression-showcase-light-${String(width)}.png`,
       style: '.site-header, .skip-link { visibility: hidden !important; }',
     });
     await expect(
@@ -73,7 +74,7 @@ for (const [width, height] of [
     ).toHaveCount(0);
     await page.evaluate(() => window.scrollTo(0, 0));
     await page.screenshot({
-      path: `docs/screenshots/mp3-regression-hero-idle-${String(width)}.png`,
+      path: `${screenshotRoot}/mp3-regression-hero-idle-${String(width)}.png`,
     });
     await page.screenshot({
       path: testInfo.outputPath(`light-${String(width)}.png`),
@@ -165,7 +166,7 @@ for (const [width, height] of [
       fullPage: true,
     });
     await page.locator('.landing-showcase').screenshot({
-      path: `docs/screenshots/mp3-regression-showcase-dark-${String(width)}.png`,
+      path: `${screenshotRoot}/mp3-regression-showcase-dark-${String(width)}.png`,
       style: '.site-header, .skip-link { visibility: hidden !important; }',
     });
     expect(browserErrors).toEqual([]);

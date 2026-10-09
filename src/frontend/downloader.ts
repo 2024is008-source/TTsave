@@ -148,7 +148,9 @@ export function initializeDownloader(root: Document = document, options: Options
       state.status === 'download-requested'
         ? 'Save requested'
         : photoMode
-          ? 'Save image'
+          ? state.preparedPhotoCount > 1
+            ? 'Save selected images'
+            : 'Save image'
           : `Save ${state.downloadType.toUpperCase()}`;
     const audioMode = state.downloadType === 'mp3';
     get('#video-quality-panel').hidden = audioMode;
@@ -166,7 +168,9 @@ export function initializeDownloader(root: Document = document, options: Options
       ? 'The audio is converted to MP3. Audio quality depends on the source.'
       : 'Choose an available source quality. Video and audio are saved together.';
     get('#completed-title').textContent = photoMode
-      ? 'Your image is ready'
+      ? state.preparedPhotoCount > 1
+        ? 'Your selected images are ready'
+        : 'Your image is ready'
       : audioMode
         ? 'Your MP3 is ready'
         : 'Download ready';
@@ -200,7 +204,9 @@ export function initializeDownloader(root: Document = document, options: Options
         ? 'Image'
         : (selected?.container?.toUpperCase() ?? 'Video');
     get('#progress-quality').textContent = photoMode
-      ? 'Selected image'
+      ? state.preparedPhotoCount > 1
+        ? `${String(state.preparedPhotoCount)} selected images`
+        : 'Selected image'
       : audioMode
         ? 'MP3 Audio'
         : (selected?.label ?? '');
@@ -279,9 +285,11 @@ export function initializeDownloader(root: Document = document, options: Options
     progressCard.hidden = !downloading;
     // Progress heading: distinguish start from active and 100%
     progressHeading.textContent = photoMode
-      ? state.status === 'starting-download'
-        ? 'Preparing image…'
-        : 'Downloading image…'
+      ? state.preparedPhotoCount > 1
+        ? 'Preparing your images…'
+        : state.status === 'starting-download'
+          ? 'Preparing image…'
+          : 'Downloading image…'
       : audioMode && state.progress?.phase === 'converting'
         ? 'Converting audio to MP3…'
         : audioMode && state.status === 'starting-download'

@@ -1,7 +1,7 @@
 # TikSaveMp4
 
 Node.js 24, strict TypeScript, Express and EJS. Public TikTok metadata analysis
-and single-server MP4 download jobs use yt-dlp. Jobs are held in memory and files
+and single-server MP4/MP3 download jobs use yt-dlp and FFmpeg. Supported public photo posts provide individual images or a ZIP of selected images. Jobs are held in memory and files
 are temporary. See `docs/DOWNLOAD_JOBS.md` for deployment limits and cleanup.
 
 ## Run locally
@@ -18,11 +18,13 @@ monitored legal inbox before launch. Review the operational legal drafts and
 configure DNS, TLS and domain redirects as described in
 [`docs/PRODUCTION_SEO.md`](docs/PRODUCTION_SEO.md).
 
-Install yt-dlp and FFmpeg independently, then configure `YTDLP_PATH` and
-`FFMPEG_PATH` as approved tool names on PATH or local absolute executable paths.
+Install yt-dlp, FFmpeg/FFprobe and Chrome independently, then configure `YTDLP_PATH` and
+`FFMPEG_PATH` and `FFPROBE_PATH` as approved tool names on PATH or local absolute executable paths.
 Run `npm run tools:check` to verify them. Startup performs the same bounded checks;
-`/ready` returns 503 if either tool is missing. See `docs/ANALYSIS.md` for limits,
+`/ready` returns 503 if a required tool is missing. See `docs/ANALYSIS.md` for limits,
 format eligibility and operation details.
+
+Photo downloads use verified JPEG, PNG or WebP bytes through the protected network layer. At most 35 photos, 12 MiB per image and 64 MiB combined are supported. A single selection downloads the image; two or more produce one ordered ZIP. See [docs/COMMAND17.md](docs/COMMAND17.md) for the current photo architecture, verification and remaining production checks. No private-post, login, cookie or regional bypass is supported.
 
 ## Interface structure
 

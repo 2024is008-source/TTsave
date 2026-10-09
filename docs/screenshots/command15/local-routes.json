@@ -1,0 +1,55 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "indexing": null
+  },
+  {
+    "path": "/health",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "indexing": "noindex, nofollow, noarchive"
+  },
+  {
+    "path": "/ready",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "indexing": "noindex, nofollow, noarchive"
+  },
+  {
+    "path": "/robots.txt",
+    "status": 200,
+    "contentType": "text/plain; charset=utf-8",
+    "indexing": null
+  },
+  {
+    "path": "/sitemap.xml",
+    "status": 200,
+    "contentType": "application/xml; charset=utf-8",
+    "indexing": null
+  },
+  {
+    "path": "/privacy",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "indexing": null
+  },
+  {
+    "path": "/terms",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "indexing": null
+  },
+  {
+    "path": "/responsible-use",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "indexing": null
+  },
+  {
+    "path": "invalid TikTok URL",
+    "status": 400,
+    "safe": true
+  }
+]

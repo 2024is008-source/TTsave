@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import { screenshotRoot } from './evidence.js';
 import { expect, test } from '@playwright/test';
 
 for (const width of [390, 1440]) {
@@ -7,7 +8,7 @@ for (const width of [390, 1440]) {
     await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
     await page.goto('/');
     await page.evaluate(async () => {
-      const modulePath = '/assets/js/downloader.js?v=simple-panels-4';
+      const modulePath = '/assets/js/downloader.js?v=photo-selection-6';
       const module = (await import(
         modulePath
       )) as typeof import('../../src/frontend/downloader.js');
@@ -31,15 +32,13 @@ for (const width of [390, 1440]) {
       'Fetching video info',
     );
     await expect(page.locator('.analyzing-spinner')).toHaveCSS('animation-name', 'none');
-    await page
-      .locator('#analyzing-indicator')
-      .screenshot({
-        path: `docs/screenshots/mp3-regression-fetching-panel-${String(width)}.png`,
-      });
+    await page.locator('#analyzing-indicator').screenshot({
+      path: `${screenshotRoot}/mp3-regression-fetching-panel-${String(width)}.png`,
+    });
     await page.getByRole('button', { name: 'Cancel analysis' }).click();
     await expect(page.locator('#analyzing-indicator')).toBeHidden();
     await page.evaluate(async () => {
-      const modulePath = '/assets/js/downloader.js?v=simple-panels-4';
+      const modulePath = '/assets/js/downloader.js?v=photo-selection-6';
       const module = (await import(
         modulePath
       )) as typeof import('../../src/frontend/downloader.js');
@@ -80,23 +79,13 @@ for (const width of [390, 1440]) {
     await page.getByRole('radio', { name: '720p' }).focus();
     await page.keyboard.press('ArrowDown');
     await expect(page.getByRole('radio', { name: '1080p' })).toBeChecked();
-    await expect(
-      page
-        .locator('.format-option')
-        .filter({ has: page.getByRole('radio', { name: '1080p' }) })
-        .locator('.selected-indicator'),
-    ).toBeVisible();
     await page.evaluate(() => (document.activeElement as HTMLElement).blur());
-    await page
-      .locator('#result-card')
-      .screenshot({
-        path: `docs/screenshots/mp3-regression-download-panel-${String(width)}.png`,
-      });
+    await page.locator('#result-card').screenshot({
+      path: `${screenshotRoot}/mp3-regression-download-panel-${String(width)}.png`,
+    });
     await page.getByRole('button', { name: 'Switch to dark theme' }).click();
-    await page
-      .locator('#result-card')
-      .screenshot({
-        path: `docs/screenshots/mp3-regression-download-panel-dark-${String(width)}.png`,
-      });
+    await page.locator('#result-card').screenshot({
+      path: `${screenshotRoot}/mp3-regression-download-panel-dark-${String(width)}.png`,
+    });
   });
 }

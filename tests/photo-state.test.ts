@@ -35,6 +35,16 @@ it('selects opaque photos, retains a failed selection and prepares further image
   await controller.analyze();
   expect(controller.getState().downloadType).toBe('image');
   expect(controller.getState().formatId).toBe(media.photos?.[0]?.id);
+  const ids = media.photos?.map((photo) => photo.id) ?? [];
+  expect(controller.getState().selectedPhotoIds).toEqual([]);
+  controller.selectPhotos(['unknown']);
+  expect(controller.getState().selectedPhotoIds).toEqual([]);
+  controller.selectPhotos([...ids].reverse());
+  expect(controller.getState().selectedPhotoIds).toEqual(ids);
+  controller.selectPhotos([ids[0] ?? '', ids[0] ?? '']);
+  expect(controller.getState().selectedPhotoIds).toEqual(ids);
+  controller.selectPhotos([]);
+  expect(controller.getState().selectedPhotoIds).toEqual([]);
   const second = media.photos?.[1]?.id;
   if (!second) throw new Error('Missing photo');
   controller.selectFormat(second);
@@ -58,6 +68,7 @@ it('selects opaque photos, retains a failed selection and prepares further image
   controller.setUrl('https://www.tiktok.com/@creator/photo/456');
   expect(controller.getState().media).toBeNull();
   expect(controller.getState().formatId).toBeNull();
+  expect(controller.getState().selectedPhotoIds).toEqual([]);
   await controller.analyze();
   expect(controller.getState().formatId).toBe(media.photos?.[0]?.id);
 });

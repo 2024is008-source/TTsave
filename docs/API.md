@@ -10,7 +10,7 @@ Zod validates requests and responses. API responses disable caching, carry
 | `POST /api/v1/downloads`                             | `{ "analysisId": "<UUID>", "formatId": "source-1" }`     | 201 job and access token         |
 | `GET /api/v1/downloads/:jobId`                       | Bearer access token                                      | 200 job                          |
 | `GET /api/v1/downloads/:jobId/events`                | Bearer access token                                      | 200 SSE stream                   |
-| `GET /api/v1/downloads/:jobId/file?token=…`          | One-use file token                                       | 200 MP4 attachment               |
+| `GET /api/v1/downloads/:jobId/file?token=…`          | One-use file token                                       | 200 authorized media attachment  |
 | `DELETE /api/v1/downloads/:jobId`                    | Bearer access token                                      | 200 job; idempotent cancellation |
 | `GET /health`                                        | None                                                     | 200 liveness                     |
 | `GET /ready`                                         | None                                                     | 200 ready or 503 not ready       |
@@ -66,3 +66,17 @@ filenames. Only an analyzed format can create a job. See `URL_VALIDATION.md`,
 State belongs to one process. Restart loses capabilities and analyses; periodic
 cleanup removes aged orphan directories. Readiness reflects startup tool
 availability and shutdown, not whether TikTok or a particular video is accessible.
+
+## Public photo posts and selected-image archives
+
+Photo analysis uses the existing `postType: "photo"` discriminator, `capabilities.images`, opaque UUID photo IDs, one-based original positions and local capability-protected preview URLs. It never returns upstream image URLs, signed media addresses, cookies, extractor headers or raw output. Video normalization and MP4/MP3 contracts remain unchanged.
+
+`GET /api/v1/analysis/:analysisId/photos/:photoId/preview?token=...` requires a valid unexpired analysis capability and a photo belonging to that post. Previews are contained WebP images no larger than 480 × 480; original JPEG/PNG/WebP downloads retain source bytes and aspect ratio.
+
+Individual intent: `{ "analysisId": "<UUID>", "photoId": "<UUID>", "capability": "<token>", "downloadType": "image" }`.
+
+Selected intent: `{ "analysisId": "<UUID>", "photoIds": ["<UUID>", "<UUID>"], "capability": "<token>", "downloadType": "image" }`.
+
+Exactly one of `photoId` and `photoIds` is required. Selection arrays contain 1–35 distinct UUIDs; every ID must belong to the authorized post. Unknown fields and arbitrary URLs, filenames, paths, titles or selectors are rejected. Client ordering is ignored in favor of original post order. A one-item array returns the verified image MIME and extension. Several items produce `application/zip`, with safe numbered names and original image bytes. Jobs may include `photoCount`.
+
+Image jobs reuse existing rate limits, status/SSE/cancel authorization, separate one-use file capabilities, private/no-store caching and guarded temporary cleanup. Raw combined images are limited to 64 MiB; each image to 12 MiB and 40 million decoded pixels. The configured `DOWNLOAD_MAX_BYTES` additionally bounds the complete output, including ZIP headers. One archive is processed at a time with sequential upstream image retrieval; archive work also occupies the existing download/application slots. Processing has a maximum 60-second budget or the existing configured download timeout if lower. No progress is fabricated.

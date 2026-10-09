@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import { screenshotRoot } from './evidence.js';
 import { test, expect } from '@playwright/test';
 import { AxeBuilder } from '@axe-core/playwright';
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -28,7 +29,7 @@ for (const [width, height] of viewports) {
       ) {
         await page.getByRole('button', { name: 'Switch to dark theme' }).click();
       }
-      const directory = 'docs/screenshots/launch';
+      const directory = `${screenshotRoot}/launch`;
       await mkdir(directory, { recursive: true });
       const findings: unknown[] = [];
       const capture = async (state: string) => {
@@ -72,7 +73,7 @@ for (const [width, height] of viewports) {
       };
       await capture('idle');
       await page.evaluate(async () => {
-        const modulePath = '/assets/js/downloader.js?v=simple-panels-4';
+        const modulePath = '/assets/js/downloader.js?v=photo-selection-6';
         const module = (await import(
           modulePath
         )) as typeof import('../../src/frontend/downloader.js');

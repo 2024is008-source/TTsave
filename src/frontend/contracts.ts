@@ -78,6 +78,7 @@ export type DownloaderAdapter = {
     signal: AbortSignal,
     downloadType?: 'mp4' | 'mp3' | 'image',
     capability?: string,
+    photoIds?: string[],
   ) => Promise<DownloadJob>;
   waitForDownload: (
     job: DownloadJob,

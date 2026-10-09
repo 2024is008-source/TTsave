@@ -85,7 +85,7 @@ export function createApiRouter(service: DownloaderService) {
       service.createJob(
         input.analysisId,
         input.downloadType === 'image'
-          ? input.photoId
+          ? (input.photoId ?? input.photoIds?.[0] ?? '')
           : input.downloadType === 'mp4'
             ? input.formatId
             : '',
@@ -96,6 +96,7 @@ export function createApiRouter(service: DownloaderService) {
         },
         input.downloadType,
         input.downloadType === 'image' ? input.capability : undefined,
+        ...(input.downloadType === 'image' && input.photoIds ? [input.photoIds] : []),
       ),
     );
     response.location(`/api/v1/downloads/${job.id}`).status(201).json(job);

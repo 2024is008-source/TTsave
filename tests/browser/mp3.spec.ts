@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import { screenshotRoot } from './evidence.js';
 import { expect, test } from '@playwright/test';
 
 for (const [width, height] of [
@@ -13,7 +14,7 @@ for (const [width, height] of [
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     await page.evaluate(async () => {
-      const modulePath = '/assets/js/downloader.js?v=simple-panels-4';
+      const modulePath = '/assets/js/downloader.js?v=photo-selection-6';
       const module = (await import(
         modulePath
       )) as typeof import('../../src/frontend/downloader.js');
@@ -81,7 +82,7 @@ for (const [width, height] of [
         await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
       ).toBe(true);
       await page.locator('#result-card').screenshot({
-        path: `docs/screenshots/mp3-${String(width)}-${state}.png`,
+        path: `${screenshotRoot}/mp3-${String(width)}-${state}.png`,
         style: '.site-header { visibility: hidden !important; }',
       });
     };

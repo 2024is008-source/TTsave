@@ -20,7 +20,7 @@ const itemSchema = z.object({
           imageURL: z.object({ urlList: z.array(z.string().max(4096)).max(10) }),
         }),
       )
-      .max(1000),
+      .max(MAX_PHOTOS),
   }),
 });
 const unsupported = () =>

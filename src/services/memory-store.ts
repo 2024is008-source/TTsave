@@ -19,6 +19,7 @@ export type DownloaderService = {
     context?: AnalysisContext,
     downloadType?: 'mp4' | 'mp3' | 'image',
     capability?: string,
+    photoIds?: string[],
   ): ApiJob;
   getJob(id: string): ApiJob;
   cancel(id: string): ApiJob;

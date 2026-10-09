@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import { screenshotRoot } from './evidence.js';
 import { mkdir } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
 
@@ -62,7 +63,7 @@ for (const [width, height] of [
   }) => {
     await page.setViewportSize({ width, height });
     await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
-    const directory = 'docs/screenshots/command17/verified';
+    const directory = `${screenshotRoot}/single-photo`;
     await mkdir(directory, { recursive: true });
     const analysisId = '123e4567-e89b-42d3-a456-426614174000';
     const photoIds = [1, 2, 3].map(

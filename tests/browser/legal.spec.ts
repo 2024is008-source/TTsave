@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+import { screenshotRoot } from './evidence.js';
 import { test, expect } from '@playwright/test';
 
 for (const width of [390, 768, 1440]) {
@@ -37,13 +38,13 @@ for (const width of [390, 768, 1440]) {
     }
     await page.goto('/privacy');
     await page.screenshot({
-      path: `docs/screenshots/mp3-regression-privacy-${String(width)}.png`,
+      path: `${screenshotRoot}/mp3-regression-privacy-${String(width)}.png`,
       fullPage: true,
     });
     await page.getByRole('button', { name: 'Switch to dark theme' }).click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     await page.screenshot({
-      path: `docs/screenshots/mp3-regression-privacy-dark-${String(width)}.png`,
+      path: `${screenshotRoot}/mp3-regression-privacy-dark-${String(width)}.png`,
       fullPage: true,
     });
     await page.locator('.footer-nav a[href="/#downloader"]').click();

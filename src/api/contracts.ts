@@ -16,11 +16,18 @@ export const downloadInput = z.discriminatedUnion('downloadType', [
   z
     .object({
       analysisId: opaqueId,
-      photoId: opaqueId,
+      photoId: opaqueId.optional(),
+      photoIds: z
+        .array(opaqueId)
+        .min(1)
+        .max(35)
+        .refine((ids) => new Set(ids).size === ids.length)
+        .optional(),
       capability: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
       downloadType: z.literal('image'),
     })
-    .strict(),
+    .strict()
+    .refine((input) => Boolean(input.photoId) !== Boolean(input.photoIds)),
 ]);
 export const compatibleDownloadInput = z.preprocess((value) => {
   if (value && typeof value === 'object' && !('downloadType' in value))
@@ -109,6 +116,7 @@ export const jobErrorSchema = z.object({
   requestId: z.string(),
 });
 export const apiJobSchema = z.object({
+  photoCount: z.number().int().min(1).max(35).optional(),
   downloadType: z.enum(['mp4', 'mp3', 'image']).optional(),
   id: opaqueId,
   analysisId: opaqueId,

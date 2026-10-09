@@ -2,7 +2,7 @@
 export function downloadFilename(
   title: string,
   creator: string | null,
-  extension: 'mp4' | 'mp3' | 'jpg' | 'png' | 'webp',
+  extension: 'mp4' | 'mp3' | 'jpg' | 'png' | 'webp' | 'zip',
   position?: number,
 ): string {
   const clean = (value: string) =>
@@ -13,7 +13,7 @@ export function downloadFilename(
       .replace(/[^\p{L}\p{N}\p{M}]+/gu, '-')
       .replace(/^-+|-+$/g, '');
   const titleStem = clean(title);
-  const image = position !== undefined;
+  const image = position !== undefined || extension === 'zip';
   const fallback = image
     ? 'tiktok-photo'
     : extension === 'mp3'
@@ -30,7 +30,7 @@ export function downloadFilename(
   }
   stem = bounded.replace(/-+$/g, '') || fallback;
   if (/^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])$/i.test(stem)) stem = `tiktok-${stem}`;
-  return `${stem}${image ? `-${String(position).padStart(2, '0')}` : ''}.${extension}`;
+  return `${stem}${extension === 'zip' ? '-images' : position !== undefined ? `-${String(position).padStart(2, '0')}` : ''}.${extension}`;
 }
 
 export function attachmentHeader(filename: string): string {

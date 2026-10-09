@@ -1,4 +1,5 @@
 import { downloadFilename } from './filename.js';
+import sharp from 'sharp';
 import { randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
 import {
   mkdir,
@@ -26,6 +27,12 @@ import { PreviewStore } from './previews.js';
 import { verifyVideo } from './verify-video.js';
 import { audioFilename, convertMp3, verifyMp3 } from './mp3.js';
 import { fetchPhotoImage } from './photo-images.js';
+import {
+  writePhotoArchive,
+  PHOTO_COMBINED_MAX_BYTES,
+  PHOTO_PROCESSING_TIMEOUT_MS,
+  PHOTO_ARCHIVE_MAX_CONCURRENT,
+} from './photo-archive.js';
 
 type MetadataProvider = {
   analyzeSource: (url: string, context: AnalysisContext) => Promise<AnalyzedSource>;
@@ -68,6 +75,11 @@ export class ProductionDownloaderService implements DownloaderService {
   >();
   private readonly jobs = new Map<string, Record>();
   private activeJobs = 0;
+  private activeArchives = 0;
+  private readonly photoPreviewCache = new Map<
+    string,
+    { expires: number; bytes: Buffer; contentType: string }
+  >();
   private activeOperations = 0;
   private stopping = false;
   private root: Promise<string> | null = null;
@@ -205,6 +217,7 @@ export class ProductionDownloaderService implements DownloaderService {
     context?: AnalysisContext,
     downloadType: 'mp4' | 'mp3' | 'image' = 'mp4',
     capability?: string,
+    photoIds?: string[],
   ): ApiJob {
     if (!['mp4', 'mp3', 'image'].includes(downloadType))
       throw new HttpError(400, 'INVALID_DOWNLOAD_TYPE', 'Choose MP4 video or MP3 audio.');
@@ -230,10 +243,36 @@ export class ProductionDownloaderService implements DownloaderService {
         '';
     }
     videoUrlSchema.parse(analysis.source.media.sourceUrl);
+    if (
+      photoIds &&
+      (downloadType !== 'image' ||
+        !photoIds.length ||
+        photoIds.length > 35 ||
+        new Set(photoIds).size !== photoIds.length)
+    )
+      throw new HttpError(
+        400,
+        'INVALID_PHOTO_SELECTION',
+        'Select valid images from this post.',
+      );
     const photo =
       downloadType === 'image'
         ? this.authorizedPhoto(analysisId, formatId, capability)
         : undefined;
+    const photos = photoIds
+      ? photoIds
+          .map((id) => this.authorizedPhoto(analysisId, id, capability))
+          .sort((a, b) => a.position - b.position)
+      : photo
+        ? [photo]
+        : [];
+    const archive = photos.length > 1;
+    if (archive && this.activeArchives >= PHOTO_ARCHIVE_MAX_CONCURRENT)
+      throw new HttpError(
+        503,
+        'ARCHIVE_BUSY',
+        'Image processing is busy. Please try again later.',
+      );
     const format = analysis.source.media.formats.find(
       (candidate) => candidate.id === formatId,
     );
@@ -256,9 +295,11 @@ export class ProductionDownloaderService implements DownloaderService {
     context?.signal.throwIfAborted();
     const release = this.acquire();
     this.activeJobs += 1;
+    if (archive) this.activeArchives += 1;
     const controller = new AbortController();
     const value: ApiJob = {
       downloadType,
+      ...(photos.length ? { photoCount: photos.length } : {}),
       id: randomUUID(),
       analysisId,
       formatId,
@@ -305,11 +346,12 @@ export class ProductionDownloaderService implements DownloaderService {
       analysis.source.media.sourceUrl,
       selector ?? '',
       format,
-      photo,
+      photos,
       analysis.source.media,
     ).finally(() => {
       context?.signal.removeEventListener('abort', abort);
       this.activeJobs -= 1;
+      if (archive) this.activeArchives -= 1;
       release();
     });
     return { ...this.snapshot(record), accessToken: record.accessToken };
@@ -462,24 +504,39 @@ export class ProductionDownloaderService implements DownloaderService {
     input: string,
     selector: string,
     selected: Analysis['formats'][number] | undefined,
-    photo?: { url: string; position: number },
+    photos: { url: string; position: number }[] = [],
     media?: Analysis,
   ) {
-    const deadline = setTimeout(() => {
-      record.failure = new HttpError(
-        504,
-        'DOWNLOAD_TIMEOUT',
-        record.value.downloadType === 'mp3'
-          ? 'The audio conversion took too long. Please try again.'
-          : 'The download took too long. Please try again.',
-      );
-      record.controller.abort();
-    }, this.config.DOWNLOAD_TIMEOUT_MS);
+    const deadline = setTimeout(
+      () => {
+        record.failure = new HttpError(
+          504,
+          'DOWNLOAD_TIMEOUT',
+          record.value.downloadType === 'mp3'
+            ? 'The audio conversion took too long. Please try again.'
+            : 'The download took too long. Please try again.',
+        );
+        record.controller.abort();
+      },
+      photos.length
+        ? Math.min(PHOTO_PROCESSING_TIMEOUT_MS, this.config.DOWNLOAD_TIMEOUT_MS)
+        : this.config.DOWNLOAD_TIMEOUT_MS,
+    );
     deadline.unref();
     let watcher: ReturnType<typeof setInterval> | undefined;
     let checking = false;
     try {
       const root = await this.temporaryRoot();
+      if (photos.length) {
+        const disk = await statfs(root);
+        const budget = Math.min(PHOTO_COMBINED_MAX_BYTES, this.config.DOWNLOAD_MAX_BYTES);
+        if (disk.bavail * disk.bsize < budget * 2)
+          throw new HttpError(
+            503,
+            'DISK_CAPACITY',
+            'Image processing is busy. Please try again later.',
+          );
+      }
       if (record.value.downloadType === 'mp3') {
         const disk = await statfs(root);
         if (disk.bavail * disk.bsize < this.config.DOWNLOAD_MAX_BYTES * 2)
@@ -493,23 +550,44 @@ export class ProductionDownloaderService implements DownloaderService {
       record.controller.signal.throwIfAborted();
       record.value.status = 'downloading';
       this.publish(record);
-      if (photo && media) {
-        const image = await fetchPhotoImage(photo.url, record.controller.signal);
+      if (photos.length && media) {
+        if (photos.length > 1) {
+          record.fileSize = await writePhotoArchive(
+            path.join(record.directory, 'image.bin'),
+            photos,
+            media,
+            record.controller.signal,
+            this.config.DOWNLOAD_MAX_BYTES,
+          );
+          record.filename = downloadFilename(media.title, media.creator, 'zip');
+          record.imageContentType = 'application/zip';
+        } else {
+          const photo = photos[0];
+          if (!photo) throw new Error('Missing photo');
+          const image = await fetchPhotoImage(photo.url, record.controller.signal);
+          if (image.bytes.length > this.config.DOWNLOAD_MAX_BYTES)
+            throw new HttpError(
+              413,
+              'IMAGES_TOO_LARGE',
+              'The selected images are too large to process.',
+            );
+          record.controller.signal.throwIfAborted();
+          await writeFile(path.join(record.directory, 'image.bin'), image.bytes, {
+            flag: 'wx',
+            mode: 0o600,
+            signal: record.controller.signal,
+          });
+          record.controller.signal.throwIfAborted();
+          record.filename = downloadFilename(
+            media.title,
+            media.creator,
+            image.extension,
+            photo.position,
+          );
+          record.imageContentType = image.contentType;
+          record.fileSize = image.bytes.length;
+        }
         record.controller.signal.throwIfAborted();
-        await writeFile(path.join(record.directory, 'image.bin'), image.bytes, {
-          flag: 'wx',
-          mode: 0o600,
-          signal: record.controller.signal,
-        });
-        record.controller.signal.throwIfAborted();
-        record.filename = downloadFilename(
-          media.title,
-          media.creator,
-          image.extension,
-          photo.position,
-        );
-        record.imageContentType = image.contentType;
-        record.fileSize = image.bytes.length;
         record.fileToken = token();
         record.value.status = 'ready';
         record.value.fileExpiresAt = Math.min(
@@ -517,7 +595,7 @@ export class ProductionDownloaderService implements DownloaderService {
           Date.now() + this.config.FILE_ACCESS_TTL_MS,
         );
         record.value.fileUrl = `/api/v1/downloads/${record.value.id}/file?token=${record.fileToken}`;
-        record.value.progress = { sizeBytes: image.bytes.length };
+        record.value.progress = { sizeBytes: record.fileSize };
         this.publish(record);
         return;
       }
@@ -846,6 +924,8 @@ export class ProductionDownloaderService implements DownloaderService {
     if (this.sweeping) return this.sweeping;
     this.sweeping = (async () => {
       await this.previews.sweep();
+      for (const [key, preview] of this.photoPreviewCache)
+        if (preview.expires <= Date.now()) this.photoPreviewCache.delete(key);
       for (const [id, entry] of this.analyses)
         if (entry.expires <= Date.now()) this.analyses.delete(id);
       for (const [id, record] of this.jobs) {
@@ -903,6 +983,7 @@ export class ProductionDownloaderService implements DownloaderService {
       }),
     );
     this.analyses.clear();
+    this.photoPreviewCache.clear();
     this.jobs.clear();
     await this.previews.dispose();
   }
@@ -933,9 +1014,31 @@ export class ProductionDownloaderService implements DownloaderService {
     signal: AbortSignal,
   ) {
     const photo = this.authorizedPhoto(id, photoId, supplied);
+    const key = `${id}/${photoId}`;
+    for (const [cacheKey, entry] of this.photoPreviewCache)
+      if (entry.expires <= Date.now()) this.photoPreviewCache.delete(cacheKey);
+    const cached = this.photoPreviewCache.get(key);
+    if (cached) {
+      signal.throwIfAborted();
+      return { bytes: cached.bytes, contentType: cached.contentType };
+    }
     const release = this.acquire();
     try {
-      return await fetchPhotoImage(photo.url, signal);
+      const image = await fetchPhotoImage(photo.url, signal);
+      const bytes = await sharp(image.bytes)
+        .resize({ width: 480, height: 480, fit: 'inside', withoutEnlargement: true })
+        .webp({ quality: 75 })
+        .toBuffer();
+      signal.throwIfAborted();
+      const expires = this.analyses.get(id)?.expires ?? Date.now();
+      if (bytes.length <= 1024 * 1024) {
+        if (this.photoPreviewCache.size >= 32) {
+          const first = this.photoPreviewCache.keys().next().value;
+          if (first) this.photoPreviewCache.delete(first);
+        }
+        this.photoPreviewCache.set(key, { expires, bytes, contentType: 'image/webp' });
+      }
+      return { bytes, contentType: 'image/webp' };
     } finally {
       release();
     }

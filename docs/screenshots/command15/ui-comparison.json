@@ -1,0 +1,62 @@
+[
+  {
+    "width": 390,
+    "height": 844,
+    "state": "idle",
+    "identicalPixels": true
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "state": "mp4",
+    "identicalPixels": false
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "state": "mp4-panel",
+    "identicalPixels": true
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "state": "mp3",
+    "identicalPixels": true
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "state": "mp3-panel",
+    "identicalPixels": true
+  },
+  {
+    "width": 1440,
+    "height": 1000,
+    "state": "idle",
+    "identicalPixels": true
+  },
+  {
+    "width": 1440,
+    "height": 1000,
+    "state": "mp4",
+    "identicalPixels": false
+  },
+  {
+    "width": 1440,
+    "height": 1000,
+    "state": "mp4-panel",
+    "identicalPixels": true
+  },
+  {
+    "width": 1440,
+    "height": 1000,
+    "state": "mp3",
+    "identicalPixels": false
+  },
+  {
+    "width": 1440,
+    "height": 1000,
+    "state": "mp3-panel",
+    "identicalPixels": true
+  }
+]
