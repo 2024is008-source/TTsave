@@ -16,6 +16,10 @@ export default tseslint.config(
   eslint.configs.recommended,
   { files: ['scripts/**/*.mjs'], languageOptions: { globals: globals.node } },
   {
+    files: ['ecosystem.config.cjs'],
+    languageOptions: { globals: globals.node, sourceType: 'commonjs' },
+  },
+  {
     files: ['public/assets/js/**/*.js'],
     languageOptions: { globals: globals.browser },
   },

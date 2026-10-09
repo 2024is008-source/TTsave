@@ -39,6 +39,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@eslint/js": "^9.38.0",
     "@playwright/test": "^1.63.0",
     "@types/ejs": "^3.1.5",

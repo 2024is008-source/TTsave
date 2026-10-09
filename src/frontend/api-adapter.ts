@@ -10,7 +10,14 @@ export function createApiAdapter(transport: typeof fetch = fetch): DownloaderAda
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       signal,
     });
-    const payload: unknown = await response.json();
+    let payload: unknown;
+    try {
+      payload = await response.json();
+    } catch {
+      throw new Error(
+        'The service returned an unreadable response. Please try again later.',
+      );
+    }
     if (!response.ok) {
       const error = apiErrorSchema.safeParse(payload);
       throw new Error(
@@ -104,7 +111,8 @@ export function createApiAdapter(transport: typeof fetch = fetch): DownloaderAda
           headers: job.accessToken ? { Authorization: `Bearer ${job.accessToken}` } : {},
         });
         if (!response.ok) {
-          const error = apiErrorSchema.safeParse(await response.json());
+          const payload: unknown = await response.json().catch(() => null);
+          const error = apiErrorSchema.safeParse(payload);
           throw new Error(
             error.success ? error.data.error.message : 'Unable to read download events.',
           );

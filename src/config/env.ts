@@ -21,9 +21,9 @@ const executable = (name: string) =>
     .default(name);
 
 const booleanFromString = z
-  .enum(['true', 'false'])
+  .enum(['true', 'false', '1', '0'])
   .default('false')
-  .transform((value) => value === 'true');
+  .transform((value) => value === 'true' || value === '1');
 
 const publicBaseUrlSchema = z
   .url()
@@ -97,11 +97,24 @@ const envSchema = z.object({
 export type Environment = z.infer<typeof envSchema>;
 
 export function parseEnvironment(source: NodeJS.ProcessEnv = process.env): Environment {
+  if (
+    source.YT_DLP_PATH !== undefined &&
+    source.YTDLP_PATH !== undefined &&
+    source.YT_DLP_PATH !== source.YTDLP_PATH
+  )
+    throw new Error('Invalid environment configuration: configure only one yt-dlp path.');
+  const normalized = {
+    ...source,
+    ...(source.YT_DLP_PATH !== undefined ? { YTDLP_PATH: source.YT_DLP_PATH } : {}),
+  };
   const schema =
     source.NODE_ENV === 'production'
-      ? envSchema.extend({ PUBLIC_BASE_URL: publicBaseUrlSchema })
+      ? envSchema.extend({
+          PUBLIC_BASE_URL: publicBaseUrlSchema,
+          HOST: z.literal('127.0.0.1').default('127.0.0.1'),
+        })
       : envSchema;
-  const result = schema.safeParse(source);
+  const result = schema.safeParse(normalized);
 
   if (!result.success) {
     const details = result.error.issues

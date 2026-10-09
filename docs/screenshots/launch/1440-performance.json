@@ -1,0 +1,125 @@
+{
+  "scope": "Local Chrome, unthrottled, fresh browser context, reduced motion. Not field Core Web Vitals or VPS results.",
+  "lcpMs": 380,
+  "lcpElement": "IMG",
+  "cls": 0,
+  "fontStatus": "loaded",
+  "resources": [
+    {
+      "path": "/assets/app.css",
+      "durationMs": 9.199999988079071,
+      "transferBytes": 84576
+    },
+    {
+      "path": "/assets/js/app.js",
+      "durationMs": 11.699999988079071,
+      "transferBytes": 526
+    },
+    {
+      "path": "/assets/images/hero-avatar-128.webp",
+      "durationMs": 13.799999982118607,
+      "transferBytes": 4948
+    },
+    {
+      "path": "/assets/images/hero-video-poster-540.webp",
+      "durationMs": 14,
+      "transferBytes": 68884
+    },
+    {
+      "path": "/assets/images/preview-unavailable.webp",
+      "durationMs": 13.400000005960464,
+      "transferBytes": 13418
+    },
+    {
+      "path": "/assets/images/showcase-left-400.webp",
+      "durationMs": 6.600000023841858,
+      "transferBytes": 56048
+    },
+    {
+      "path": "/assets/images/moment-nature-300.webp",
+      "durationMs": 7.4000000059604645,
+      "transferBytes": 40486
+    },
+    {
+      "path": "/assets/images/showcase-right-400.webp",
+      "durationMs": 7.5,
+      "transferBytes": 58382
+    },
+    {
+      "path": "/assets/images/moment-city-300.webp",
+      "durationMs": 7,
+      "transferBytes": 38794
+    },
+    {
+      "path": "/assets/js/theme.js",
+      "durationMs": 5.800000011920929,
+      "transferBytes": 1329
+    },
+    {
+      "path": "/assets/js/navigation.js",
+      "durationMs": 8.800000011920929,
+      "transferBytes": 1374
+    },
+    {
+      "path": "/assets/js/downloader.js",
+      "durationMs": 10.400000005960464,
+      "transferBytes": 477223
+    },
+    {
+      "path": "/assets/favicon.svg",
+      "durationMs": 4.5999999940395355,
+      "transferBytes": 550
+    }
+  ],
+  "images": [
+    {
+      "path": "/assets/images/hero-video-poster-540.webp",
+      "loading": "eager",
+      "priority": "high",
+      "width": 266,
+      "height": 478
+    },
+    {
+      "path": "/assets/images/hero-avatar-128.webp",
+      "loading": "eager",
+      "priority": "high",
+      "width": 26,
+      "height": 26
+    },
+    {
+      "path": "/assets/images/showcase-left-400.webp",
+      "loading": "lazy",
+      "priority": "auto",
+      "width": 220,
+      "height": 330
+    },
+    {
+      "path": "/assets/images/showcase-right-400.webp",
+      "loading": "lazy",
+      "priority": "auto",
+      "width": 220,
+      "height": 330
+    },
+    {
+      "path": "/assets/images/hero-video-poster-540.webp",
+      "loading": "lazy",
+      "priority": "auto",
+      "width": 105,
+      "height": 115
+    },
+    {
+      "path": "/assets/images/moment-nature-300.webp",
+      "loading": "lazy",
+      "priority": "auto",
+      "width": 105,
+      "height": 115
+    },
+    {
+      "path": "/assets/images/moment-city-300.webp",
+      "loading": "lazy",
+      "priority": "auto",
+      "width": 105,
+      "height": 115
+    }
+  ]
+}

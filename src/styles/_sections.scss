@@ -324,9 +324,16 @@
 .footer-nav {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
   font-size: 0.9rem;
   color: var(--muted);
+}
+.footer-nav a,
+.footer-dmca a {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
 }
 .footer-nav a:hover {
   color: var(--pink);

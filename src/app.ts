@@ -19,6 +19,36 @@ import type { DownloaderService } from './services/memory-store.js';
 import { ProductionDownloaderService } from './services/downloader.js';
 import { HttpError } from './middleware/error-handler.js';
 
+/** Log route labels, never user-defined paths, queries or capability identifiers. */
+export function safeRequestPath(value: string | undefined): string {
+  const pathname = value?.split('?')[0] ?? '';
+  if (/^\/api\/v1\/analysis\/[^/]+\/thumbnail\/?$/i.test(pathname))
+    return '/api/v1/analysis/:id/thumbnail';
+  if (/^\/api\/v1\/downloads\/[^/]+(?:\/(?:file|events))?\/?$/i.test(pathname))
+    return pathname.toLowerCase().endsWith('/file')
+      ? '/api/v1/downloads/:id/file'
+      : pathname.toLowerCase().endsWith('/events')
+        ? '/api/v1/downloads/:id/events'
+        : '/api/v1/downloads/:id';
+  const known = [
+    '/',
+    '/privacy',
+    '/terms',
+    '/copyright',
+    '/responsible-use',
+    '/contact',
+    '/health',
+    '/ready',
+    '/robots.txt',
+    '/sitemap.xml',
+    '/analyze',
+    '/api/v1/analyze',
+    '/api/v1/downloads',
+  ];
+  if (known.includes(pathname)) return pathname;
+  return pathname.startsWith('/assets/') ? '/assets/:asset' : '/unmatched';
+}
+
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(currentDirectory, '..');
 
@@ -29,7 +59,7 @@ export function createApp(
   const app = express();
 
   app.disable('x-powered-by');
-  app.set('trust proxy', env.TRUST_PROXY);
+  app.set('trust proxy', env.TRUST_PROXY ? 'loopback' : false);
   app.set('view engine', 'ejs');
   app.set('views', path.join(projectRoot, 'views'));
 
@@ -42,8 +72,10 @@ export function createApp(
         req: (request: { id?: unknown; method?: string; url?: string }) => ({
           id: request.id,
           method: request.method,
-          url: request.url?.split('?')[0],
+          url: safeRequestPath(request.url),
         }),
+        res: (response: { statusCode?: number }) => ({ statusCode: response.statusCode }),
+        err: () => ({ type: 'RequestError' }),
       },
     }),
   );
@@ -95,6 +127,23 @@ export function createApp(
   );
   app.use(express.json({ limit: '32kb' }));
   app.use(express.urlencoded({ extended: false, limit: '32kb' }));
+
+  const creationLimit = rateLimit({
+    windowMs: 60_000,
+    limit: 10,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    skip: (request) => request.method !== 'POST',
+    handler: (_request, _response, next) =>
+      next(
+        new HttpError(
+          429,
+          'RATE_LIMITED',
+          'Too many processing requests. Please try again later.',
+        ),
+      ),
+  });
+  app.use(['/api/v1/analyze', '/api/v1/downloads', '/analyze'], creationLimit);
 
   app.use(publicRouter);
   app.use(analyzeRouter);

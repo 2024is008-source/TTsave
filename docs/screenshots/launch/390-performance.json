@@ -1,0 +1,105 @@
+{
+  "scope": "Local Chrome, unthrottled, fresh browser context, reduced motion. Not field Core Web Vitals or VPS results.",
+  "lcpMs": 284,
+  "lcpElement": "H1",
+  "cls": 0,
+  "fontStatus": "loaded",
+  "resources": [
+    {
+      "path": "/assets/app.css",
+      "durationMs": 10.600000023841858,
+      "transferBytes": 84576
+    },
+    {
+      "path": "/assets/js/app.js",
+      "durationMs": 12.800000011920929,
+      "transferBytes": 526
+    },
+    {
+      "path": "/assets/images/hero-video-poster-540.webp",
+      "durationMs": 13.900000005960464,
+      "transferBytes": 68884
+    },
+    {
+      "path": "/assets/images/hero-avatar-128.webp",
+      "durationMs": 14.800000011920929,
+      "transferBytes": 4948
+    },
+    {
+      "path": "/assets/images/preview-unavailable.webp",
+      "durationMs": 14.800000011920929,
+      "transferBytes": 13418
+    },
+    {
+      "path": "/assets/js/theme.js",
+      "durationMs": 4,
+      "transferBytes": 1329
+    },
+    {
+      "path": "/assets/js/navigation.js",
+      "durationMs": 3.5,
+      "transferBytes": 1374
+    },
+    {
+      "path": "/assets/js/downloader.js",
+      "durationMs": 5.5,
+      "transferBytes": 477223
+    },
+    {
+      "path": "/assets/favicon.svg",
+      "durationMs": 4.799999982118607,
+      "transferBytes": 550
+    }
+  ],
+  "images": [
+    {
+      "path": "/assets/images/hero-video-poster-540.webp",
+      "loading": "eager",
+      "priority": "high",
+      "width": 1080,
+      "height": 1920
+    },
+    {
+      "path": "/assets/images/hero-avatar-128.webp",
+      "loading": "eager",
+      "priority": "high",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "path": "/assets/images/showcase-left.webp",
+      "loading": "lazy",
+      "priority": "auto",
+      "width": 800,
+      "height": 1200
+    },
+    {
+      "path": "/assets/images/showcase-right.webp",
+      "loading": "lazy",
+      "priority": "auto",
+      "width": 800,
+      "height": 1200
+    },
+    {
+      "path": "/assets/images/hero-video-poster-540.webp",
+      "loading": "lazy",
+      "priority": "auto",
+      "width": 104,
+      "height": 120
+    },
+    {
+      "path": "/assets/images/moment-nature.webp",
+      "loading": "lazy",
+      "priority": "auto",
+      "width": 104,
+      "height": 120
+    },
+    {
+      "path": "/assets/images/moment-city.webp",
+      "loading": "lazy",
+      "priority": "auto",
+      "width": 104,
+      "height": 120
+    }
+  ]
+}

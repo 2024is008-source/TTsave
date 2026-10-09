@@ -3,6 +3,35 @@ import { describe, expect, it } from 'vitest';
 import { parseEnvironment } from '../src/config/env.js';
 
 describe('environment configuration', () => {
+  it.each(['true', '1'])(
+    'supports proxy switch %s for the local Nginx deployment',
+    (value) => {
+      expect(parseEnvironment({ TRUST_PROXY: value }).TRUST_PROXY).toBe(true);
+    },
+  );
+  it.each(['false', '0'])('disables proxy trust for %s', (value) => {
+    expect(parseEnvironment({ TRUST_PROXY: value }).TRUST_PROXY).toBe(false);
+  });
+  it('supports the requested yt-dlp variable and rejects conflicting/empty aliases', () => {
+    expect(parseEnvironment({ YT_DLP_PATH: 'yt-dlp.exe' }).YTDLP_PATH).toBe('yt-dlp.exe');
+    expect(() => parseEnvironment({ YT_DLP_PATH: '', YTDLP_PATH: 'yt-dlp' })).toThrow();
+    expect(() => parseEnvironment({ YT_DLP_PATH: '' })).toThrow();
+    expect(() =>
+      parseEnvironment({ YT_DLP_PATH: 'yt-dlp', YTDLP_PATH: 'yt-dlp.exe' }),
+    ).toThrow();
+  });
+  it.each(['0.0.0.0', '::', 'localhost', '192.168.1.2'])(
+    'rejects a non-loopback production bind: %s',
+    (host) => {
+      expect(() =>
+        parseEnvironment({
+          NODE_ENV: 'production',
+          PUBLIC_BASE_URL: 'https://tiksavemp4.online',
+          HOST: host,
+        }),
+      ).toThrow();
+    },
+  );
   it('requires explicit canonical HTTPS configuration in production', () => {
     expect(() => parseEnvironment({ NODE_ENV: 'production' })).toThrow(
       'Invalid environment configuration',

@@ -6,6 +6,7 @@ export function createLogger(options: LoggerOptions = {}) {
   return pino({
     level: env.LOG_LEVEL,
     base: { service: 'tiksavemp4' },
+    serializers: { err: () => ({ type: 'InternalError' }) },
     ...options,
   });
 }

@@ -2,6 +2,27 @@ import { expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { createApiAdapter } from '../src/frontend/api-adapter.js';
 
+it('handles HTML proxy failures without exposing parser text or response bodies', async () => {
+  const transport = vi.fn<typeof fetch>(() =>
+    Promise.resolve(
+      new Response('<html>secret signed-url /private/path</html>', { status: 502 }),
+    ),
+  );
+  const adapter = createApiAdapter(transport);
+  await expect(
+    adapter.analyze('https://vt.tiktok.com/abc/', new AbortController().signal),
+  ).rejects.toThrow(
+    'The service returned an unreadable response. Please try again later.',
+  );
+  await expect(
+    adapter.waitForDownload(
+      { id: randomUUID() },
+      new AbortController().signal,
+      () => undefined,
+    ),
+  ).rejects.toThrow('Unable to read download events.');
+});
+
 it('submits MP3 intent without the saved MP4 selection or source URL', async () => {
   const analysisId = randomUUID();
   const jobId = randomUUID();

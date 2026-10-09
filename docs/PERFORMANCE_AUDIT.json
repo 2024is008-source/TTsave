@@ -1,0 +1,82 @@
+{
+  "measuredAt": "2026-10-09T10:12:14.492Z",
+  "platform": "win32",
+  "node": "v24.18.0",
+  "scope": "Local Windows; synthetic fixtures; no VPS or live TikTok evidence",
+  "homepage": {
+    "samples": 20,
+    "medianMs": 21.40479999999991,
+    "p95Ms": 31.37990000000002,
+    "includes": "Loopback HTTP, EJS rendering and full response read; first warmup excluded"
+  },
+  "streams": [
+    {
+      "fixtureMiB": 8,
+      "bytes": 8388608,
+      "elapsedMs": 82.18820000000005,
+      "rssBeforeBytes": 113676288,
+      "sampledPeakRssBytes": 138272768,
+      "rssDeltaBytes": 24596480,
+      "deliveryReleased": true,
+      "note": "Non-media sparse fixture through real HTTP pipeline. Client and server share process; RSS includes fetch buffers and GC, not server-only memory."
+    },
+    {
+      "fixtureMiB": 64,
+      "bytes": 67108864,
+      "elapsedMs": 415.6738,
+      "rssBeforeBytes": 139669504,
+      "sampledPeakRssBytes": 155303936,
+      "rssDeltaBytes": 15634432,
+      "deliveryReleased": true,
+      "note": "Non-media sparse fixture through real HTTP pipeline. Client and server share process; RSS includes fetch buffers and GC, not server-only memory."
+    }
+  ],
+  "assets": [
+    {
+      "filename": "public/assets/app.css",
+      "bytes": 84276,
+      "gzipBytes": 15980
+    },
+    {
+      "filename": "public/assets/js/downloader.js",
+      "bytes": 476923,
+      "gzipBytes": 100564
+    }
+  ],
+  "imageBytes": 1143100,
+  "mp4Smoke": {
+    "source": "Owned offline synthetic MP4 with audio",
+    "dimensions": "64 × 64",
+    "durationSeconds": 60,
+    "productionProbePassed": true,
+    "fullDecodePassed": true,
+    "note": "Does not verify live yt-dlp extraction or production downloads"
+  },
+  "conversion": {
+    "concurrency": 2,
+    "sourceDurationSeconds": 60,
+    "elapsedMs": 456.16560000000027,
+    "files": [
+      {
+        "name": "audio-0.mp3",
+        "bytes": 291327
+      },
+      {
+        "name": "audio-1.mp3",
+        "bytes": 291327
+      },
+      {
+        "name": "source.mp4",
+        "bytes": 557835
+      }
+    ]
+  },
+  "ffmpegBenchmark": {
+    "userSeconds": 0.312,
+    "systemSeconds": 0.016,
+    "wallSeconds": 0.254,
+    "maxRssKiB": 22216,
+    "note": "Separate FFmpeg null-output encode with production MP3 options; platform-reported metrics, not VPS capacity"
+  },
+  "cleanupPassed": true
+}

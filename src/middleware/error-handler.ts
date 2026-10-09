@@ -52,7 +52,7 @@ export const errorHandler: ErrorRequestHandler = (error, request, response, next
 
   request.log.error(
     {
-      err: error,
+      code,
       requestId: request.id,
       status,
     },
