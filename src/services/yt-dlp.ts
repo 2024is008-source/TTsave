@@ -8,6 +8,7 @@ import { HttpError } from '../middleware/error-handler.js';
 import { runTool, type AnalysisContext } from './tool-process.js';
 import { remoteThumbnailSchema } from '../shared/thumbnail.js';
 import { publicExtractorOptions } from './extractor-options.js';
+import { resolveTikTokLink } from './tiktok-link.js';
 
 const optionalNumber = z.number().nullable().optional();
 const extractorFormat = z.object({
@@ -255,7 +256,7 @@ export class YtDlpAnalyzer {
   }
   async analyzeSource(input: string, context: AnalysisContext): Promise<AnalyzedSource> {
     const t0 = performance.now();
-    const url = videoUrlSchema.parse(input);
+    const validated = videoUrlSchema.parse(input);
     const tValidation = performance.now() - t0;
     if (this.active >= this.config.ANALYSIS_MAX_CONCURRENT)
       throw new HttpError(
@@ -265,6 +266,18 @@ export class YtDlpAnalyzer {
       );
     this.active += 1;
     try {
+      const url = await resolveTikTokLink(
+        validated,
+        context.signal,
+        this.config.ANALYSIS_TIMEOUT_MS,
+      );
+      const remainingMs = this.config.ANALYSIS_TIMEOUT_MS - (performance.now() - t0);
+      if (remainingMs <= 0)
+        throw new HttpError(
+          504,
+          'ANALYSIS_TIMEOUT',
+          'The public video analysis timed out. Please try again later.',
+        );
       const tExtractStart = performance.now();
       const result = await runTool(
         this.config.YTDLP_PATH,
@@ -286,7 +299,7 @@ export class YtDlpAnalyzer {
           url,
         ],
         {
-          timeoutMs: this.config.ANALYSIS_TIMEOUT_MS,
+          timeoutMs: Math.max(1, Math.floor(remainingMs)),
           maxOutputBytes: this.config.ANALYSIS_MAX_OUTPUT_BYTES,
         },
         { ...context, stage: 'analysis' },

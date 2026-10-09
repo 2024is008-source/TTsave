@@ -18,7 +18,7 @@ export const URL_MESSAGES = {
 export const safeUrlMessages = new Set<string>(Object.values(URL_MESSAGES));
 
 /** Syntax validation only: no DNS, redirects or network access; not proof of publicity. */
-export const videoUrlSchema = z
+export const tiktokUrlSchema = z
   .string({ error: URL_MESSAGES.required })
   .max(MAX_VIDEO_URL_LENGTH, URL_MESSAGES.long)
   .trim()
@@ -51,13 +51,16 @@ export const videoUrlSchema = z
     }
     if (url.hostname !== hostname || url.username || url.password || url.port)
       return reject(URL_MESSAGES.invalid);
-    const short = hostname === 'vm.tiktok.com' || hostname === 'vt.tiktok.com';
     const rawPath = value.slice('https://'.length + authority.length).split(/[?#]/, 1)[0];
     if (rawPath !== url.pathname) return reject(URL_MESSAGES.invalid);
-    const validPath = short
-      ? /^\/[a-zA-Z0-9]+\/?$/.test(url.pathname)
-      : /^\/@[a-zA-Z0-9._]+\/video\/\d+\/?$/.test(url.pathname);
-    if (!validPath) return reject(URL_MESSAGES.invalid);
     if (url.href.length > MAX_VIDEO_URL_LENGTH) return reject(URL_MESSAGES.long);
     return url.href;
   });
+
+// Submitted inputs retain the existing narrow public-video/short-code path rules.
+export const videoUrlSchema = tiktokUrlSchema.refine((value) => {
+  const url = new URL(value);
+  return url.hostname === 'vm.tiktok.com' || url.hostname === 'vt.tiktok.com'
+    ? /^\/[a-zA-Z0-9]+\/?$/.test(url.pathname)
+    : /^\/@[a-zA-Z0-9._]+\/video\/\d+\/?$/.test(url.pathname);
+}, URL_MESSAGES.invalid);
