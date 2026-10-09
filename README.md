@@ -12,9 +12,12 @@ override defaults, then run `npm run build` and `npm run dev`. Open
 `npm run frontend:watch` when editing the downloader modules. Production uses
 `npm run build` followed by `npm start`.
 
+Optional GA4 is configured through `GA_MEASUREMENT_ID`; see [docs/ANALYTICS.md](docs/ANALYTICS.md). Remove or blank this variable for local development. Before enabling it in production, disable the stream's Enhanced Measurement and confirm the documented privacy settings. The application sends only sanitized public-page views.
+
 Production requires `NODE_ENV=production` and explicit
-`PUBLIC_BASE_URL=https://tiksavemp4.online`. Set `LEGAL_CONTACT_EMAIL` to a real
-monitored legal inbox before launch. Review the operational legal drafts and
+`PUBLIC_BASE_URL=https://tiksavemp4.online`. Set `PUBLIC_CONTACT_EMAIL=tiksavemp4@gmail.com`
+and `LEGAL_CONTACT_EMAIL=tiksavemp4@gmail.com` in production. The legal setting takes
+precedence; the public setting defaults to the official address. Review the operational legal drafts and
 configure DNS, TLS and domain redirects as described in
 [`docs/PRODUCTION_SEO.md`](docs/PRODUCTION_SEO.md).
 

@@ -6,7 +6,7 @@ Historical Command 11 record. The October 9 USA SEO changes, current metadata/sc
 
 The permanent public origin is `https://tiksavemp4.online`. Zod validates and normalizes `PUBLIC_BASE_URL` without a trailing slash. Production startup requires it explicitly; missing values, HTTP, alternate hosts, credentials, ports, paths, queries and fragments fail validation. Development and tests default to the canonical production origin, avoiding local metadata. Host and forwarding headers never generate public metadata.
 
-Set `LEGAL_CONTACT_EMAIL` to a real monitored legal inbox. It takes precedence over the earlier `PUBLIC_CONTACT_EMAIL` setting, which remains a compatible fallback. Both settings are validated email addresses. Neither has a fictitious default. Unconfigured pages explicitly state that no reporting channel exists yet. Publishing an actual channel is required before launch.
+Set `PUBLIC_CONTACT_EMAIL=tiksavemp4@gmail.com` and `LEGAL_CONTACT_EMAIL=tiksavemp4@gmail.com` in the production environment. The legal setting takes precedence over the public setting. Both are validated email addresses; the public setting defaults to the supplied official address when absent. Existing explicit environment values continue to override this fallback, so update both VPS variables and run `pm2 restart ttsave --update-env` after deployment.
 
 ## Pages and metadata
 

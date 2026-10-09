@@ -22,6 +22,10 @@ for (const width of [390, 768, 1440]) {
     ]) {
       await page.goto(path);
       await expect(page.locator('h1')).toBeVisible();
+      const contactLink = page.locator('a[href="mailto:tiksavemp4@gmail.com"]');
+      await expect(contactLink).toHaveText('tiksavemp4@gmail.com');
+      await contactLink.focus();
+      await expect(contactLink).toBeFocused();
       expect(
         await page
           .locator('.legal-page p')

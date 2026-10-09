@@ -11,6 +11,8 @@ NODE_ENV=production
 HOST=127.0.0.1
 PORT=3000
 PUBLIC_BASE_URL=https://tiksavemp4.online
+PUBLIC_CONTACT_EMAIL=tiksavemp4@gmail.com
+LEGAL_CONTACT_EMAIL=tiksavemp4@gmail.com
 TRUST_PROXY=1
 LOG_LEVEL=info
 YT_DLP_PATH=/usr/local/bin/yt-dlp
@@ -19,7 +21,7 @@ FFPROBE_PATH=/usr/bin/ffprobe
 DOWNLOAD_TEMP_ROOT=/var/lib/ttsave/tmp
 ```
 
-Executable paths are examples: verify their actual installation paths, executability and versions on the VPS. `YT_DLP_PATH` supports the legacy `YTDLP_PATH` alias; conflicting settings fail. Set a real monitored PUBLIC_CONTACT_EMAIL or LEGAL_CONTACT_EMAIL. Never put credentials, cookies or signed URLs into this file or audit evidence. Create the temporary root owned by the application user, mode 0700, outside the checkout; never use a shared root or web-served directory.
+Executable paths are examples: verify their actual installation paths, executability and versions on the VPS. `YT_DLP_PATH` supports the legacy `YTDLP_PATH` alias; conflicting settings fail. Set both contact variables to the official address shown above; LEGAL_CONTACT_EMAIL takes precedence. After deploying the environment update, run `pm2 restart ttsave --update-env`. Never put credentials, cookies or signed URLs into this file or audit evidence. Create the temporary root owned by the application user, mode 0700, outside the checkout; never use a shared root or web-served directory.
 
 Retain the example's duration, byte, TTL, timeout and concurrency limits until a representative VPS load test supports a change. Two downloads/conversions and four application operations are the defaults. MP3 requires libmp3lame and ffprobe. Run `npm run tools:check` after configuring paths; verify MP3 capability separately from liveness. Tools must be current, but upgrades need a smoke test.
 
@@ -69,7 +71,7 @@ Use an owner-authorized public TikTok video to test analysis, returned quality, 
 
 ## Operations, privacy and rollback
 
-Configure PM2 and Nginx log rotation, restrictive log access and a documented short retention period. Nginx access logs deliberately omit URLs, queries and headers; IPs remain necessary security data. Critical Nginx error records may still include request context, so restrict access and never export raw logs as public evidence. Application logs use fixed route labels and sanitized error categories. No analytics/ad scripts were added; adding tracking needs a separate privacy review.
+Configure PM2 and Nginx log rotation, restrictive log access and a documented short retention period. Nginx access logs deliberately omit URLs, queries and headers; IPs remain necessary security data. Critical Nginx error records may still include request context, so restrict access and never export raw logs as public evidence. Application logs use fixed route labels and sanitized error categories. Optional GA4 is enabled only by `GA_MEASUREMENT_ID`. Before setting it, disable Enhanced Measurement in the Google web stream and confirm retention and consent arrangements using [ANALYTICS.md](ANALYTICS.md). No advertising integration is included.
 
 Monitor health/readiness failures, process restarts, queue rejection, disk free space, stale temporary files and TLS expiry. `/health` is liveness, not proof TikTok is reachable. Test resource behavior on the actual VPS with approved sources; local CPU/RSS numbers are not sizing guarantees. Temporary media must never be backed up or served statically.
 

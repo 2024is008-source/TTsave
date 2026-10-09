@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import helmet from 'helmet';
 import { env } from '../config/env.js';
 import { legalPages } from '../data/legal-pages.js';
 import { mockData } from '../data/mock-data.js';
@@ -15,6 +16,22 @@ const pages = [
   ...legalPages,
 ];
 const sitemapPaths = pages.map((page) => page.path);
+// Applied only to rendered public pages; API/file/preview/SSE policies stay unchanged.
+const analyticsCsp = helmet.contentSecurityPolicy({
+  directives: {
+    scriptSrc: ["'self'", 'https://www.googletagmanager.com'],
+    connectSrc: [
+      "'self'",
+      'https://*.google-analytics.com',
+      'https://www.googletagmanager.com',
+    ],
+    imgSrc: [
+      "'self'",
+      'https://*.google-analytics.com',
+      'https://www.googletagmanager.com',
+    ],
+  },
+});
 
 publicRouter.use((request, response, next) => {
   const publicPath = pages.find(
@@ -48,10 +65,21 @@ for (const page of pages) {
       return;
     }
     const hasQuery = request.originalUrl.includes('?');
+    if (env.GA_MEASUREMENT_ID)
+      analyticsCsp(request, response, () => {
+        /* CSP only; rendering continues below. */
+      });
     if (hasQuery) response.setHeader('X-Robots-Tag', 'noindex, follow');
     response.render(page.path === '/' ? 'index' : 'legal', {
       ...mockData,
       page,
+      analytics: env.GA_MEASUREMENT_ID
+        ? {
+            measurementId: env.GA_MEASUREMENT_ID,
+            pageLocation: env.PUBLIC_BASE_URL + page.path,
+            pageTitle: page.title,
+          }
+        : null,
       contactEmail: env.LEGAL_CONTACT_EMAIL ?? env.PUBLIC_CONTACT_EMAIL,
       structuredData:
         page.path === '/'

@@ -11,8 +11,11 @@
         <p class="section-eyebrow">TikSaveMp4</p>
         <h1><%= page.title %></h1>
         <p class="legal-date">
-          Last updated: <time datetime="2026-10-08">October 8, 2026</time> · Operational
-          draft
+          Last updated:
+          <time datetime="<%= page.path === '/privacy' ? '2026-10-09' : '2026-10-08' %>"
+            ><%= page.path === '/privacy' ? 'October 9, 2026' : 'October 8, 2026' %></time
+          >
+          · Operational draft
         </p>
         <aside class="legal-note" aria-label="Developer note">
           <strong>Developer note — review before commercial launch.</strong>
@@ -21,6 +24,21 @@
           and confirm hosting providers and log retention before commercial launch.
         </aside>
         <p class="legal-intro"><%= page.introduction %></p>
+        <% if (page.path === '/privacy') { %>
+        <p>
+          See
+          <a href="https://policies.google.com/privacy" rel="noreferrer"
+            >Google’s Privacy Policy</a
+          >
+          and
+          <a
+            href="https://policies.google.com/technologies/partner-sites"
+            rel="noreferrer"
+            >how Google uses information from partner sites</a
+          >
+          for Google’s processing practices.
+        </p>
+        <% } %>
         <p>
           TikSaveMp4 is an independent service and is not affiliated with, endorsed by or
           sponsored by TikTok or ByteDance. TikTok is a trademark of its respective owner.

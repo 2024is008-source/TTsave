@@ -44,8 +44,15 @@ const publicBaseUrlSchema = z
 
 const envSchema = z.object({
   PUBLIC_BASE_URL: publicBaseUrlSchema.default('https://tiksavemp4.online'),
+  GA_MEASUREMENT_ID: z.preprocess(
+    (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
+    z
+      .string()
+      .regex(/^G-[A-Z0-9]{10}$/)
+      .optional(),
+  ),
   LEGAL_CONTACT_EMAIL: z.email().optional(),
-  PUBLIC_CONTACT_EMAIL: z.email().optional(),
+  PUBLIC_CONTACT_EMAIL: z.email().default('tiksavemp4@gmail.com'),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   HOST: z.string().trim().min(1).default('127.0.0.1'),
   PORT: z.coerce.number().int().min(1).max(65_535).default(3000),

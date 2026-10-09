@@ -34,5 +34,20 @@
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
 <meta name="theme-color" content="#f8faff" />
 <script src="/assets/js/theme-init.js"></script>
+<% if (typeof analytics !== 'undefined' && analytics) { %>
+<script
+  id="analytics-init"
+  src="/assets/js/analytics.js"
+  data-measurement-id="<%= analytics.measurementId %>"
+  data-page-location="<%= analytics.pageLocation %>"
+  data-page-title="<%= analytics.pageTitle %>"
+  referrerpolicy="no-referrer"
+></script>
+<script
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=<%= analytics.measurementId %>"
+  referrerpolicy="no-referrer"
+></script>
+<% } %>
 <link rel="stylesheet" href="/assets/app.css?v=photo-selection-6" />
 <script type="module" src="/assets/js/app.js?v=photo-selection-6"></script>

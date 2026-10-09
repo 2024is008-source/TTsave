@@ -18,7 +18,15 @@ export const legalPages = [
       {
         heading: 'Browser storage and cookies',
         paragraphs: [
-          'The application stores your light or dark theme preference in local storage on your device. You can remove it using your browser’s site-data settings. The application currently adds no account, advertising or analytics cookies and contains no third-party analytics integration. Hosting or security services may operate separately; the owner must disclose any such additions before launch.',
+          'The application stores your light or dark theme preference in local storage on your device. You can remove it using your browser’s site-data settings. When the operator enables Google Analytics 4, Google may set first-party analytics cookies, including _ga cookies, to distinguish browsers and sessions. This integration requests a 30-day cookie lifetime without refreshing that lifetime on each visit. When Analytics is not configured, the application does not load the Google tag or set analytics cookies. Hosting or security services may operate separately.',
+        ],
+      },
+      {
+        heading: 'Optional Google Analytics 4',
+        paragraphs: [
+          'When enabled, Google Analytics 4 is used to understand visits to public site pages. The application sends a canonical site page address and a static site page title, excluding query strings, fragments and referrer addresses. It does not send submitted TikTok links, TikTok titles, access tokens, signed media URLs, filenames or entered form data. API, health, readiness, preview, job-status, event-stream and file-download responses do not load Analytics.',
+          'Google receives network and browser information when its script and collection endpoints are contacted, including your IP address, browser/device details and analytics identifiers. GA4 also produces standard session and engagement information. Advertising personalization and Google signals are disabled in this integration. Enhanced Measurement must be disabled by the operator so that form, click, search, scroll and download activity are not automatically measured.',
+          'Google processes Analytics data under its own policies and may process it outside your country. Cookie expiry is separate from Google’s server-side data retention, which the operator controls in the Analytics property. The operator must confirm and publish that retention setting and obtain any required consent before enabling Analytics. No consent banner is currently implemented. You can clear site cookies or block Analytics using browser privacy controls; doing so does not prevent use of the downloader.',
         ],
       },
       {
@@ -45,7 +53,7 @@ export const legalPages = [
       {
         heading: 'Security and monitoring',
         paragraphs: [
-          'The application uses security headers, input validation, rate limiting and token-protected temporary file routes. These measures reduce risk but cannot guarantee complete security or anonymity. Keep job and download tokens confidential. The application uses local server error logging and does not currently integrate an external error-monitoring service. The policy must be updated before adding analytics, advertising or external monitoring, with the actual providers and their retention disclosed.',
+          'The application uses security headers, input validation, rate limiting and token-protected temporary file routes. These measures reduce risk but cannot guarantee complete security or anonymity. Keep job and download tokens confidential. The application uses local server error logging and does not currently integrate an external error-monitoring service. Additional advertising or external monitoring requires an updated policy describing the actual providers and retention.',
         ],
       },
       {

@@ -169,12 +169,12 @@ describe('public SEO and policies', () => {
       .set('Host', 'www.tiksavemp4.online.evil.test')
       .expect(200);
   });
-  it('does not invent an unconfigured contact channel', async () => {
+  it('renders the configured contact channel including the official fallback', async () => {
     const response = await request(app).get('/contact').expect(200);
-    if (!env.LEGAL_CONTACT_EMAIL && !env.PUBLIC_CONTACT_EMAIL)
-      expect(response.text).toContain(
-        'A public contact address has not yet been configured',
-      );
+    const document = new JSDOM(response.text).window.document;
+    const address = env.LEGAL_CONTACT_EMAIL ?? env.PUBLIC_CONTACT_EMAIL;
+    const link = document.querySelector(`a[href="mailto:${address}"]`);
+    expect(link?.textContent).toBe(address);
   });
   it('excludes query variants from indexing and ignores untrusted query values', async () => {
     const response = await request(app)

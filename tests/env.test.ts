@@ -81,6 +81,18 @@ describe('environment configuration', () => {
   it('rejects malformed public contact details', () => {
     expect(() => parseEnvironment({ PUBLIC_CONTACT_EMAIL: 'not an email' })).toThrow();
   });
+  it('uses the official public fallback and preserves validated contact overrides', () => {
+    const defaults = parseEnvironment({});
+    expect(defaults.PUBLIC_CONTACT_EMAIL).toBe('tiksavemp4@gmail.com');
+    expect(defaults.LEGAL_CONTACT_EMAIL).toBeUndefined();
+    expect(
+      parseEnvironment({ PUBLIC_CONTACT_EMAIL: 'support@example.test' })
+        .PUBLIC_CONTACT_EMAIL,
+    ).toBe('support@example.test');
+    expect(
+      parseEnvironment({ LEGAL_CONTACT_EMAIL: 'legal@example.test' }).LEGAL_CONTACT_EMAIL,
+    ).toBe('legal@example.test');
+  });
   it('provides safe defaults', () => {
     expect(parseEnvironment({})).toMatchObject({
       NODE_ENV: 'development',
