@@ -1,6 +1,6 @@
 <div class="downloader" id="downloader">
   <form id="download-form" action="/api/v1/analyze" method="post">
-    <label class="field-label" for="video-url">TikTok video link</label>
+    <label class="field-label" for="video-url">TikTok video or photo link</label>
     <div class="input-capsule">
       <span class="input-icon"><%- include('icon', { name: 'link' }) %></span>
       <input
@@ -9,12 +9,12 @@
         type="url"
         inputmode="url"
         autocomplete="off"
-        placeholder="Paste a TikTok video link here..."
+        placeholder="Paste a public TikTok link here..."
         required
         maxlength="2048"
         aria-describedby="availability form-status"
       />
-      <button class="clear-button" type="button" aria-label="Clear video link" hidden>
+      <button class="clear-button" type="button" aria-label="Clear TikTok link" hidden>
         <svg
           width="16"
           height="16"

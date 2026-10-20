@@ -32,6 +32,12 @@ const canonical = (url: URL) =>
   /^\/@[a-zA-Z0-9._]+\/(?:video|photo)\/\d+\/?$/.test(url.pathname)
     ? `https://www.tiktok.com${url.pathname.replace(/\/$/, '')}`
     : null;
+const normalizedHref = (url: URL) => {
+  const next = new URL(url.href);
+  next.search = '';
+  next.hash = '';
+  return next.href;
+};
 
 async function addressesFor(
   hostname: string,
@@ -67,13 +73,16 @@ function redirectUrl(location: string, previous: URL): URL {
     /[\s\\\p{Cc}]/u.test(location)
   )
     throw failure();
-  // Validate raw absolute authority before URL can repair/decode a malicious host.
-  if (/^[a-z][a-z\d+.-]*:/i.test(location))
-    return new URL(tiktokUrlSchema.parse(location));
-  if (location.startsWith('//'))
-    return new URL(tiktokUrlSchema.parse(`https:${location}`));
   if (/(?:^|\/)(?:\.|%2e){1,2}(?:\/|[?#]|$)/i.test(location)) throw failure();
-  return new URL(tiktokUrlSchema.parse(new URL(location, previous).href));
+  const parsed =
+    /^[a-z][a-z\d+.-]*:/i.test(location)
+      ? new URL(tiktokUrlSchema.parse(location))
+      : location.startsWith('//')
+        ? new URL(tiktokUrlSchema.parse(`https:${location}`))
+        : new URL(tiktokUrlSchema.parse(new URL(location, previous).href));
+  parsed.search = '';
+  parsed.hash = '';
+  return parsed;
 }
 
 async function headers(url: URL, address: LookupAddress, signal: AbortSignal) {
@@ -161,9 +170,11 @@ export async function resolveTikTokLink(
   try {
     while (redirects <= SHORT_LINK_LIMITS.redirects) {
       signal.throwIfAborted();
+      url.search = '';
       url.hash = '';
-      if (visited.has(url.href)) throw failure();
-      visited.add(url.href);
+      const key = normalizedHref(url);
+      if (visited.has(key)) throw failure();
+      visited.add(key);
       const addresses = await addressesFor(url.hostname, signal);
       const pinned = addresses.find((entry) => entry.family === 4) ?? addresses[0];
       if (!pinned) throw failure();

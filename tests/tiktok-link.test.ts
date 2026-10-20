@@ -135,6 +135,15 @@ describe('secure TikTok short-link resolution', () => {
     ).rejects.toMatchObject({ code: 'SHORT_LINK_FAILED' });
     expect(mocks.request).toHaveBeenCalledTimes(4);
   });
+  it('treats tracking-only redirect variants as the same public URL', async () => {
+    reply(302, 'https://m.tiktok.com/t/Znext/?tracking=one');
+    reply(302, 'https://m.tiktok.com/t/Znext/?tracking=two');
+    reply(302, 'https://m.tiktok.com/t/Znext/?tracking=three');
+    await expect(
+      resolveTikTokLink('https://vm.tiktok.com/Zabc/', signal()),
+    ).rejects.toMatchObject({ code: 'SHORT_LINK_FAILED' });
+    expect(mocks.request).toHaveBeenCalledTimes(2);
+  });
   it('resolves a chain at the redirect limit', async () => {
     reply(301, '/Zone/');
     reply(302, '/Ztwo/');

@@ -9,9 +9,9 @@ export const publicRouter = Router();
 const pages = [
   {
     path: '/',
-    title: 'TikTok Downloader – Download MP4, MP3 & Photos | TikSaveMP4',
+    title: 'TikTok to MP4, MP3 & Image Downloader | TikSaveMP4',
     description:
-      'Download supported public TikTok videos as MP4, convert available audio to MP3, or save photos from supported image posts. Available options depend on the source.',
+      'Free and fast TikTok downloader. Save MP4 videos without watermark, convert audio to MP3, and download images online. No signup required.',
   },
   ...legalPages,
 ];
@@ -64,6 +64,8 @@ for (const page of pages) {
       response.redirect(301, env.PUBLIC_BASE_URL + page.path);
       return;
     }
+    // Public pages have no query-driven content. Ignore every parameter, keep a
+    // clean canonical and let crawlers read noindex; never reflect query values.
     const hasQuery = request.originalUrl.includes('?');
     if (env.GA_MEASUREMENT_ID)
       analyticsCsp(request, response, () => {
@@ -106,11 +108,11 @@ publicRouter.get('/robots.txt', (_request, response) => {
       [
         'User-agent: *',
         'Allow: /',
+        'Allow: /assets/',
         'Disallow: /api/',
         'Disallow: /analyze',
         'Disallow: /health',
         'Disallow: /ready',
-        'Disallow: /*?*',
         `Sitemap: ${env.PUBLIC_BASE_URL}/sitemap.xml`,
         '',
       ].join('\n'),

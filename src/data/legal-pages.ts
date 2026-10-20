@@ -5,12 +5,12 @@ export const legalPages = [
     description:
       'How TikSaveMp4 processes public TikTok links, temporary downloads, request logs and browser preferences.',
     introduction:
-      'TikSaveMp4 at tiksavemp4.online processes a public video link to prepare a download you request. This policy describes the current application; it does not promise anonymous or completely private use.',
+      'TikSaveMp4 at tiksavemp4.online processes a supported public video or photo-post link to prepare a download you request. This policy describes the current application; it does not promise anonymous or completely private use.',
     sections: [
       {
         heading: 'Information used to provide a download',
         paragraphs: [
-          'The server receives the TikTok URL you submit and retrieves the public title, creator, thumbnail, duration and available formats. It keeps analysis records and job status in server memory and writes temporary previews and video files to server-controlled storage. Access tokens authorize job status, preview and file requests; keep these tokens and file links confidential.',
+          'The server receives the TikTok URL you submit and retrieves available public metadata and media options. It keeps analysis records and job status in server memory and writes temporary previews, video, audio, image and selected-image ZIP files to server-controlled storage as needed. Access tokens authorize job status, preview and file requests; keep these tokens and file links confidential.',
           'Network connections expose technical information such as your IP address to the hosting provider. The application uses IP-based rate limiting. Request logs include a request ID, method, path, response status and timing; the configured request serializer omits query strings. Error diagnostics may contain additional technical context. Do not include passwords or sensitive information in links you submit.',
           'Full submitted TikTok URLs are held temporarily to perform analysis and downloads; ordinary application request logging does not record request bodies or query strings. There is no promise that a full URL can never appear in a diagnostic error or provider log. Browsers send technical headers, including a user agent that may describe browser and device software. The current application request serializer does not record those headers, but hosting and security providers may log them.',
         ],
@@ -24,7 +24,7 @@ export const legalPages = [
       {
         heading: 'Optional Google Analytics 4',
         paragraphs: [
-          'When enabled, Google Analytics 4 is used to understand visits to public site pages. The application sends a canonical site page address and a static site page title, excluding query strings, fragments and referrer addresses. It does not send submitted TikTok links, TikTok titles, access tokens, signed media URLs, filenames or entered form data. API, health, readiness, preview, job-status, event-stream and file-download responses do not load Analytics.',
+          'When enabled, Google Analytics 4 is used to understand visits to public site pages. The application sends a canonical site page address and a static site page title, excluding page query strings and fragments. It reads the available referring address once and may send only a permitted external origin (scheme, hostname and non-default port) to help Analytics identify genuine referral sources. Referrer paths, query strings, fragments and credentials are never sent. Empty, malformed, credential-bearing, local, IP-literal, same-site, TikTok/media-provider and recognized sensitive-parameter referrers are excluded. No referrer is invented when one is absent or excluded. It does not send submitted TikTok links, TikTok titles, access tokens, signed media URLs, filenames or entered form data. API, health, readiness, preview, job-status, event-stream and file-download responses do not load Analytics.',
           'Google receives network and browser information when its script and collection endpoints are contacted, including your IP address, browser/device details and analytics identifiers. GA4 also produces standard session and engagement information. Advertising personalization and Google signals are disabled in this integration. Enhanced Measurement must be disabled by the operator so that form, click, search, scroll and download activity are not automatically measured.',
           'Google processes Analytics data under its own policies and may process it outside your country. Cookie expiry is separate from Google’s server-side data retention, which the operator controls in the Analytics property. The operator must confirm and publish that retention setting and obtain any required consent before enabling Analytics. No consent banner is currently implemented. You can clear site cookies or block Analytics using browser privacy controls; doing so does not prevent use of the downloader.',
         ],
@@ -39,7 +39,7 @@ export const legalPages = [
       {
         heading: 'Retention and deletion',
         paragraphs: [
-          'Successful file delivery, cancellation and failure trigger temporary video cleanup. Analysis records, job records and previews expire and are swept periodically. A failed cleanup may be retried, and an interrupted server may leave temporary files for a later sweep. These are operational cleanup mechanisms, not a guarantee of instantaneous deletion from all storage or backups.',
+          'Successful file delivery, cancellation and failure trigger temporary media cleanup. Analysis records, job records and previews expire and are swept periodically. A failed cleanup may be retried, and an interrupted server may leave temporary files for a later sweep. These are operational cleanup mechanisms, not a guarantee of instantaneous deletion from all storage or backups.',
           'The application does not establish a retention period for hosting logs, application-log exports or provider backups. The owner must set and publish those periods before launch. Files saved to your own device remain under your control.',
         ],
       },
@@ -68,7 +68,7 @@ export const legalPages = [
     path: '/terms',
     title: 'Terms of Use',
     description:
-      'Conditions for using TikSaveMp4 to download authorized public TikTok videos in available MP4 formats.',
+      'Conditions for using TikSaveMp4 for authorized public TikTok MP4, MP3 and photo downloads, including selected-image ZIPs and service limits.',
     introduction:
       'These terms describe permitted use of the TikSaveMp4 service at tiksavemp4.online. Read them together with the Privacy Policy and Responsible Use page before submitting a link.',
     sections: [

@@ -1,6 +1,44 @@
 /// <reference lib="dom" />
 import { expect, test } from '@playwright/test';
 
+for (const path of [
+  '/',
+  '/privacy',
+  '/terms',
+  '/responsible-use',
+  '/copyright',
+  '/contact',
+]) {
+  test(`loads downloader only when needed on ${path}`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const downloaderRequests: string[] = [];
+    page.on('request', (request) => {
+      if (new URL(request.url()).pathname === '/assets/js/downloader.js')
+        downloaderRequests.push(request.url());
+    });
+    await page.goto(path);
+    await expect(page.locator('h1')).toHaveCount(1);
+    expect(downloaderRequests).toHaveLength(path === '/' ? 1 : 0);
+    await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await page.getByRole('button', { name: 'Open navigation' }).click();
+    await expect(page.locator('#mobile-nav')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#mobile-nav')).toBeHidden();
+    if (path === '/') {
+      await page.locator('#video-url').fill('https://example.com/not-tiktok');
+      await page.getByRole('button', { name: 'Get video', exact: true }).click();
+      await expect(page.locator('.downloader')).toHaveAttribute('data-state', 'error');
+      await expect(page.locator('#form-status')).not.toBeEmpty();
+    } else {
+      await expect(page.locator('#download-form')).toHaveCount(0);
+      await page.locator('.footer-nav a[href="/#downloader"]').click();
+      await expect(page.locator('#download-form')).toBeVisible();
+      await expect.poll(() => downloaderRequests.length).toBe(1);
+    }
+  });
+}
+
 for (const width of [390, 768, 1024, 1440, 1920]) {
   test(`SEO copy remains readable and interactive at ${String(width)}px`, async ({
     page,

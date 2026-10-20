@@ -1,5 +1,34 @@
 # USA SEO implementation results — October 9, 2026
 
+## Current correction addendum — October 20, 2026
+
+This addendum supersedes conflicting implementation statements in the historical report below. This was a targeted technical/content correction, without keyword optimization, new landing pages, a redesign, API changes, commits, pushes or deployment.
+
+- The current homepage title remains **TikTok Downloader – Download MP4, MP3 & Photos | TikSaveMP4**. Its current description remains **Download supported public TikTok videos as MP4, convert available audio to MP3, or save photos from supported image posts. Available options depend on the source.** The H1 remains **TikTok to MP4 Downloader**. The title's existing `TikSaveMP4` capitalization is intentionally preserved because the correction request explicitly prohibits changing it; the visible brand remains `TikSaveMp4`.
+- Robots no longer emits `Disallow: /*?*`. `/assets/` is explicitly allowed, including versioned CSS, JavaScript, fonts and images. API, analysis, health and readiness exclusions remain; response-level private/noindex/no-store controls are unchanged.
+- No public page uses query parameters to alter content. Every parameter, including tracking parameters and unknown values, is ignored for rendering. Query variants remain HTTP 200 with `noindex, follow` in both HTML and `X-Robots-Tag`, and a clean canonical. Crawlers can now fetch these directives. Existing case, www, HTTP and trailing-slash normalization redirects still strip query strings and never reflect submitted values. API/file/SSE query behavior is unchanged.
+- Public-post availability, input labels and relevant copy now acknowledge supported video and photo posts. Existing MP4 messaging and controls remain. One photo FAQ explains individual images, multiple selected images as a ZIP, source-dependent availability, permissions and unsupported slideshow-to-video conversion. FAQ JSON-LD continues to use the same data as visible FAQs.
+- Shared theme/navigation initialize on all pages. The downloader is dynamically imported only when `#download-form` exists. The shared app URL is versioned for cache refresh; no dependencies or validation protections were removed.
+- The unsupported static “Fast download” label now reads “Public posts,” within the same element and styling.
+- Terms metadata now describes MP4, MP3, photos and selected-image ZIPs. Privacy technical copy now acknowledges temporary audio, image and ZIP files. Only these revised policies receive an October 20 review date. Operational-draft notices remain: operator identity, monitored contact, jurisdiction-specific review, providers and retention still require owner confirmation.
+- Optional GA4 public-page measurement exists in the current code, controlled by validated `GA_MEASUREMENT_ID`; the older “no tracker installed” statement is historical. Privacy/consent and Enhanced Measurement settings still require owner review. Existing ads.txt files and any existing analytics/deployment configuration were left intact; no advertising code was added.
+
+Regression coverage now evaluates actual emitted asset URLs against robots rules, query indexing on all six pages, private exclusions, source-consistent photo explanations, unchanged homepage metadata/H1, FAQ schema equality, and browser network loading plus theme/navigation on all six pages. Existing MP4, MP3, individual-photo and selected-image ZIP suites are retained.
+
+### Correction verification
+
+- `npm run check`: passed lint, typecheck, 349 unit tests across 20 files, 142 integration tests across 11 files, and the production build.
+- Focused Chrome regression run: all 40 tests passed across SEO, legal, Analytics/CSP, downloader API/form, MP3, individual/repeated photos, selected-image ZIP and responsive UI suites. Tested sizes include 390, 768, 1024, 1440 and 1920 pixels. Browser network assertions verify zero downloader-module requests on each legal/support page, one on the homepage, and successful navigation from policies back to the downloader. Google collection is stubbed or blocked in Analytics tests.
+- Desktop and mobile SEO screenshots were visually checked; the existing design and section structure remain. CSS, download services, API contracts, dependencies, AdSense files and Analytics configuration were not changed by this correction.
+- Initial sandbox checks failed to access Vitest worker temporary modules; execution outside the sandbox resolved this environment issue. Initial integration/browser assertions exposed old video-only expectations, a whitespace-sensitive test and an MP3 test-fixture startup race. Assertions were corrected to test the updated factual copy; the fixture now awaits application initialization before replacing its adapter. No tests were removed or skipped.
+- `git diff --check` passed. No automatic commit, push or VPS deployment occurred. Verification uses local and mocked-source coverage, not live TikTok or Google indexing evidence.
+
+Manual verification remains necessary for public DNS/TLS, the active VPS release and redirects, real upstream media availability, Search Console indexing/canonicals and field performance. Local tests do not establish Google rankings, traffic or production availability.
+
+## Historical October 9 report
+
+The remainder preserves the earlier implementation record. Its title, capability scope, analytics status, robots conclusions, performance observations and test counts must not be treated as current verification.
+
 The pre-edit findings are in [SEO_AUDIT.md](SEO_AUDIT.md). The existing downloader, security contracts, policy content, responsive components and styles are preserved. No reference files were edited and no commits, deployment, external account creation or outreach occurred.
 
 ## Final metadata and content

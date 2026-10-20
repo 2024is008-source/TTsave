@@ -12,8 +12,10 @@
         <h1><%= page.title %></h1>
         <p class="legal-date">
           Last updated:
-          <time datetime="<%= page.path === '/privacy' ? '2026-10-09' : '2026-10-08' %>"
-            ><%= page.path === '/privacy' ? 'October 9, 2026' : 'October 8, 2026' %></time
+          <time
+            datetime="<%= ['/privacy', '/terms'].includes(page.path) ? '2026-10-20' : '2026-10-08' %>"
+            ><%= ['/privacy', '/terms'].includes(page.path) ? 'October 20, 2026' :
+            'October 8, 2026' %></time
           >
           · Operational draft
         </p>

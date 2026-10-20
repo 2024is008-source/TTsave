@@ -7,6 +7,31 @@ import { JSDOM } from 'jsdom';
 import sharp from 'sharp';
 import { mockData } from '../../src/data/mock-data.js';
 import { faqPage, webApplication } from '../../src/services/seo.js';
+import { readFile } from 'node:fs/promises';
+
+// Evaluate the single wildcard-user-agent group emitted by this application.
+// Longest matching rule wins; Allow wins ties. Supports * and terminal $.
+function canCrawl(robots: string, url: string): boolean {
+  const rules = robots.split('\n').flatMap((line) => {
+    const match = /^(Allow|Disallow):\s*(\S+)/i.exec(line);
+    if (!match?.[2]) return [];
+    const pattern = match[2];
+    const anchored = pattern.endsWith('$');
+    const expression = (anchored ? pattern.slice(0, -1) : pattern)
+      .split('*')
+      .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+      .join('.*');
+    if (!new RegExp('^' + expression + (anchored ? '$' : '')).test(url)) return [];
+    return [
+      {
+        allow: match[1]?.toLowerCase() === 'allow',
+        length: pattern.replaceAll('*', '').length,
+      },
+    ];
+  });
+  rules.sort((a, b) => b.length - a.length || Number(b.allow) - Number(a.allow));
+  return rules[0]?.allow ?? true;
+}
 
 describe('public SEO and policies', () => {
   const app = createApp();
@@ -59,6 +84,25 @@ describe('public SEO and policies', () => {
       );
       expect(document.querySelectorAll('title')).toHaveLength(1);
       expect(document.querySelectorAll('meta[name="description"]')).toHaveLength(1);
+      expect(
+        document.querySelector('meta[property="og:title"]')?.getAttribute('content'),
+      ).toBe(document.title);
+      expect(
+        document.querySelector('meta[name="twitter:title"]')?.getAttribute('content'),
+      ).toBe(document.title);
+      const description = document
+        .querySelector('meta[name="description"]')
+        ?.getAttribute('content');
+      expect(
+        document
+          .querySelector('meta[property="og:description"]')
+          ?.getAttribute('content'),
+      ).toBe(description);
+      expect(
+        document
+          .querySelector('meta[name="twitter:description"]')
+          ?.getAttribute('content'),
+      ).toBe(description);
       expect(document.querySelectorAll('link[rel="canonical"]')).toHaveLength(1);
       expect(document.querySelector('meta[name="keywords"]')).toBeNull();
       expect(
@@ -129,13 +173,11 @@ describe('public SEO and policies', () => {
   it('uses exact homepage copy and valid factual WebApplication data', async () => {
     const response = await request(app).get('/').expect(200);
     const document = new JSDOM(response.text).window.document;
-    expect(document.title).toBe(
-      'TikTok Downloader – Download MP4, MP3 & Photos | TikSaveMP4',
-    );
+    expect(document.title).toBe('TikTok to MP4, MP3 & Image Downloader | TikSaveMP4');
     expect(
       document.querySelector('meta[name="description"]')?.getAttribute('content'),
     ).toBe(
-      'Download supported public TikTok videos as MP4, convert available audio to MP3, or save photos from supported image posts. Available options depend on the source.',
+      'Free and fast TikTok downloader. Save MP4 videos without watermark, convert audio to MP3, and download images online. No signup required.',
     );
     const data: unknown = JSON.parse(
       document.querySelector('script[type="application/ld+json"]')?.textContent ?? '',
@@ -206,6 +248,112 @@ describe('public SEO and policies', () => {
     expect(response.headers['x-robots-tag']).toBe('noindex, follow');
     expect(response.text).toContain('content="noindex, follow"');
     expect(response.text).not.toContain('https://evil.test');
+  });
+  it.each(paths)(
+    'keeps query variants crawlable but nonindexable for %s',
+    async (path) => {
+      const queryApp = createApp();
+      const robots = await request(queryApp).get('/robots.txt').expect(200);
+      for (const query of [
+        '?utm_source=test&utm_campaign=seo&gclid=SECRET',
+        '?url=https%3A%2F%2Fevil.test&title=Injected&token=SECRET',
+        '?unknown=SECRET&unknown=OTHER',
+        '?empty=',
+      ]) {
+        const response = await request(queryApp)
+          .get(path + query)
+          .expect(200);
+        const document = new JSDOM(response.text).window.document;
+        expect(canCrawl(robots.text, path + query)).toBe(true);
+        expect(response.headers.location).toBeUndefined();
+        expect(response.headers['x-robots-tag']).toBe('noindex, follow');
+        expect(
+          document.querySelector('meta[name="robots"]')?.getAttribute('content'),
+        ).toBe('noindex, follow');
+        expect(
+          document.querySelector('link[rel="canonical"]')?.getAttribute('href'),
+        ).toBe(env.PUBLIC_BASE_URL + path);
+        expect(response.text).not.toMatch(/SECRET|Injected|evil\.test|utm_campaign/);
+      }
+      const head = await request(queryApp)
+        .head(path + '?utm_source=test')
+        .expect(200);
+      expect(head.headers['x-robots-tag']).toBe('noindex, follow');
+      const clean = await request(queryApp).get(path).expect(200);
+      expect(clean.headers['x-robots-tag']).toBeUndefined();
+    },
+  );
+  it('matches robots rules against actual rendering assets and private resources', async () => {
+    const robots = await request(app).get('/robots.txt').expect(200);
+    const home = await request(app).get('/').expect(200);
+    const document = new JSDOM(home.text).window.document;
+    const assets = [
+      ...document.querySelectorAll(
+        'link[rel="stylesheet"], link[rel="icon"], script[src], img[src]',
+      ),
+    ]
+      .map((element) => element.getAttribute('href') ?? element.getAttribute('src') ?? '')
+      .filter((url) => url.startsWith('/assets/'));
+    const application = await readFile('public/assets/js/app.js', 'utf8');
+    for (const match of application.matchAll(
+      /(?:from\s*|import\s*\()\s*['"]([^'"]+)['"]/g,
+    )) {
+      const url = new URL(match[1] ?? '', env.PUBLIC_BASE_URL + '/assets/js/app.js');
+      assets.push(url.pathname + url.search);
+    }
+    expect(assets.some((url) => url.includes('app.js?v='))).toBe(true);
+    expect(assets.some((url) => url.includes('downloader.js?v='))).toBe(true);
+    for (const url of assets) {
+      expect(canCrawl(robots.text, url), url).toBe(true);
+      const response = await request(app).get(url).expect(200);
+      expect(response.headers['x-robots-tag']).toBeUndefined();
+    }
+    expect(canCrawl(robots.text, '/assets/fonts/example.woff2?v=1')).toBe(true);
+    for (const url of [
+      '/api/v1/analyze',
+      '/api/v1/downloads/id/events',
+      '/api/v1/downloads/id/file?token=SECRET',
+      '/api/v1/analysis/id/photos/photo/preview?token=SECRET',
+      '/health',
+      '/ready',
+      '/analyze',
+    ])
+      expect(canCrawl(robots.text, url), url).toBe(false);
+    // This test must detect the original indirect blocking regression.
+    expect(
+      canCrawl('User-agent: *\nAllow: /\nDisallow: /*?*', '/assets/app.css?v=1'),
+    ).toBe(false);
+  });
+  it('explains verified photo options without changing MP4 positioning or controls', async () => {
+    const response = await request(app).get('/').expect(200);
+    const document = new JSDOM(response.text).window.document;
+    expect(document.querySelector('h1')?.textContent.replace(/\s+/g, ' ').trim()).toBe(
+      'TikTok to MP4 Downloader',
+    );
+    expect(document.querySelector('#download-form')?.getAttribute('action')).toBe(
+      '/api/v1/analyze',
+    );
+    expect(document.querySelector('label[for="video-url"]')?.textContent).toContain(
+      'video or photo',
+    );
+    expect(document.querySelector('.analyze-label')?.textContent).toBe('Get video');
+    const faq = [...document.querySelectorAll('.faq-item')].find((item) =>
+      item.querySelector('summary')?.textContent.includes('How do photo downloads work?'),
+    );
+    expect(faq?.querySelector('p')?.textContent).toMatch(
+      /one available image.*multiple images for a ZIP/,
+    );
+    expect(faq?.querySelector('p')?.textContent).toContain(
+      'Available images depend on the post.',
+    );
+    expect(faq?.querySelector('p')?.textContent).toContain(
+      'Slideshow-to-video conversion is not supported.',
+    );
+    expect(
+      document.querySelector('#features')?.textContent.replace(/\s+/g, ' '),
+    ).toContain('selected-image ZIP');
+    expect(response.text).not.toMatch(/Fast download|video links only/);
+    expect(response.text).toMatch(/Private, login-required/);
   });
   it('redirects public trailing slashes to the canonical clean URL', async () => {
     const response = await request(app).get('/privacy/?token=secret').expect(301);

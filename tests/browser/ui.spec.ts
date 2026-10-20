@@ -93,9 +93,12 @@ for (const [width, height] of [
       .filter({ hasText: 'Which TikTok links are supported?' })
       .click();
     await expect(
-      page.getByText('TikSaveMp4 supports publicly accessible TikTok video links only', {
-        exact: false,
-      }),
+      page.getByText(
+        'TikSaveMp4 supports publicly accessible TikTok video and photo posts',
+        {
+          exact: false,
+        },
+      ),
     ).toBeVisible();
     await page.locator('#video-url').fill('https://example.com/video/123');
     await page.getByRole('button', { name: 'Get video' }).click();

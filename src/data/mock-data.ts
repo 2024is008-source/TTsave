@@ -2,7 +2,7 @@
 export const mockData = {
   title: 'TikSaveMp4 — Online TikTok Video Downloader',
   availability:
-    'Publicly accessible TikTok video links are supported. Available quality depends on the source.',
+    'Supported public TikTok video and photo posts only. Available options depend on the post.',
   result: null,
   progress: null,
   stepImageSizes: '(max-width: 600px) 100vw, 30vw',
@@ -31,9 +31,9 @@ export const mockData = {
       icon: 'shield',
       image: null,
       color: 'violet',
-      title: 'Public Videos',
+      title: 'Public Posts',
       description:
-        'Public video links only. Private, login-required and restricted content is unsupported.',
+        'Supported public video and photo posts. Private, login-required and restricted posts are unsupported.',
     },
     {
       icon: 'device',
@@ -47,7 +47,8 @@ export const mockData = {
     {
       image: 'copy-link-step',
       title: 'Copy link',
-      description: 'Open a public TikTok video, tap Share, then select Copy link.',
+      description:
+        'Open a supported public video or photo post, tap Share, then Copy link.',
     },
     {
       image: 'paste-link-step',
@@ -58,7 +59,7 @@ export const mockData = {
       image: 'download-video-step',
       title: 'Download video',
       description:
-        'Review the source details, choose an available MP4 quality or MP3 audio, and download the file.',
+        'Choose an available MP4 quality or MP3 audio. Photo posts offer image selection and downloads.',
     },
   ],
   moments: [
@@ -107,7 +108,12 @@ export const mockData = {
     {
       question: 'Which TikTok links are supported?',
       answer:
-        'TikSaveMp4 supports publicly accessible TikTok video links only. Private posts, content behind a login, and regionally restricted videos cannot be processed.',
+        'TikSaveMp4 supports publicly accessible TikTok video and photo posts when compatible source media is available. Private, login-required, regionally restricted and unavailable posts cannot be processed.',
+    },
+    {
+      question: 'How do photo downloads work?',
+      answer:
+        'Paste a supported public photo-post link and select Get video to analyze it. Choose one available image to download individually, or select multiple images for a ZIP. Available images depend on the post. Slideshow-to-video conversion is not supported. Save and reuse photos only with permission.',
     },
     {
       question: 'Why are some video qualities unavailable?',
@@ -122,7 +128,7 @@ export const mockData = {
     {
       question: 'Can private TikTok videos be downloaded?',
       answer:
-        'No. TikSaveMp4 only processes publicly accessible TikTok video links. Private-video access, login bypasses, cookies and regional restriction workarounds are not supported.',
+        'No. TikSaveMp4 only processes supported public video and photo posts. Private-post access, login bypasses, cookies and regional restriction workarounds are not supported.',
     },
     {
       question: 'Does downloading give me permission to reuse a video?',

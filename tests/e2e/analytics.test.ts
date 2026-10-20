@@ -23,7 +23,9 @@ describe('public-page-only GA4 layout and CSP', () => {
       const document = dom.window.document;
       const init = document.querySelector('#analytics-init');
       if (!init) throw new Error('Missing Analytics initializer');
-      expect(init.getAttribute('src')).toBe('/assets/js/analytics.js');
+      expect(init.getAttribute('src')).toBe(
+        '/assets/js/analytics.js?v=origin-referrer-1',
+      );
       expect(init.getAttribute('data-measurement-id')).toBe(env.GA_MEASUREMENT_ID);
       expect(init.getAttribute('data-page-location')).toBe(env.PUBLIC_BASE_URL + path);
       expect(init.outerHTML).not.toMatch(/SECRET|attacker/);

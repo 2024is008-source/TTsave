@@ -60,7 +60,12 @@ describe('application routes', () => {
       .send({ url: 'https://www.tiktok.com/@test/video/123' })
       .expect(503);
     expect(response.body.error.code).toBe('DOWNLOADER_UNAVAILABLE');
-    expect(response.body.error.message).toContain('Publicly accessible TikTok video');
+    expect(response.body.error.message).toContain(
+      'Supported public TikTok video and photo posts only.',
+    );
+    expect(response.body.error.message).toContain(
+      'Available options depend on the post.',
+    );
   });
 
   it('returns a structured 404 response', async () => {

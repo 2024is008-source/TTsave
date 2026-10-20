@@ -14,6 +14,12 @@ for (const [width, height] of [
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/');
     await page.evaluate(async () => {
+      // Finish the conditional application bootstrap before replacing its adapter.
+      const bootstrap = document.querySelector<HTMLScriptElement>(
+        'script[type="module"][src*="/assets/js/app.js"]',
+      );
+      if (!bootstrap) throw new Error('Missing application bootstrap');
+      await import(bootstrap.src);
       const modulePath = '/assets/js/downloader.js?v=photo-selection-6';
       const module = (await import(
         modulePath
