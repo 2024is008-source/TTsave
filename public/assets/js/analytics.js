@@ -8,7 +8,7 @@
   if (!/^G-[A-Z0-9]{10}$/.test(measurementId || '') || !pageTitle) return;
   // Fail closed if the public layout's canonical metadata is ever changed incorrectly.
   if (
-    !/^https:\/\/tiksavemp4\.online\/(?:privacy|terms|copyright|responsible-use|contact)?$/.test(
+    !/^https:\/\/tiksavemp4\.online\/(?:privacy|terms|copyright|responsible-use|contact|blog(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?)?$/.test(
       pageLocation || '',
     )
   )

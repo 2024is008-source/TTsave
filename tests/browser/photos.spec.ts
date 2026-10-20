@@ -274,7 +274,21 @@ for (const [width, height] of [
     // Image element may be capped; object-fit contains the full natural image.
     expect(image.width).toBeLessThanOrEqual(width);
     await expect(page.locator('#photo-selected')).toHaveCSS('object-fit', 'contain');
+    // Let this fixture's real load event finish before simulating an error;
+    // otherwise a late successful load can immediately clear the error state.
+    await page.locator('#photo-selected').evaluate((element) => {
+      element.removeAttribute('data-test-preview-loaded');
+      element.addEventListener(
+        'load',
+        () => element.setAttribute('data-test-preview-loaded', 'true'),
+        { once: true },
+      );
+    });
     await page.getByRole('button', { name: 'Select image 3' }).click();
+    await expect(page.locator('#photo-selected')).toHaveAttribute(
+      'data-test-preview-loaded',
+      'true',
+    );
     await page.locator('#photo-selected').dispatchEvent('error');
     await expect(page.locator('#photo-unavailable')).toBeVisible();
     await expect(page.locator('#photo-download')).toBeEnabled();

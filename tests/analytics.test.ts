@@ -173,6 +173,27 @@ describe('optional page-view analytics', () => {
     expect(Reflect.get(dom.window, 'dataLayer')).toBeUndefined();
     dom.window.close();
   });
+  it.each([
+    'https://tiksavemp4.online/blog',
+    'https://tiksavemp4.online/blog/public-guide',
+  ])('retains permitted referrer attribution for public blog metadata %s', (location) => {
+    const dom = browser(location, testId, 'https://www.google.com/search?q=SECRET');
+    dom.window.eval(source);
+    const commands = (Reflect.get(dom.window, 'dataLayer') as IArguments[]).map(
+      (args) => Array.from(args) as unknown[],
+    );
+    expect(commands[2]).toEqual([
+      'event',
+      'page_view',
+      {
+        send_to: testId,
+        page_location: location,
+        page_title: 'Static site title',
+        page_referrer: 'https://www.google.com',
+      },
+    ]);
+    dom.window.close();
+  });
   it('does nothing without the layout configuration or with a bad ID', () => {
     for (const id of ['', 'invalid']) {
       const dom = browser(undefined, id);

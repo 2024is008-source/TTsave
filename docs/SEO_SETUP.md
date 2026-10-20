@@ -2,6 +2,19 @@
 
 Production origin: `https://tiksavemp4.online`. Audience: United States; interface language: `en-US`. No geographic address, doorway pages or verification tokens are invented. These steps are manual owner actions after deployment; this task does not create accounts or submit URLs.
 
+## Homepage keyword priorities
+
+Keep **tiktok to mp4** as the primary homepage keyword in the existing H1 and main video content. Retain **tiktok to mp4 converter** in the feature introduction and **tiktok to mp3** in the audio FAQ as secondary/supporting phrases. Keep the current SEO title, meta description and canonical URL unchanged.
+
+| Image keyword           | Placement and intent                                                                                  |
+| ----------------------- | ----------------------------------------------------------------------------------------------------- |
+| tiktok photo downloader | Feature introduction, describing supported public photo posts                                         |
+| tiktok image downloader | Existing photo FAQ question                                                                           |
+| tiktok to image         | Photo FAQ answer, explicitly describing existing photo-post images rather than video-frame conversion |
+| download tiktok images  | Same FAQ's instructions for individual images and selected-photo ZIP files                            |
+
+Keep the photo instructions together in that FAQ: analyze a supported public photo-post link, browse and use **Download image** for one photo, or open **Choose images**, select two or more photos and use **Download selected** for a ZIP. Availability depends on the post; saving or reusing photos requires permission. Do not claim video-to-image or slideshow-to-video conversion. The visible FAQ and FAQ structured data share the same source. Do not add separate keyword pages, a meta-keywords tag or repeated explanations.
+
 ## Deploy and verify first
 
 Use Node.js 24 LTS and set `NODE_ENV=production` and `PUBLIC_BASE_URL=https://tiksavemp4.online`. Provision DNS and valid certificates for both apex and www. Configure a single edge redirect from HTTP or www directly to the final HTTPS non-www URL, including clean public paths, to avoid chains. API methods and signed download URLs must keep their existing behavior; never redirect sensitive requests to unrelated routes.

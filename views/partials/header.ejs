@@ -9,6 +9,12 @@
       ><a href="<%= page.path === '/' ? '' : '/' %>#how-it-works">How it works</a
       ><a href="<%= page.path === '/' ? '' : '/' %>#features">Features</a
       ><a href="<%= page.path === '/' ? '' : '/' %>#faq">FAQ</a>
+      <a
+        href="/blog"
+        class="<%= page.path === '/blog' || page.path.startsWith('/blog/') ? 'nav-active' : '' %>"
+        aria-current="<%= page.path === '/blog' ? 'page' : page.path.startsWith('/blog/') ? 'location' : 'false' %>"
+        >Blog</a
+      >
     </nav>
     <div class="header-actions">
       <button
@@ -41,5 +47,11 @@
     ><a href="<%= page.path === '/' ? '' : '/' %>#how-it-works">How it works</a
     ><a href="<%= page.path === '/' ? '' : '/' %>#features">Features</a
     ><a href="<%= page.path === '/' ? '' : '/' %>#faq">FAQ</a>
+    <a
+      href="/blog"
+      class="<%= page.path === '/blog' || page.path.startsWith('/blog/') ? 'nav-active' : '' %>"
+      aria-current="<%= page.path === '/blog' ? 'page' : page.path.startsWith('/blog/') ? 'location' : 'false' %>"
+      >Blog</a
+    >
   </nav>
 </header>

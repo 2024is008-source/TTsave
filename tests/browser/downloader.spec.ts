@@ -8,6 +8,13 @@ test('keyboard selection, cancellation, real progress and browser handoff', asyn
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await page.evaluate(async () => {
+    // Let the application's conditional bootstrap finish before installing the
+    // fixture adapter, so a late default initializer cannot replace the fixture.
+    const bootstrap = document.querySelector<HTMLScriptElement>(
+      'script[type="module"][src*="/assets/js/app.js"]',
+    );
+    if (!bootstrap) throw new Error('Missing application bootstrap');
+    await import(bootstrap.src);
     const modulePath = '/assets/js/downloader.js?v=photo-selection-6';
     const module = (await import(
       modulePath

@@ -111,9 +111,9 @@ export const mockData = {
         'TikSaveMp4 supports publicly accessible TikTok video and photo posts when compatible source media is available. Private, login-required, regionally restricted and unavailable posts cannot be processed.',
     },
     {
-      question: 'How do photo downloads work?',
+      question: 'How do I use the TikTok image downloader?',
       answer:
-        'Paste a supported public photo-post link and select Get video to analyze it. Choose one available image to download individually, or select multiple images for a ZIP. Available images depend on the post. Slideshow-to-video conversion is not supported. Save and reuse photos only with permission.',
+        'TikTok to image means saving photos from a supported public photo post; it does not convert videos into images. To download TikTok images, paste the photo-post link and select Get video to analyze it. Browse the available photos and choose Download image to save one individually. For a ZIP file, open Choose images, select two or more photos, then choose Download selected. Available images depend on the post. Slideshow-to-video conversion is not supported. Save and reuse photos only with permission.',
     },
     {
       question: 'Why are some video qualities unavailable?',

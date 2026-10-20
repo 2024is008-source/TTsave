@@ -1,0 +1,558 @@
+{
+  "checkedAt": "2026-10-20T16:06:08.880Z",
+  "base": "https://tiksavemp4.online",
+  "scope": "Read-only public HTTP GETs; no authenticated Search Console or VPS access",
+  "pages": [
+    {
+      "path": "/",
+      "status": 200,
+      "location": null,
+      "type": "text/html; charset=utf-8",
+      "xRobots": null,
+      "canonical": ["https://tiksavemp4.online/"],
+      "title": "TikTok Downloader – Download MP4, MP3 & Photos | TikSaveMP4",
+      "descriptions": [
+        "Download supported public TikTok videos as MP4, convert available audio to MP3, or save photos from supported image posts. Available options depend on the source."
+      ],
+      "robots": ["index, follow"],
+      "h1": ["TikTok to MP4\n        Downloader"],
+      "mainTextCharacters": 11145,
+      "internalLinks": [
+        "/",
+        "/responsible-use",
+        "/copyright",
+        "/contact",
+        "/privacy",
+        "/terms"
+      ],
+      "schemas": [
+        [
+          {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "TikSaveMp4",
+            "url": "https://tiksavemp4.online/",
+            "applicationCategory": "MultimediaApplication",
+            "operatingSystem": "Web-based",
+            "inLanguage": "en-US",
+            "browserRequirements": "Requires a modern web browser",
+            "description": "Download supported public TikTok videos as MP4, convert usable audio to MP3, or save photos individually or as a selected-image ZIP. Available options depend on the source."
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "inLanguage": "en-US",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How do I convert a TikTok video to MP4?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Open a public TikTok video, tap Share and choose Copy link. Paste it into TikSaveMp4 and select Get video. Choose MP4 and an available quality, then download. MP4 saves the video with its source audio."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I download TikTok audio as MP3?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, when the analyzed public video provides supported source audio, TikSaveMp4 offers MP3. Choose MP3 after analysis to convert TikTok to MP3. Conversion does not improve audio quality or grant music-use rights."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which TikTok links are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "TikSaveMp4 supports publicly accessible TikTok video links only. Private posts, content behind a login, and regionally restricted videos cannot be processed."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why are some video qualities unavailable?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Available resolutions depend on the source video. TikSaveMp4 shows only the formats the source actually provides — no invented quality claims or upscaling."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Where will the downloaded file be saved?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Your browser controls where files are saved. Check your Downloads folder or the location selected in your browser; saving to your photo library may require a separate action."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can private TikTok videos be downloaded?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. TikSaveMp4 only processes publicly accessible TikTok video links. Private-video access, login bypasses, cookies and regional restriction workarounds are not supported."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does downloading give me permission to reuse a video?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. You must have permission to save and reuse the video and its audio. Downloading does not grant ownership, redistribution rights or commercial-use permission. Review the Responsible Use and Copyright pages."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why might a download fail?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A post may be deleted, private, login-required or restricted. Source formats can be unavailable, a network or conversion error can occur, or a request can exceed service limits. Temporary download links also expire. Review the displayed error; some links cannot be processed."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does TikSaveMp4 store downloaded videos?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Files and previews are stored temporarily on the server for processing and delivery. Cleanup runs after delivery or expiry; failures or an interrupted server can delay removal. There is no public video library. The Privacy Policy lists current retention settings and explains logs and backups separately."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does TikSaveMp4 work on iPhone and Android?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. TikSaveMp4 is designed for modern phones, tablets, laptops and desktop browsers. The interface adapts to every screen size."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does TikSaveMp4 improve the original quality?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. TikSaveMp4 does not upscale, restore or improve video quality. Available formats and resolutions depend on what the source actually provides."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is TikSaveMp4 affiliated with TikTok?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. TikSaveMp4 is an independent tool and is not affiliated with, endorsed by, or connected to TikTok or ByteDance in any way."
+                }
+              }
+            ]
+          }
+        ]
+      ],
+      "versionedAssets": [
+        "/assets/app.css?v=photo-selection-6",
+        "/assets/js/app.js?v=photo-selection-6"
+      ]
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "location": null,
+      "type": "text/html; charset=utf-8",
+      "xRobots": null,
+      "canonical": ["https://tiksavemp4.online/privacy"],
+      "title": "Privacy Policy | TikSaveMp4",
+      "descriptions": [
+        "How TikSaveMp4 processes public TikTok links, temporary downloads, request logs and browser preferences."
+      ],
+      "robots": ["index, follow"],
+      "h1": ["Privacy Policy"],
+      "mainTextCharacters": 8693,
+      "internalLinks": [
+        "/",
+        "/#how-it-works",
+        "/#features",
+        "/#faq",
+        "/#downloader",
+        "/privacy",
+        "/terms",
+        "/responsible-use",
+        "/copyright",
+        "/contact"
+      ],
+      "schemas": [],
+      "versionedAssets": [
+        "/assets/app.css?v=photo-selection-6",
+        "/assets/js/app.js?v=photo-selection-6"
+      ]
+    },
+    {
+      "path": "/terms",
+      "status": 200,
+      "location": null,
+      "type": "text/html; charset=utf-8",
+      "xRobots": null,
+      "canonical": ["https://tiksavemp4.online/terms"],
+      "title": "Terms of Use | TikSaveMp4",
+      "descriptions": [
+        "Conditions for using TikSaveMp4 to download authorized public TikTok videos in available MP4 formats."
+      ],
+      "robots": ["index, follow"],
+      "h1": ["Terms of Use"],
+      "mainTextCharacters": 6203,
+      "internalLinks": [
+        "/",
+        "/#how-it-works",
+        "/#features",
+        "/#faq",
+        "/#downloader",
+        "/privacy",
+        "/terms",
+        "/responsible-use",
+        "/copyright",
+        "/contact"
+      ],
+      "schemas": [],
+      "versionedAssets": [
+        "/assets/app.css?v=photo-selection-6",
+        "/assets/js/app.js?v=photo-selection-6"
+      ]
+    },
+    {
+      "path": "/responsible-use",
+      "status": 200,
+      "location": null,
+      "type": "text/html; charset=utf-8",
+      "xRobots": null,
+      "canonical": ["https://tiksavemp4.online/responsible-use"],
+      "title": "Responsible Use | TikSaveMp4",
+      "descriptions": [
+        "Respect creators, permissions and public-access limits when saving TikTok videos with TikSaveMp4."
+      ],
+      "robots": ["index, follow"],
+      "h1": ["Responsible Use"],
+      "mainTextCharacters": 4705,
+      "internalLinks": [
+        "/",
+        "/#how-it-works",
+        "/#features",
+        "/#faq",
+        "/#downloader",
+        "/privacy",
+        "/terms",
+        "/responsible-use",
+        "/copyright",
+        "/contact"
+      ],
+      "schemas": [],
+      "versionedAssets": [
+        "/assets/app.css?v=photo-selection-6",
+        "/assets/js/app.js?v=photo-selection-6"
+      ]
+    },
+    {
+      "path": "/copyright",
+      "status": 200,
+      "location": null,
+      "type": "text/html; charset=utf-8",
+      "xRobots": null,
+      "canonical": ["https://tiksavemp4.online/copyright"],
+      "title": "Copyright and DMCA | TikSaveMp4",
+      "descriptions": [
+        "How to document a copyright concern involving TikSaveMp4’s temporary download service or website content."
+      ],
+      "robots": ["index, follow"],
+      "h1": ["Copyright and DMCA"],
+      "mainTextCharacters": 4784,
+      "internalLinks": [
+        "/",
+        "/#how-it-works",
+        "/#features",
+        "/#faq",
+        "/#downloader",
+        "/privacy",
+        "/terms",
+        "/responsible-use",
+        "/copyright",
+        "/contact"
+      ],
+      "schemas": [],
+      "versionedAssets": [
+        "/assets/app.css?v=photo-selection-6",
+        "/assets/js/app.js?v=photo-selection-6"
+      ]
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "location": null,
+      "type": "text/html; charset=utf-8",
+      "xRobots": null,
+      "canonical": ["https://tiksavemp4.online/contact"],
+      "title": "Contact and Support | TikSaveMp4",
+      "descriptions": [
+        "Support, privacy and copyright reporting for TikSaveMp4 at tiksavemp4.online."
+      ],
+      "robots": ["index, follow"],
+      "h1": ["Contact and Support"],
+      "mainTextCharacters": 2354,
+      "internalLinks": [
+        "/",
+        "/#how-it-works",
+        "/#features",
+        "/#faq",
+        "/#downloader",
+        "/privacy",
+        "/terms",
+        "/responsible-use",
+        "/copyright",
+        "/contact"
+      ],
+      "schemas": [],
+      "versionedAssets": [
+        "/assets/app.css?v=photo-selection-6",
+        "/assets/js/app.js?v=photo-selection-6"
+      ]
+    },
+    {
+      "path": "/blog",
+      "status": 404,
+      "location": null,
+      "type": "text/html; charset=utf-8",
+      "xRobots": "noindex, nofollow, noarchive",
+      "canonical": [],
+      "title": "Page not found | TikSaveMp4",
+      "descriptions": [
+        "This page could not be found. Return to TikSaveMp4 or review the service policies."
+      ],
+      "robots": ["noindex, nofollow, noarchive"],
+      "h1": ["Page not found"],
+      "mainTextCharacters": 113,
+      "internalLinks": [
+        "/",
+        "/#how-it-works",
+        "/#features",
+        "/#faq",
+        "/#downloader",
+        "/contact",
+        "/privacy",
+        "/terms",
+        "/responsible-use",
+        "/copyright"
+      ],
+      "schemas": [],
+      "versionedAssets": []
+    },
+    {
+      "path": "/blog/how-to-download-tiktok-videos-on-pc",
+      "status": 404,
+      "location": null,
+      "type": "text/html; charset=utf-8",
+      "xRobots": "noindex, nofollow, noarchive",
+      "canonical": [],
+      "title": "Page not found | TikSaveMp4",
+      "descriptions": [
+        "This page could not be found. Return to TikSaveMp4 or review the service policies."
+      ],
+      "robots": ["noindex, nofollow, noarchive"],
+      "h1": ["Page not found"],
+      "mainTextCharacters": 113,
+      "internalLinks": [
+        "/",
+        "/#how-it-works",
+        "/#features",
+        "/#faq",
+        "/#downloader",
+        "/contact",
+        "/privacy",
+        "/terms",
+        "/responsible-use",
+        "/copyright"
+      ],
+      "schemas": [],
+      "versionedAssets": []
+    },
+    {
+      "path": "/blog/how-to-download-tiktok-images",
+      "status": 404,
+      "location": null,
+      "type": "text/html; charset=utf-8",
+      "xRobots": "noindex, nofollow, noarchive",
+      "canonical": [],
+      "title": "Page not found | TikSaveMp4",
+      "descriptions": [
+        "This page could not be found. Return to TikSaveMp4 or review the service policies."
+      ],
+      "robots": ["noindex, nofollow, noarchive"],
+      "h1": ["Page not found"],
+      "mainTextCharacters": 113,
+      "internalLinks": [
+        "/",
+        "/#how-it-works",
+        "/#features",
+        "/#faq",
+        "/#downloader",
+        "/contact",
+        "/privacy",
+        "/terms",
+        "/responsible-use",
+        "/copyright"
+      ],
+      "schemas": [],
+      "versionedAssets": []
+    },
+    {
+      "path": "/blog/how-to-convert-tiktok-to-mp3",
+      "status": 404,
+      "location": null,
+      "type": "text/html; charset=utf-8",
+      "xRobots": "noindex, nofollow, noarchive",
+      "canonical": [],
+      "title": "Page not found | TikSaveMp4",
+      "descriptions": [
+        "This page could not be found. Return to TikSaveMp4 or review the service policies."
+      ],
+      "robots": ["noindex, nofollow, noarchive"],
+      "h1": ["Page not found"],
+      "mainTextCharacters": 113,
+      "internalLinks": [
+        "/",
+        "/#how-it-works",
+        "/#features",
+        "/#faq",
+        "/#downloader",
+        "/contact",
+        "/privacy",
+        "/terms",
+        "/responsible-use",
+        "/copyright"
+      ],
+      "schemas": [],
+      "versionedAssets": []
+    },
+    {
+      "path": "/blog/how-to-convert-tiktok-to-mp4",
+      "status": 404,
+      "location": null,
+      "type": "text/html; charset=utf-8",
+      "xRobots": "noindex, nofollow, noarchive",
+      "canonical": [],
+      "title": "Page not found | TikSaveMp4",
+      "descriptions": [
+        "This page could not be found. Return to TikSaveMp4 or review the service policies."
+      ],
+      "robots": ["noindex, nofollow, noarchive"],
+      "h1": ["Page not found"],
+      "mainTextCharacters": 113,
+      "internalLinks": [
+        "/",
+        "/#how-it-works",
+        "/#features",
+        "/#faq",
+        "/#downloader",
+        "/contact",
+        "/privacy",
+        "/terms",
+        "/responsible-use",
+        "/copyright"
+      ],
+      "schemas": [],
+      "versionedAssets": []
+    }
+  ],
+  "crawlerFiles": [
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "type": "text/plain; charset=utf-8",
+      "xRobots": null,
+      "body": "User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /analyze\nDisallow: /health\nDisallow: /ready\nDisallow: /*?*\nSitemap: https://tiksavemp4.online/sitemap.xml\n"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "type": "application/xml; charset=utf-8",
+      "xRobots": null,
+      "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"><url><loc>https://tiksavemp4.online/</loc></url><url><loc>https://tiksavemp4.online/privacy</loc></url><url><loc>https://tiksavemp4.online/terms</loc></url><url><loc>https://tiksavemp4.online/responsible-use</loc></url><url><loc>https://tiksavemp4.online/copyright</loc></url><url><loc>https://tiksavemp4.online/contact</loc></url></urlset>"
+    }
+  ],
+  "redirects": [
+    {
+      "url": "http://tiksavemp4.online/",
+      "status": 301,
+      "location": "https://tiksavemp4.online/"
+    },
+    {
+      "url": "http://tiksavemp4.online/privacy",
+      "status": 301,
+      "location": "https://tiksavemp4.online/privacy"
+    },
+    {
+      "url": "http://www.tiksavemp4.online/",
+      "status": 301,
+      "location": "https://tiksavemp4.online/"
+    },
+    {
+      "url": "http://www.tiksavemp4.online/privacy",
+      "status": 301,
+      "location": "https://tiksavemp4.online/privacy"
+    },
+    {
+      "url": "https://www.tiksavemp4.online/",
+      "status": 301,
+      "location": "https://tiksavemp4.online/"
+    },
+    {
+      "url": "https://www.tiksavemp4.online/privacy",
+      "status": 301,
+      "location": "https://tiksavemp4.online/privacy"
+    }
+  ],
+  "assets": [
+    {
+      "path": "/assets/app.css?v=photo-selection-6",
+      "status": 200,
+      "type": "text/css; charset=utf-8",
+      "xRobots": null
+    },
+    {
+      "path": "/assets/js/app.js?v=photo-selection-6",
+      "status": 200,
+      "type": "text/javascript; charset=utf-8",
+      "xRobots": null
+    }
+  ],
+  "queryChecks": [
+    {
+      "checkedAt": "2026-10-20T16:10:04.192Z",
+      "path": "/?seo_audit=1",
+      "status": 200,
+      "xRobots": "noindex, follow",
+      "canonical": "https://tiksavemp4.online/",
+      "robots": "noindex, follow"
+    },
+    {
+      "checkedAt": "2026-10-20T16:10:04.565Z",
+      "path": "/privacy?seo_audit=1",
+      "status": 200,
+      "xRobots": "noindex, follow",
+      "canonical": "https://tiksavemp4.online/privacy",
+      "robots": "noindex, follow"
+    }
+  ],
+  "derivedValidation": {
+    "sitemapNamespace": "http://www.sitemaps.org/schemas/sitemap/0.9",
+    "locations": [
+      "https://tiksavemp4.online/",
+      "https://tiksavemp4.online/privacy",
+      "https://tiksavemp4.online/terms",
+      "https://tiksavemp4.online/responsible-use",
+      "https://tiksavemp4.online/copyright",
+      "https://tiksavemp4.online/contact"
+    ],
+    "uniqueLocations": true,
+    "canonicalOrigins": true,
+    "indexableHtmlPages": 6,
+    "uniqueTitles": true,
+    "uniqueDescriptions": true,
+    "liveQueryBlock": true,
+    "versionedResourcesAffected": [
+      "/assets/app.css?v=photo-selection-6",
+      "/assets/js/app.js?v=photo-selection-6"
+    ]
+  }
+}

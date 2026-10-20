@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <%- include('partials/header') %>
+    <main id="main" class="blog-page container">
+      <nav class="blog-breadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span><a href="/blog">Blog</a
+        ><span aria-hidden="true">/</span
+        ><span aria-current="page"><%= post.title %></span>
+      </nav>
+      <article class="blog-article">
+        <header class="blog-intro">
+          <div class="blog-meta">
+            <span><%= post.category %></span
+            ><time datetime="<%= post.publishedAt %>"
+              ><%= blogDate(post.publishedAt) %></time
+            >
+          </div>
+          <h1><%= post.title %></h1>
+          <p><%= post.excerpt %></p>
+          <% if (post.author) { %>
+          <p class="blog-meta">By <%= post.author.name %></p>
+          <% } %> <% if (post.modifiedAt) { %>
+          <p class="blog-meta">
+            Updated
+            <time datetime="<%= post.modifiedAt %>"
+              ><%= blogDate(post.modifiedAt) %></time
+            >
+          </p>
+          <% } %>
+        </header>
+        <% if (post.cover) { %>
+        <img
+          class="blog-cover"
+          src="<%= post.cover.src %>"
+          alt="<%= post.cover.alt %>"
+          width="<%= post.cover.width %>"
+          height="<%= post.cover.height %>"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <% } %>
+        <div class="blog-prose">
+          <% for (const block of post.body) { %> <% if (block.type === 'heading') { %> <%
+          if (block.level === 2) { %>
+          <h2 id="<%= block.id %>"><%= block.text %></h2>
+          <% } else { %>
+          <h3 id="<%= block.id %>"><%= block.text %></h3>
+          <% } %> <% } else if (block.type === 'paragraph') { %>
+          <p><%- include('partials/blog-inline', { content: block.content }) %></p>
+          <% } else if (block.ordered) { %>
+          <ol>
+            <% for (const content of block.items) { %>
+            <li><%- include('partials/blog-inline', { content }) %></li>
+            <% } %>
+          </ol>
+          <% } else { %>
+          <ul>
+            <% for (const content of block.items) { %>
+            <li><%- include('partials/blog-inline', { content }) %></li>
+            <% } %>
+          </ul>
+          <% } %> <% } %>
+        </div>
+      </article>
+      <% if (relatedPosts.length) { %>
+      <section class="blog-related" aria-labelledby="related-title">
+        <h2 id="related-title">Related guides</h2>
+        <div class="blog-grid">
+          <% for (const card of relatedPosts) { %><%- include('partials/blog-card', { card
+          }) %><% } %>
+        </div>
+      </section>
+      <% } %>
+      <a class="blog-link" href="/blog">← All guides</a>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

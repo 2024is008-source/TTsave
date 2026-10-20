@@ -1,0 +1,23 @@
+<article class="blog-card glass-card">
+  <% if (card.cover) { %>
+  <img
+    src="<%= card.cover.src %>"
+    alt="<%= card.cover.alt %>"
+    width="<%= card.cover.width %>"
+    height="<%= card.cover.height %>"
+    loading="lazy"
+    decoding="async"
+  />
+  <% } %>
+  <div class="blog-card-copy">
+    <div class="blog-meta">
+      <span><%= card.category %></span
+      ><time datetime="<%= card.publishedAt %>"><%= blogDate(card.publishedAt) %></time>
+    </div>
+    <h3><a href="/blog/<%= card.slug %>"><%= card.title %></a></h3>
+    <p><%= card.excerpt %></p>
+    <a class="blog-link" href="/blog/<%= card.slug %>" aria-label="Read <%= card.title %>"
+      >Read guide <span aria-hidden="true">→</span></a
+    >
+  </div>
+</article>

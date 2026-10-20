@@ -77,7 +77,7 @@ for (const [referrer, expected] of [
     expect(await page.evaluate(() => document.referrer)).toBe(referrer);
     await expect.poll(() => payloads.length).toBe(1);
     await page.addScriptTag({
-      url: `${origin}/assets/js/analytics.js?v=origin-referrer-1`,
+      url: `${origin}/assets/js/analytics.js?v=origin-referrer-blog-1`,
     });
     expect(tagLoads).toBe(1);
     expect(payloads).toEqual([

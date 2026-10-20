@@ -78,6 +78,15 @@ for (const width of [390, 768, 1024, 1440, 1920]) {
     await question.focus();
     await page.keyboard.press('Enter');
     await expect(question.locator('..').locator('p')).toBeHidden();
+    const photoQuestion = page.locator('summary').filter({
+      hasText: 'How do I use the TikTok image downloader?',
+    });
+    await photoQuestion.click();
+    const photoAnswer = photoQuestion.locator('..').locator('p');
+    await expect(photoAnswer).toBeVisible();
+    await expect(photoAnswer).toContainText('TikTok to image');
+    await expect(photoAnswer).toContainText('two or more photos');
+    await expect(photoAnswer).toContainText('Download selected');
     if (width <= 800) {
       await page.getByRole('button', { name: 'Open navigation' }).click();
       await expect(page.locator('#mobile-nav')).toBeVisible();

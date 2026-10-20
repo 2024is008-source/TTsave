@@ -15,7 +15,7 @@
     "images:build": "node scripts/build-images.mjs",
     "frontend:build": "esbuild src/frontend/downloader.ts --bundle --minify --format=esm --platform=browser --target=es2023 --outfile=public/assets/js/downloader.js",
     "frontend:watch": "npm run frontend:build -- --watch",
-    "build": "npm run images:build && npm run css:build && npm run frontend:build && tsc -p tsconfig.build.json",
+    "build": "npm run images:build && npm run css:build && npm run frontend:build && tsc -p tsconfig.build.json && node dist/check-blog.js",
     "start": "node --env-file-if-exists=.env dist/server.js",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

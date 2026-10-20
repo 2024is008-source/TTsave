@@ -8,7 +8,8 @@ import { pinoHttp } from 'pino-http';
 
 import { env } from './config/env.js';
 import { logger } from './config/logger.js';
-import { publicRouter } from './routes/public.js';
+import { createPublicRouter } from './routes/public.js';
+import type { BlogPost } from './services/blog.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { notFound } from './middleware/not-found.js';
 import { requestId } from './middleware/request-id.js';
@@ -57,6 +58,7 @@ const projectRoot = path.resolve(currentDirectory, '..');
 export function createApp(
   service: DownloaderService = new ProductionDownloaderService(),
   isReady: () => boolean = () => true,
+  posts?: readonly BlogPost[],
 ) {
   const app = express();
 
@@ -147,7 +149,7 @@ export function createApp(
   });
   app.use(['/api/v1/analyze', '/api/v1/downloads', '/analyze'], creationLimit);
 
-  app.use(publicRouter);
+  app.use(createPublicRouter(posts));
   app.use(analyzeRouter);
   app.use('/api/v1', createApiRouter(service));
 

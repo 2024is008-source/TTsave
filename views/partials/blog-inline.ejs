@@ -1,0 +1,4 @@
+<% for (const run of content) { %><% if (run.type === 'link') { %><a
+  href="<%= run.href %>"
+  ><%= run.text %></a
+><% } else { %><%= run.text %><% } %><% } %>

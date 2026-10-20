@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <%- include('partials/header') %>
+    <main id="main" class="blog-page container">
+      <nav class="blog-breadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span
+        ><span aria-current="page">Blog</span>
+      </nav>
+      <header class="blog-intro">
+        <span class="showcase-label">The TikSaveMp4 blog</span>
+        <h1>TikTok Download Guides &amp; Tutorials</h1>
+        <p>
+          Practical guidance on TikTok to MP4, available MP3 audio, and photo downloads.
+          Learn how to save supported public posts and respect the rights of their
+          creators.
+        </p>
+      </header>
+      <% if (posts.length) { %>
+      <section aria-labelledby="guides-title">
+        <h2 id="guides-title">Latest guides</h2>
+        <div class="blog-grid">
+          <% for (const card of posts) { %><%- include('partials/blog-card', { card })
+          %><% } %>
+        </div>
+      </section>
+      <% } else { %>
+      <section class="blog-empty glass-card" aria-labelledby="blog-empty-title">
+        <span class="blog-empty-icon" aria-hidden="true"
+          ><%- include('partials/icon', { name: 'link' }) %></span
+        >
+        <h2 id="blog-empty-title">A little guidance is on the way.</h2>
+        <p>
+          There are no published guides yet. In the meantime, the homepage explains how
+          the downloader works and answers common questions.
+        </p>
+        <a class="blog-link" href="/#how-it-works"
+          >Explore how it works <span aria-hidden="true">→</span></a
+        >
+        <a class="blog-link" href="/#faq"
+          >Read the downloader FAQ <span aria-hidden="true">→</span></a
+        >
+      </section>
+      <% } %>
+    </main>
+    <%- include('partials/footer') %>
+  </body>
+</html>

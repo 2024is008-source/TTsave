@@ -338,10 +338,12 @@ describe('public SEO and policies', () => {
     );
     expect(document.querySelector('.analyze-label')?.textContent).toBe('Get video');
     const faq = [...document.querySelectorAll('.faq-item')].find((item) =>
-      item.querySelector('summary')?.textContent.includes('How do photo downloads work?'),
+      item
+        .querySelector('summary')
+        ?.textContent.includes('How do I use the TikTok image downloader?'),
     );
     expect(faq?.querySelector('p')?.textContent).toMatch(
-      /one available image.*multiple images for a ZIP/,
+      /Download image to save one individually.*For a ZIP file.*Choose images.*two or more photos.*Download selected/,
     );
     expect(faq?.querySelector('p')?.textContent).toContain(
       'Available images depend on the post.',
@@ -351,7 +353,15 @@ describe('public SEO and policies', () => {
     );
     expect(
       document.querySelector('#features')?.textContent.replace(/\s+/g, ' '),
-    ).toContain('selected-image ZIP');
+    ).toContain('TikTok photo downloader');
+    const answer = faq?.querySelector('p')?.textContent ?? '';
+    expect(answer).toContain('TikTok to image');
+    expect(answer).toContain('download TikTok images');
+    expect(answer).toContain('does not convert videos into images');
+    expect(
+      document.querySelector('#features')?.textContent.replace(/\s+/g, ' '),
+    ).toContain('TikTok to MP4 converter');
+    expect(document.querySelector('#faq')?.textContent).toContain('TikTok to MP3');
     expect(response.text).not.toMatch(/Fast download|video links only/);
     expect(response.text).toMatch(/Private, login-required/);
   });
@@ -461,9 +471,15 @@ describe('public SEO and policies', () => {
     const document = new JSDOM(response.text, { contentType: 'application/xml' }).window
       .document;
     expect([...document.querySelectorAll('loc')].map((node) => node.textContent)).toEqual(
-      ['/', ...legalPages.map((page) => page.path)].map(
-        (path) => env.PUBLIC_BASE_URL + path,
-      ),
+      [
+        '/',
+        ...legalPages.map((page) => page.path),
+        '/blog',
+        '/blog/how-to-download-tiktok-videos-on-pc',
+        '/blog/how-to-download-tiktok-images',
+        '/blog/how-to-convert-tiktok-to-mp3',
+        '/blog/how-to-convert-tiktok-to-mp4',
+      ].map((path) => env.PUBLIC_BASE_URL + path),
     );
     expect(response.text).not.toMatch(
       /api\/|jobId|token=|lastmod|health|ready|analyze|changefreq|priority/,

@@ -6,25 +6,32 @@
 <link rel="canonical" href="<%= seo.canonical %>" />
 <meta property="og:site_name" content="TikSaveMp4" />
 <meta property="og:locale" content="en_US" />
-<meta property="og:type" content="website" />
+<meta property="og:type" content="<%= seo.ogType ?? 'website' %>" />
 <meta property="og:title" content="<%= seo.title %>" />
 <meta property="og:description" content="<%= seo.description %>" />
 <meta property="og:url" content="<%= seo.canonical %>" />
 <meta property="og:image" content="<%= seo.image %>" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
+<meta property="og:image:width" content="<%= seo.imageWidth ?? 1200 %>" />
+<meta property="og:image:height" content="<%= seo.imageHeight ?? 630 %>" />
 <meta
   property="og:image:alt"
-  content="TikSaveMp4: public TikTok videos with available MP4 and MP3 options"
+  content="<%= seo.imageAlt ?? 'TikSaveMp4: public TikTok videos with available MP4 and MP3 options' %>"
 />
-<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:type" content="<%= seo.imageType ?? 'image/jpeg' %>" />
+<% if (seo.publishedAt) { %><meta
+  property="article:published_time"
+  content="<%= seo.publishedAt %>"
+/><% } %> <% if (seo.modifiedAt) { %><meta
+  property="article:modified_time"
+  content="<%= seo.modifiedAt %>"
+/><% } %>
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="<%= seo.title %>" />
 <meta name="twitter:description" content="<%= seo.description %>" />
 <meta name="twitter:image" content="<%= seo.image %>" />
 <meta
   name="twitter:image:alt"
-  content="TikSaveMp4: public TikTok videos with available MP4 and MP3 options"
+  content="<%= seo.imageAlt ?? 'TikSaveMp4: public TikTok videos with available MP4 and MP3 options' %>"
 />
 <% if (structuredData) { %>
 <script type="application/ld+json">
@@ -37,7 +44,7 @@
 <% if (typeof analytics !== 'undefined' && analytics) { %>
 <script
   id="analytics-init"
-  src="/assets/js/analytics.js?v=origin-referrer-1"
+  src="/assets/js/analytics.js?v=origin-referrer-blog-1"
   data-measurement-id="<%= analytics.measurementId %>"
   data-page-location="<%= analytics.pageLocation %>"
   data-page-title="<%= analytics.pageTitle %>"
@@ -49,5 +56,5 @@
   referrerpolicy="no-referrer"
 ></script>
 <% } %>
-<link rel="stylesheet" href="/assets/app.css?v=photo-selection-6" />
+<link rel="stylesheet" href="/assets/app.css?v=blog-3" />
 <script type="module" src="/assets/js/app.js?v=seo-fixes-1"></script>

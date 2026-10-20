@@ -1,0 +1,16 @@
+<% if (latestPosts.length) { %>
+<section class="section container blog-preview" aria-labelledby="blog-preview-title">
+  <div class="section-heading">
+    <span class="showcase-label">From the blog</span>
+    <h2 id="blog-preview-title">
+      A little guidance. <span class="gradient-text">A clearer download.</span>
+    </h2>
+    <a class="blog-link" href="/blog"
+      >View All Guides <span aria-hidden="true">→</span></a
+    >
+  </div>
+  <div class="blog-grid">
+    <% for (const card of latestPosts) { %><%- include('blog-card', { card }) %><% } %>
+  </div>
+</section>
+<% } %>

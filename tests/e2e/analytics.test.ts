@@ -11,7 +11,7 @@ afterEach(() => {
 });
 
 describe('public-page-only GA4 layout and CSP', () => {
-  it.each(['/', ...legalPages.map((page) => page.path)])(
+  it.each(['/', ...legalPages.map((page) => page.path), '/blog'])(
     'loads one external Google tag with safe metadata for %s',
     async (path) => {
       env.GA_MEASUREMENT_ID = 'G-TEST123456';
@@ -24,7 +24,7 @@ describe('public-page-only GA4 layout and CSP', () => {
       const init = document.querySelector('#analytics-init');
       if (!init) throw new Error('Missing Analytics initializer');
       expect(init.getAttribute('src')).toBe(
-        '/assets/js/analytics.js?v=origin-referrer-1',
+        '/assets/js/analytics.js?v=origin-referrer-blog-1',
       );
       expect(init.getAttribute('data-measurement-id')).toBe(env.GA_MEASUREMENT_ID);
       expect(init.getAttribute('data-page-location')).toBe(env.PUBLIC_BASE_URL + path);
