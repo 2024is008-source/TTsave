@@ -107,12 +107,10 @@ try {
             .evaluate((node) =>
               node.scrollIntoView({ block: 'start', behavior: 'instant' }),
             );
-          const panel = await page
-            .locator('#result-card')
-            .screenshot({
-              path: `${directory}/${name}/${String(width)}-${state}-panel.png`,
-              style: 'header,.skip-link{visibility:hidden!important;}',
-            });
+          const panel = await page.locator('#result-card').screenshot({
+            path: `${directory}/${name}/${String(width)}-${state}-panel.png`,
+            style: 'header,.skip-link{visibility:hidden!important;}',
+          });
           const raw = await sharp(panel).raw().toBuffer();
           if (name === 'before') images.set(`${state}-panel`, raw);
           else

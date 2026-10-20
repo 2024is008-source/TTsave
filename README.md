@@ -38,10 +38,10 @@ Photo downloads use verified JPEG, PNG or WebP bytes through the protected netwo
   DOM controller and API adapter. esbuild compiles these into the
   browser module in `public/assets/js`, alongside theme and navigation modules.
   No inline application scripts or handlers are used.
-- `src/artwork` holds original SVG placeholders. `npm run images:build` compiles
-  all nine assets and responsive variants into `public/assets/images`. The
-  smartphone is explicitly labelled as an illustrated lifestyle preview with a
-  fictional adult concept creator, and has no engagement counts. See
+- `src/artwork` holds local SVG, JPEG and PNG source artwork. `npm run images:build`
+  compiles 18 sources into 36 responsive WebP variants, plus a JPEG social card
+  and PNG favicon. Decorative artwork does not establish real source metadata
+  or download capabilities. See
   `docs/IMAGE_REQUIREMENTS.md` for final licensed-photo requirements.
 - `src/data/mock-data.ts` holds temporary server-rendered copy. Result and
   progress data remain `null`; hidden result and progress containers are populated
@@ -68,4 +68,5 @@ browser handoff and theme persistence. Screenshots are written to
 the ignored `test-results` directory. Browser tests are separate from Vitest
 so basic service checks do not require a browser installation.
 
-The `reference` directory is preserved unchanged as the original design source.
+The remaining `reference/DESIGN.md` is the original design source. The owner removed
+`reference/code.html`; it is not a runtime or build dependency.

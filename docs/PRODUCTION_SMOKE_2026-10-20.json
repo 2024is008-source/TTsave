@@ -1,0 +1,134 @@
+{
+  "checkedAt": "2026-10-20T17:07:05.185Z",
+  "platform": "win32",
+  "node": "v24.18.0",
+  "scope": "Built production server on local loopback; real tool availability; no live TikTok traffic or VPS access",
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/terms",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/responsible-use",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/copyright",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/contact",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/blog",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/blog/how-to-download-tiktok-videos-on-pc",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/blog/how-to-download-tiktok-images",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/blog/how-to-convert-tiktok-to-mp3",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/blog/how-to-convert-tiktok-to-mp4",
+      "status": 200,
+      "type": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/health",
+      "status": 200,
+      "type": "application/json; charset=utf-8"
+    },
+    {
+      "path": "/ready",
+      "status": 200,
+      "type": "application/json; charset=utf-8"
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "type": "text/plain; charset=utf-8"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "type": "application/xml; charset=utf-8"
+    },
+    {
+      "path": "/ads.txt",
+      "status": 200,
+      "type": "text/plain; charset=utf-8"
+    },
+    {
+      "path": "/assets/app.css?v=blog-3",
+      "status": 200,
+      "type": "text/css; charset=utf-8"
+    },
+    {
+      "path": "/assets/js/app.js?v=seo-fixes-1",
+      "status": 200,
+      "type": "text/javascript; charset=utf-8"
+    },
+    {
+      "path": "/api/v1/analyze (invalid source)",
+      "status": 400
+    },
+    {
+      "path": "/api/v1/downloads/123e4567-e89b-42d3-a456-426614174000",
+      "status": 401,
+      "robots": "noindex, nofollow, noarchive"
+    },
+    {
+      "path": "/api/v1/downloads/123e4567-e89b-42d3-a456-426614174000/file (synthetic token)",
+      "status": 404,
+      "robots": "noindex, nofollow, noarchive"
+    },
+    {
+      "path": "/.env",
+      "status": 404,
+      "robots": "noindex, nofollow, noarchive"
+    },
+    {
+      "path": "/package.json",
+      "status": 404,
+      "robots": "noindex, nofollow, noarchive"
+    }
+  ],
+  "serverErrorDetected": false,
+  "shutdownNote": "Local smoke child stopped in finally. Windows process termination does not verify Linux SIGTERM/PM2 lifecycle.",
+  "assets": [
+    {
+      "file": "public/assets/app.css",
+      "bytes": 97302
+    },
+    {
+      "file": "public/assets/js/downloader.js",
+      "bytes": 485505
+    }
+  ]
+}

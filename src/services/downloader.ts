@@ -81,6 +81,7 @@ export class ProductionDownloaderService implements DownloaderService {
     { expires: number; bytes: Buffer; contentType: string }
   >();
   private activeOperations = 0;
+  private readonly activeAnalyses = new Map<AbortController, Promise<void>>();
   private stopping = false;
   private root: Promise<string> | null = null;
   private sweeping: Promise<void> | null = null;
@@ -120,6 +121,18 @@ export class ProductionDownloaderService implements DownloaderService {
     if (!context) throw new Error('Analysis context is required');
     const url = videoUrlSchema.parse(input);
     const release = this.acquire();
+    const controller = new AbortController();
+    let finish!: () => void;
+    this.activeAnalyses.set(
+      controller,
+      new Promise<void>((resolve) => {
+        finish = resolve;
+      }),
+    );
+    context = {
+      ...context,
+      signal: AbortSignal.any([context.signal, controller.signal]),
+    };
     try {
       const source = await this.analyzer.analyzeSource(url, context);
       context.signal.throwIfAborted();
@@ -208,6 +221,8 @@ export class ProductionDownloaderService implements DownloaderService {
       });
       return structuredClone(source.media);
     } finally {
+      this.activeAnalyses.delete(controller);
+      finish();
       release();
     }
   }
@@ -967,6 +982,8 @@ export class ProductionDownloaderService implements DownloaderService {
   async dispose() {
     this.stopping = true;
     clearInterval(this.sweepTimer);
+    const analyses = [...this.activeAnalyses];
+    for (const [controller] of analyses) controller.abort();
     for (const record of this.jobs.values()) {
       if (!terminalStates.has(record.value.status)) {
         record.value.status = 'cancelled';
@@ -975,6 +992,7 @@ export class ProductionDownloaderService implements DownloaderService {
         this.publish(record);
       }
     }
+    await Promise.all(analyses.map(([, done]) => done));
     await Promise.all(
       [...this.jobs.values()].map(async (record) => {
         await record.done;

@@ -426,7 +426,9 @@
   display: block;
 }
 @keyframes rp-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Quality label during progress */
@@ -486,8 +488,12 @@
   animation: rp-shimmer 1.4s ease-in-out infinite;
 }
 @keyframes rp-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Progress metrics row — clean formatted values */
@@ -533,7 +539,8 @@
 /* ══════════════════════════════════════════════════════════
    COMPLETED STATE
 ══════════════════════════════════════════════════════════ */
-.rp-completed {}
+.rp-completed {
+}
 .rp-completed-header {
   display: flex;
   align-items: center;
@@ -568,7 +575,8 @@
 /* ══════════════════════════════════════════════════════════
    ERROR STATE
 ══════════════════════════════════════════════════════════ */
-.rp-error {}
+.rp-error {
+}
 .rp-error-header {
   display: flex;
   align-items: flex-start;

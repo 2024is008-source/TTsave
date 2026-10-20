@@ -1,4 +1,5 @@
 import express from 'express';
+import { readFile } from 'node:fs/promises';
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
 
@@ -23,6 +24,21 @@ describe('application routes', () => {
     const response = await request(app).get('/ready').expect(200);
 
     expect(response.body).toEqual({ status: 'ready' });
+  });
+
+  it('serves the existing publisher declaration as plain text without tracking', async () => {
+    const response = await request(app).get('/ads.txt').expect(200);
+    const declaration = await readFile(
+      new URL('../../public/ads.txt', import.meta.url),
+      'utf8',
+    );
+    expect(response.type).toBe('text/plain');
+    expect(response.text).toBe(declaration);
+    expect(response.headers['x-content-type-options']).toBe('nosniff');
+    expect(response.text).not.toMatch(/<script|gtag\(/);
+    await request(app).head('/ads.txt').expect(200);
+    await request(app).get('/package.json').expect(404);
+    await request(app).get('/.env').expect(404);
   });
 
   it('renders the TikSaveMp4 interface without fabricated media or inline scripts', async () => {

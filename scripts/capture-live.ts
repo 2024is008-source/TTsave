@@ -22,12 +22,10 @@ const page = await browser.newPage({
 });
 const result: Record<string, unknown> = { source: url, live: true };
 const capture = (state: string) =>
-  page
-    .locator('.hero')
-    .screenshot({
-      path: `docs/screenshots/live-${state}.png`,
-      style: '.site-header { position: static !important; }',
-    });
+  page.locator('.hero').screenshot({
+    path: `docs/screenshots/live-${state}.png`,
+    style: '.site-header { position: static !important; }',
+  });
 try {
   await page.goto(`http://127.0.0.1:${String(address.port)}`);
   await capture('idle');

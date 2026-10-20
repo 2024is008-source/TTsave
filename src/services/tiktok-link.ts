@@ -74,12 +74,11 @@ function redirectUrl(location: string, previous: URL): URL {
   )
     throw failure();
   if (/(?:^|\/)(?:\.|%2e){1,2}(?:\/|[?#]|$)/i.test(location)) throw failure();
-  const parsed =
-    /^[a-z][a-z\d+.-]*:/i.test(location)
-      ? new URL(tiktokUrlSchema.parse(location))
-      : location.startsWith('//')
-        ? new URL(tiktokUrlSchema.parse(`https:${location}`))
-        : new URL(tiktokUrlSchema.parse(new URL(location, previous).href));
+  const parsed = /^[a-z][a-z\d+.-]*:/i.test(location)
+    ? new URL(tiktokUrlSchema.parse(location))
+    : location.startsWith('//')
+      ? new URL(tiktokUrlSchema.parse(`https:${location}`))
+      : new URL(tiktokUrlSchema.parse(new URL(location, previous).href));
   parsed.search = '';
   parsed.hash = '';
   return parsed;

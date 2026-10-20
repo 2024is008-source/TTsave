@@ -73,6 +73,45 @@ async function ready() {
 }
 
 describe('production download jobs', () => {
+  it('aborts in-flight analysis and drains it before shutdown completes', async () => {
+    let entered!: () => void;
+    const started = new Promise<void>((resolve) => {
+      entered = resolve;
+    });
+    let analysisSignal: AbortSignal | undefined;
+    const analyzer = {
+      analyzeSource: vi.fn((_url: string, ctx: ReturnType<typeof context>) => {
+        analysisSignal = ctx.signal;
+        entered();
+        return new Promise<ReturnType<typeof sourceFixture>>((resolve) => {
+          ctx.signal.addEventListener(
+            'abort',
+            () => setImmediate(() => resolve(sourceFixture())),
+            { once: true },
+          );
+        });
+      }),
+    };
+    await service.dispose();
+    service = new ProductionDownloaderService(
+      analyzer,
+      parseEnvironment({ DOWNLOAD_TEMP_ROOT: root }),
+    );
+    const caller = context();
+    const pending = service.analyze(publicUrl, caller);
+    const rejected = expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+    await started;
+    await service.dispose();
+    await rejected;
+    expect(analysisSignal?.aborted).toBe(true);
+    expect(caller.signal.aborted).toBe(false);
+    await expect(service.analyze(publicUrl, context())).rejects.toMatchObject({
+      code: 'APPLICATION_BUSY',
+    });
+    expect(analyzer.analyzeSource).toHaveBeenCalledTimes(1);
+    expect(await readdir(root)).toEqual([]);
+  });
+
   it.each([
     {
       streams: [{ codec_type: 'video', width: 720, height: 1280 }],

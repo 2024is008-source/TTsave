@@ -104,6 +104,10 @@ export function createApp(
     next();
   });
   app.use(createHealthRouter(isReady));
+  // Serve only the reviewed publisher file, never the entire public directory.
+  app.get('/ads.txt', (_request, response) => {
+    response.type('text/plain').sendFile(path.join(projectRoot, 'public', 'ads.txt'));
+  });
   // Static artwork must not consume the request budget for application routes.
   app.use(
     '/assets',
