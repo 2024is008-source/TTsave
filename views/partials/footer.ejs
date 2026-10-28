@@ -44,3 +44,24 @@
     </div>
   </div>
 </footer>
+
+<% if(typeof analytics!=='undefined' && analytics){ %>
+<button class="analytics-preferences" type="button" data-analytics-preferences>
+  Analytics preferences
+</button>
+<aside
+  id="analytics-consent"
+  class="analytics-consent"
+  aria-label="Optional analytics"
+  hidden
+>
+  <p>
+    Allow optional analytics to help us understand visits and download reliability? Your
+    TikTok links are excluded. <a href="/privacy">Privacy policy</a>
+  </p>
+  <div>
+    <button type="button" data-analytics-accept>Allow analytics</button
+    ><button type="button" data-analytics-decline>Decline</button>
+  </div>
+</aside>
+<% } %>

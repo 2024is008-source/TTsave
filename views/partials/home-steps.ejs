@@ -1,0 +1,24 @@
+<section class="home-steps" id="how-it-works" aria-labelledby="steps-title">
+  <div class="container">
+    <h2 id="steps-title">Save Supported Media in Three Steps</h2>
+    <p class="home-section-description">
+      No account sign-in or browser extension required. Copy a public link from the TikTok
+      app or your web browser.
+    </p>
+    <ol class="step-grid">
+      <% steps.forEach((step, index) => { %>
+      <li class="step-card">
+        <div class="home-step-meta">
+          <span><%= ['First Step', 'Second Step', 'Third Step'][index] %></span
+          ><small
+            ><%= ['TikTok App or Web', 'Auto-detects media', 'MP4 / MP3 / Photos'][index]
+            %></small
+          >
+        </div>
+        <h3><%= step.title %></h3>
+        <p><%= step.description %></p>
+      </li>
+      <% }) %>
+    </ol>
+  </div>
+</section>

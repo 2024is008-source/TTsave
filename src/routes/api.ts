@@ -13,6 +13,8 @@ import {
 } from '../api/contracts.js';
 import { HttpError } from '../middleware/error-handler.js';
 import type { DownloaderService } from '../services/memory-store.js';
+import type { OperationsStore, MediaType } from '../services/operational-analytics.js';
+import { countryFor, operational } from '../services/telemetry.js';
 
 function validateOutput<T>(schema: ZodType<T>, data: unknown): T {
   const parsed = schema.safeParse(data);
@@ -20,7 +22,7 @@ function validateOutput<T>(schema: ZodType<T>, data: unknown): T {
   return parsed.data;
 }
 
-export function createApiRouter(service: DownloaderService) {
+export function createApiRouter(service: DownloaderService, store?: OperationsStore) {
   const router = Router();
   const authorize = (request: Request, id: string) => {
     const parsed = z
@@ -34,7 +36,18 @@ export function createApiRouter(service: DownloaderService) {
     next();
   });
   router.post('/analyze', async (request, response) => {
-    const input = analyzeInput.parse(request.body as unknown);
+    const started = Date.now();
+    response.locals.analysisStarted = true;
+    operational(() =>
+      store?.event(
+        typeof request.id === 'string' ? request.id : 'unknown-request',
+        'analysis.started',
+        'unknown',
+        undefined,
+        undefined,
+        countryFor(request),
+      ),
+    );
     const controller = new AbortController();
     const abort = () => controller.abort();
     const close = () => {
@@ -43,6 +56,7 @@ export function createApiRouter(service: DownloaderService) {
     request.once('aborted', abort);
     response.once('close', close);
     try {
+      const input = analyzeInput.parse(request.body as unknown);
       const media = await service.analyze(input.url, {
         signal: controller.signal,
         requestId: typeof request.id === 'string' ? request.id : 'unknown-request',
@@ -50,7 +64,31 @@ export function createApiRouter(service: DownloaderService) {
       });
       if (!controller.signal.aborted)
         response.json(validateOutput(analysisSchema, media));
+      operational(() =>
+        store?.event(
+          typeof request.id === 'string' ? request.id : 'unknown-request',
+          'analysis.valid',
+          media.postType === 'photo' ? 'image' : 'mp4',
+          undefined,
+          Date.now() - started,
+          countryFor(request),
+        ),
+      );
     } catch (error) {
+      operational(() =>
+        store?.event(
+          typeof request.id === 'string' ? request.id : 'unknown-request',
+          'analysis.failed',
+          'unknown',
+          error instanceof HttpError
+            ? error.code
+            : error instanceof z.ZodError
+              ? 'VALIDATION_ERROR'
+              : 'INTERNAL_SERVER_ERROR',
+          Date.now() - started,
+          countryFor(request),
+        ),
+      );
       if (!controller.signal.aborted) throw error;
     } finally {
       request.off('aborted', abort);
@@ -93,6 +131,15 @@ export function createApiRouter(service: DownloaderService) {
           signal: controller.signal,
           requestId: typeof request.id === 'string' ? request.id : 'unknown-request',
           logger: request.log,
+          onJob: (update) =>
+            operational(() => {
+              const type: MediaType =
+                update.downloadType === 'image' && (update.photoCount ?? 1) > 1
+                  ? 'zip'
+                  : (update.downloadType ?? 'mp4');
+              store?.startJob(update.id, type, countryFor(request));
+              store?.updateJob(update.id, update.status, update.error?.code);
+            }),
         },
         input.downloadType,
         input.downloadType === 'image' ? input.capability : undefined,

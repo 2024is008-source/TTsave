@@ -24,7 +24,7 @@ import { HttpError } from '../middleware/error-handler.js';
 import { videoUrlSchema } from '../shared/video-url.js';
 import { publicExtractorOptions } from './extractor-options.js';
 import { PreviewStore } from './previews.js';
-import { verifyVideo } from './verify-video.js';
+import { verifyAudioSource, verifyVideo } from './verify-video.js';
 import { audioFilename, convertMp3, verifyMp3 } from './mp3.js';
 import { fetchPhotoImage } from './photo-images.js';
 import {
@@ -344,6 +344,7 @@ export class ProductionDownloaderService implements DownloaderService {
         logger: context?.logger ?? logger,
         jobId: value.id,
         stage: 'download',
+        ...(context?.onJob ? { onJob: context.onJob } : {}),
       },
       done: Promise.resolve(),
       cleaning: null,
@@ -352,6 +353,7 @@ export class ProductionDownloaderService implements DownloaderService {
       finishDelivery: null,
     };
     this.jobs.set(value.id, record);
+    record.context.onJob?.(this.snapshot(record));
     const abort = () => {
       this.cancelRecord(record);
     };
@@ -409,7 +411,20 @@ export class ProductionDownloaderService implements DownloaderService {
     return this.snapshot(this.lookup(id));
   }
   private publish(record: Record) {
+    record.context.onJob?.(this.snapshot(record));
     for (const listener of record.listeners) listener(this.snapshot(record));
+  }
+  metrics() {
+    return {
+      activeJobs: this.activeJobs,
+      activeAnalyses: this.activeAnalyses.size,
+      activeArchives: this.activeArchives,
+      storedJobs: this.jobs.size,
+      preparedBytes: [...this.jobs.values()].reduce(
+        (total, record) => total + record.fileSize,
+        0,
+      ),
+    };
   }
   private removeFileAccess(record: Record) {
     record.fileToken = null;
@@ -745,7 +760,10 @@ export class ProductionDownloaderService implements DownloaderService {
       }
       record.controller.signal.throwIfAborted();
       record.context.stage = 'verification';
-      const verified = await verifyVideo(filename, selected, this.config, record.context);
+      const verified =
+        record.value.downloadType === 'mp3'
+          ? await verifyAudioSource(filename, this.config, record.context)
+          : await verifyVideo(filename, selected, this.config, record.context);
       record.controller.signal.throwIfAborted();
       let outputSize = info.size;
       if (record.value.downloadType === 'mp3') {

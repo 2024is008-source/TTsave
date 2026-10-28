@@ -75,9 +75,11 @@ for (const [referrer, expected] of [
       referrer ? { referer: referrer } : {},
     );
     expect(await page.evaluate(() => document.referrer)).toBe(referrer);
+    expect(tagLoads).toBe(0);
+    await page.locator('[data-analytics-accept]').click();
     await expect.poll(() => payloads.length).toBe(1);
     await page.addScriptTag({
-      url: `${origin}/assets/js/analytics.js?v=origin-referrer-blog-1`,
+      url: `${origin}/assets/js/analytics.js?v=consent-downloads-2`,
     });
     expect(tagLoads).toBe(1);
     expect(payloads).toEqual([
@@ -121,6 +123,7 @@ test('CSP permits the external initializer and exactly one stubbed tag; download
     }),
   );
   await page.goto(`${origin}/?token=SECRET&url=SECRET#signed-url`);
+  await page.locator('[data-analytics-accept]').click();
   await expect(page.locator('#video-url')).toBeVisible();
   await page.locator('#video-url').fill('https://www.tiktok.com/@SECRET/video/123');
   await page.evaluate(() => {
@@ -133,7 +136,7 @@ test('CSP permits the external initializer and exactly one stubbed tag; download
     return queue.map((args) => Array.from(args) as unknown[]);
   });
   expect(loads).toBe(1);
-  expect(commands).toHaveLength(3);
+  expect(commands.filter((command) => command[1] === 'page_view')).toHaveLength(1);
   expect(commands[2]).toEqual([
     'event',
     'page_view',

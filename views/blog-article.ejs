@@ -37,6 +37,8 @@
         <img
           class="blog-cover"
           src="<%= post.cover.src %>"
+          srcset="<%= blogCoverSrcset(post.cover) %>"
+          sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 855px) 92vw, 760px"
           alt="<%= post.cover.alt %>"
           width="<%= post.cover.width %>"
           height="<%= post.cover.height %>"

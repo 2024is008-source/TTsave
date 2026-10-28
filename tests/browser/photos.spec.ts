@@ -196,7 +196,7 @@ for (const [width, height] of [
       path: `${directory}/${String(width)}-first-visit-light.png`,
     });
     await page.locator('#video-url').fill('https://www.tiktok.com/@creator/photo/123');
-    await page.getByRole('button', { name: 'Get video', exact: true }).click();
+    await page.locator('.analyze-button').click();
     await expect(page.locator('#photo-position')).toHaveText('1 of 3');
     await expect
       .poll(() =>
@@ -246,7 +246,7 @@ for (const [width, height] of [
     await page.locator('#photo-another').click();
     await expect(page.locator('#photo-thumbnails button')).toHaveCount(0);
     await page.locator('#video-url').fill('https://www.tiktok.com/@creator/photo/456');
-    await page.getByRole('button', { name: 'Get video', exact: true }).click();
+    await page.locator('.analyze-button').click();
     await expect(page.locator('#result-title')).toHaveText('Public photo collection 2');
     await expect(page.locator('#photo-position')).toHaveText('1 of 3');
     await page.getByRole('button', { name: 'Select image 2' }).click();

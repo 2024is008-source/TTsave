@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { mkdtemp, readdir, rm, readFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir, rm, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import sharp from 'sharp';
@@ -12,6 +12,7 @@ import { videoUrlSchema } from '../src/shared/video-url.js';
 // Explicit manual owner-authorized source only. No media or capabilities are retained.
 const source = videoUrlSchema.parse(process.argv[2]);
 const parent = path.resolve('node_modules/.cache');
+await mkdir(parent, { recursive: true });
 const root = await mkdtemp(path.join(parent, 'photo-live-'));
 const service = new ProductionDownloaderService(undefined, {
   ...env,

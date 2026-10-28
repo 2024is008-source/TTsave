@@ -1,5 +1,6 @@
 import type { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
+import helmet from 'helmet';
 import { safeUrlMessages } from '../shared/video-url.js';
 
 export class HttpError extends Error {
@@ -49,6 +50,16 @@ export const errorHandler: ErrorRequestHandler = (error, request, response, next
         : tooLarge
           ? 'The request body is too large.'
           : 'An unexpected error occurred.';
+  response.locals.failureCode = code;
+  if (response.locals.advertising) {
+    // An unsuccessful public render must not retain advertising permissions.
+    delete response.locals.advertising;
+    helmet.contentSecurityPolicy({ directives: { imgSrc: ["'self'"] } })(
+      request,
+      response,
+      () => undefined,
+    );
+  }
 
   request.log.error(
     {

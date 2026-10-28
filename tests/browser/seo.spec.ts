@@ -1,5 +1,10 @@
 /// <reference lib="dom" />
 import { expect, test } from '@playwright/test';
+import { reservePublicBudget } from './public-budget.js';
+
+test.beforeEach(async ({ request }, info) => {
+  await reservePublicBudget(request, info);
+});
 
 for (const path of [
   '/',
@@ -27,7 +32,7 @@ for (const path of [
     await expect(page.locator('#mobile-nav')).toBeHidden();
     if (path === '/') {
       await page.locator('#video-url').fill('https://example.com/not-tiktok');
-      await page.getByRole('button', { name: 'Get video', exact: true }).click();
+      await page.locator('.analyze-button').click();
       await expect(page.locator('.downloader')).toHaveAttribute('data-state', 'error');
       await expect(page.locator('#form-status')).not.toBeEmpty();
     } else {
@@ -51,16 +56,15 @@ for (const width of [390, 768, 1024, 1440, 1920]) {
     await expect(page.locator('html')).toHaveAttribute('lang', 'en-US');
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      'TikTok to MP4 Downloader',
+      'Download TikTok Videos & Photos',
     );
     for (const selector of [
       '#hero-title',
       '#download-form',
       '#features-title',
       '#steps-title',
-      '#moments-title',
       '#faq-title',
-      '.cta-copy',
+      '.home-download-panel',
     ]) {
       const element = page.locator(selector);
       const bounds = await element.boundingBox();

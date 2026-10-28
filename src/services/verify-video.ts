@@ -16,11 +16,11 @@ const probeSchema = z.object({
     .max(20),
   format: z.object({ duration: z.coerce.number().positive(), format_name: z.string() }),
 });
-export async function verifyVideo(
+async function verifyInputVideo(
   filename: string,
-  selected: Analysis['formats'][number],
   config: Environment,
   context: AnalysisContext,
+  selected?: Analysis['formats'][number],
 ) {
   const result = await runTool(
     config.FFPROBE_PATH,
@@ -51,8 +51,8 @@ export async function verifyVideo(
         requestId: context.requestId,
         jobId: context.jobId,
         stage: 'verification',
-        expectedWidth: selected.width,
-        expectedHeight: selected.height,
+        expectedWidth: selected?.width,
+        expectedHeight: selected?.height,
         actualWidth: video?.width,
         actualHeight: video?.height,
         hasAudio: data.streams.some((stream) => stream.codec_type === 'audio'),
@@ -65,8 +65,8 @@ export async function verifyVideo(
       !video ||
       !data.streams.some((stream) => stream.codec_type === 'audio') ||
       !data.format.format_name.split(',').includes('mp4') ||
-      (selected.width !== undefined && selected.width !== video.width) ||
-      (selected.height !== undefined && selected.height !== video.height) ||
+      (selected?.width !== undefined && selected.width !== video.width) ||
+      (selected?.height !== undefined && selected.height !== video.height) ||
       data.format.duration > config.MAX_VIDEO_DURATION_SECONDS
     )
       throw new Error('Source changed');
@@ -78,4 +78,23 @@ export async function verifyVideo(
       'The source did not deliver the selected MP4 video with audio. Check the public link again.',
     );
   }
+}
+
+export function verifyVideo(
+  filename: string,
+  selected: Analysis['formats'][number],
+  config: Environment,
+  context: AnalysisContext,
+) {
+  return verifyInputVideo(filename, config, context, selected);
+}
+
+/** MP3 consumes audio, not advertised video dimensions; the input still must be
+ * a bounded-duration MP4 with video and audio. Conversion and MP3 probing follow. */
+export function verifyAudioSource(
+  filename: string,
+  config: Environment,
+  context: AnalysisContext,
+) {
+  return verifyInputVideo(filename, config, context);
 }

@@ -6,6 +6,50 @@ import { parseEnvironment } from '../src/config/env.js';
 const source = readFileSync('public/assets/js/analytics.js', 'utf8');
 const testId = 'G-TEST123456';
 
+describe('consent and download events', () => {
+  it('loads nothing before acceptance, emits only fixed safe fields, and stops after withdrawal', () => {
+    const dom = browser();
+    const { document } = dom.window;
+    const init = document.getElementById('analytics-init');
+    if (!init) throw Error('Missing initializer');
+    init.dataset.requireConsent = 'true';
+    document.body.insertAdjacentHTML(
+      'beforeend',
+      '<aside id="analytics-consent" hidden><button data-analytics-accept>Allow</button><button data-analytics-decline>Decline</button></aside>',
+    );
+    dom.window.eval(source);
+    expect(Reflect.get(dom.window, 'dataLayer')).toBeUndefined();
+    expect(document.querySelector('script[src*="googletagmanager"]')).toBeNull();
+    const click = (selector: string) =>
+      document.querySelector<HTMLButtonElement>(selector)?.click();
+    click('[data-analytics-accept]');
+    dom.window.eval(source);
+    const emit = (name: string) =>
+      dom.window.dispatchEvent(
+        new dom.window.CustomEvent('ttsave:analytics', {
+          detail: { name, media_type: 'mp4', url: 'SECRET', accessToken: 'SECRET' },
+        }),
+      );
+    emit('download_success');
+    emit('SECRET');
+    const queue = Reflect.get(dom.window, 'dataLayer') as IArguments[];
+    expect(queue).toHaveLength(4);
+    expect(Array.from(queue[3] ?? [])).toEqual([
+      'event',
+      'download_success',
+      expect.objectContaining({ media_type: 'mp4' }),
+    ]);
+    expect(JSON.stringify(queue)).not.toContain('SECRET');
+    expect(document.querySelectorAll('script[src*="googletagmanager"]')).toHaveLength(1);
+    click('[data-analytics-decline]');
+    const count = queue.length;
+    emit('download_success');
+    expect(queue).toHaveLength(count);
+    expect(Reflect.get(dom.window, `ga-disable-${testId}`)).toBe(true);
+    dom.window.close();
+  });
+});
+
 function browser(
   location = 'https://tiksavemp4.online/',
   id = testId,

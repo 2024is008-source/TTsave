@@ -18,46 +18,24 @@ for (const [width, height] of [
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await expect(page.locator('#video-url')).toHaveValue('');
-    // Idle marketing decorations are preserved. Check the input workspace here;
-    // result tests check document-wide overflow after the artwork transforms.
+    // The new layout has no decorative phone; controls and results must fit.
     const inputBounds = await page.locator('#download-form').boundingBox();
     expect(inputBounds?.x).toBeGreaterThanOrEqual(0);
     expect((inputBounds?.x ?? 0) + (inputBounds?.width ?? 0)).toBeLessThanOrEqual(width);
-    const imageLoaded = await page
-      .locator('.phone-scene img')
-      .evaluate((image) => (image as HTMLImageElement).naturalWidth > 0);
-    expect(imageLoaded).toBe(true);
-    const pictures = page.locator('picture');
-    await expect(pictures).toHaveCount(7);
-    for (const picture of await pictures.all()) {
-      const image = picture.locator('img');
-      if (await image.isVisible()) {
-        await image.scrollIntoViewIfNeeded();
-        await expect(image).toHaveJSProperty('complete', true);
-        await expect
-          .poll(async () =>
-            image.evaluate((element) => (element as HTMLImageElement).naturalWidth),
-          )
-          .toBeGreaterThan(0);
-      }
-      await expect(image).toHaveAttribute('src', /^\/assets\/images\/.*\.webp$/);
-      await expect(image).toHaveAttribute('width', /^\d+$/);
-      await expect(image).toHaveAttribute('height', /^\d+$/);
-      await expect(picture.locator('source')).toHaveAttribute(
-        'srcset',
-        /\.webp \d+w, .*\.webp \d+w/,
-      );
-    }
-    await expect(page.locator('.art-sphere')).toHaveCount(2);
-    await expect(page.locator('.phone-action')).toHaveCount(4);
-    await expect(page.locator('.tiktok-tile')).toHaveCount(1);
+    await expect(page.locator('.hero-art, .phone, .showcase-decoration')).toHaveCount(0);
+    await expect(page.locator('#hero-title')).toHaveText(
+      'Download TikTok Videos & Photos',
+    );
+    await expect(page.getByRole('tab', { name: 'Photo', exact: true })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
     await expect(page.locator('.feature-card')).toHaveCount(4);
     await expect(page.locator('.step-card')).toHaveCount(3);
-    await expect(page.locator('.moment-card')).toHaveCount(3);
-    await expect(page.locator('.showcase-decoration')).toHaveCSS(
-      'pointer-events',
-      'none',
-    );
+    for (const image of await page.locator('.blog-card img').all()) {
+      await image.scrollIntoViewIfNeeded();
+      await expect(image).toHaveJSProperty('complete', true);
+    }
     for (const card of await page
       .locator('.landing-showcase article, .step-card')
       .all()) {
@@ -101,7 +79,7 @@ for (const [width, height] of [
       ),
     ).toBeVisible();
     await page.locator('#video-url').fill('https://example.com/video/123');
-    await page.getByRole('button', { name: 'Get video' }).click();
+    await page.locator('.analyze-button').click();
     await expect(page.locator('#form-status')).toHaveText(
       'Enter a public TikTok video link using HTTPS.',
     );
@@ -132,7 +110,7 @@ for (const [width, height] of [
         },
       }),
     );
-    await page.getByRole('button', { name: 'Get video' }).click();
+    await page.locator('.analyze-button').click();
     await expect(page.locator('#result-title')).toHaveText('Test source video');
     await expect(
       page.getByRole('radio', { name: /720 × 1280 source pixels/ }),
@@ -158,8 +136,7 @@ for (const [width, height] of [
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     await expect(page.locator('#result-card')).toBeHidden();
-    if (width >= 1024) await expect(page.locator('.hero-art')).toBeVisible();
-    else await expect(page.locator('.hero-art')).toBeHidden();
+    await expect(page.locator('.hero-art')).toHaveCount(0);
     await page.evaluate(() => {
       (document.activeElement as HTMLElement).blur();
       window.scrollTo(0, 0);

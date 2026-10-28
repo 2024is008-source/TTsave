@@ -9,7 +9,15 @@ type Options = {
   requestDownload?: (url: string) => void;
 };
 
-const instances = new WeakMap<Document, { destroy: () => void }>();
+// Asset versions can coexist during cache transitions or diagnostic imports.
+// Share ownership so a second module cannot leave the previous handlers active.
+const instancesKey = Symbol.for('tiksavemp4.downloader.instances');
+const instanceScope = globalThis as typeof globalThis & {
+  [instancesKey]?: WeakMap<Document, { destroy: () => void }>;
+};
+const instances =
+  instanceScope[instancesKey] ?? new WeakMap<Document, { destroy: () => void }>();
+instanceScope[instancesKey] = instances;
 
 export function initializeDownloader(root: Document = document, options: Options = {}) {
   const form = root.querySelector<HTMLFormElement>('#download-form');
@@ -60,10 +68,51 @@ export function initializeDownloader(root: Document = document, options: Options
   const progFill = root.querySelector<HTMLElement>('.rp-prog-fill');
   const progTrack = root.querySelector<HTMLElement>('.rp-prog-track');
   let lastStatus = 'idle';
+  let lastType = 'mp4';
+  const analytics = (name: string, type: string) => {
+    const view = root.defaultView;
+    if (view)
+      view.dispatchEvent(
+        new view.CustomEvent('ttsave:analytics', { detail: { name, media_type: type } }),
+      );
+  };
   let renderedMedia: State['media'] = null;
   let clipboardVersion = 0;
   const eventController = new AbortController();
   const events = { signal: eventController.signal };
+  let mediaTool: 'photo' | 'video' = 'photo';
+  const toolTabs = Array.from(
+    root.querySelectorAll<HTMLButtonElement>('[data-media-tool]'),
+  );
+  const showMediaTool = (tool: 'photo' | 'video') => {
+    mediaTool = tool;
+    for (const tab of toolTabs) {
+      const active = tab.dataset.mediaTool === tool;
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
+    }
+    root
+      .querySelector('#downloader-panel')
+      ?.setAttribute('aria-labelledby', `tool-${tool}`);
+    const heading = root.querySelector('#panel-tool-title');
+    if (heading)
+      heading.textContent =
+        tool === 'photo'
+          ? 'Download TikTok Photos & Slideshows'
+          : 'Download TikTok Videos as MP4';
+    const subtitle = root.querySelector('#panel-tool-subtitle');
+    if (subtitle)
+      subtitle.textContent =
+        tool === 'photo'
+          ? 'Paste a public TikTok post link to save individual images or a selected slideshow.'
+          : 'Paste a public TikTok video or share link to preview available MP4 and MP3 formats.';
+    input.placeholder =
+      tool === 'photo'
+        ? 'Paste a TikTok photo or share link'
+        : 'Paste a TikTok video or share link';
+    submitLabel.textContent = tool === 'photo' ? 'Download Photo' : 'Download Video';
+  };
+  showMediaTool(mediaTool);
   const fallback = '/assets/images/preview-unavailable.webp';
   // ── Byte formatting helpers ──────────────────────────────────────
   const fmtBytes = (bytes: number): string => {
@@ -100,6 +149,7 @@ export function initializeDownloader(root: Document = document, options: Options
       link.remove();
     });
   const controller = createDownloaderController({
+    onDelivered: (type) => analytics('download_success', type),
     adapter: options.adapter ?? createApiAdapter(),
     requestDownload,
   });
@@ -107,6 +157,8 @@ export function initializeDownloader(root: Document = document, options: Options
 
   const render = (state: State) => {
     const photoMode = state.media?.postType === 'photo';
+    if (state.media && state.media !== renderedMedia)
+      showMediaTool(photoMode ? 'photo' : 'video');
     renderGallery(state);
     const busy = isBusy(state.status);
     const downloading = ['starting-download', 'downloading'].includes(state.status);
@@ -119,6 +171,7 @@ export function initializeDownloader(root: Document = document, options: Options
     input.setAttribute('aria-invalid', String(state.invalidUrl));
     submit.disabled = busy;
     paste.disabled = busy;
+    for (const tab of toolTabs) tab.disabled = busy;
     cancel.hidden = !busy || downloading;
     cancel.textContent = downloading ? 'Cancel download request' : 'Cancel analysis';
     clear.disabled = !input.value && !busy;
@@ -127,7 +180,9 @@ export function initializeDownloader(root: Document = document, options: Options
         ? 'Checking link…'
         : state.status === 'analyzing'
           ? 'Analyzing video…'
-          : 'Get video';
+          : mediaTool === 'photo'
+            ? 'Download Photo'
+            : 'Download Video';
     status.textContent = state.message;
     analyzing.hidden = !['validating', 'analyzing'].includes(state.status);
     result.hidden = ![
@@ -365,9 +420,66 @@ export function initializeDownloader(root: Document = document, options: Options
       else if (state.status === 'download-requested') status.focus();
       else if (state.status === 'idle' && lastStatus !== 'idle') input.focus();
     }
+    const mediaType =
+      state.downloadType === 'image' && state.selectedPhotoIds.length > 1
+        ? 'zip'
+        : state.downloadType;
+    if (state.downloadType !== lastType) {
+      analytics('format_selected', state.downloadType);
+      lastType = state.downloadType;
+    }
+    if (state.status !== lastStatus) {
+      const name: Record<string, string> = {
+        analyzing: 'metadata_request',
+        'starting-download': 'download_attempt',
+        completed: 'download_prepared',
+        'download-requested': 'download_requested',
+        error: 'download_failure',
+      };
+      if (name[state.status]) analytics(name[state.status] ?? '', mediaType);
+      if (state.status === 'idle' && isBusy(lastStatus as State['status']))
+        analytics('download_cancelled', mediaType);
+    }
     lastStatus = state.status;
   };
   const unsubscribe = controller.subscribe(render);
+  const changeTool = (tool: 'photo' | 'video') => {
+    if (isBusy(controller.getState().status)) return;
+    controller.setUrl(input.value);
+    showMediaTool(tool);
+  };
+  for (const tab of toolTabs) {
+    tab.addEventListener(
+      'click',
+      () => changeTool(tab.dataset.mediaTool === 'video' ? 'video' : 'photo'),
+      events,
+    );
+    tab.addEventListener(
+      'keydown',
+      (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const next =
+          event.key === 'Home'
+            ? 'photo'
+            : event.key === 'End'
+              ? 'video'
+              : mediaTool === 'photo'
+                ? 'video'
+                : 'photo';
+        changeTool(next);
+        toolTabs.find((item) => item.dataset.mediaTool === next)?.focus();
+      },
+      events,
+    );
+  }
+  root.querySelectorAll<HTMLElement>('[data-open-tool]').forEach((link) => {
+    link.addEventListener(
+      'click',
+      () => changeTool(link.dataset.openTool === 'video' ? 'video' : 'photo'),
+      events,
+    );
+  });
   form.noValidate = true;
   form.addEventListener(
     'submit',
@@ -416,7 +528,7 @@ export function initializeDownloader(root: Document = document, options: Options
           if (version !== clipboardVersion || isBusy(controller.getState().status))
             return;
           input.value = text;
-          controller.setUrl(text, 'Link pasted. Select Get video to continue.');
+          controller.setUrl(text, 'Link pasted. Select the download button to continue.');
         } catch {
           if (version !== clipboardVersion || isBusy(controller.getState().status))
             return;

@@ -40,7 +40,7 @@ for (const width of [390, 768, 850, 1024, 1440]) {
     });
     await page.goto('/');
     downloaderRequests.length = 0;
-    if (width <= 800) {
+    if (width < 1024) {
       await page.getByRole('button', { name: 'Open navigation' }).click();
       await page.locator('#mobile-nav a[href="/blog"]').click();
     } else await page.locator('.desktop-nav a[href="/blog"]').click();

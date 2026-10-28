@@ -3,6 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
 
+const publicRoot = fileURLToPath(new URL('../../public/', import.meta.url));
+
 export const blogSlugSchema = z
   .string()
   .max(100)
@@ -119,6 +121,16 @@ export const blogPostSchema = z
     }
   });
 export type BlogPost = z.input<typeof blogPostSchema>;
+/** Only advertise generated variants actually present on disk (also supports fixtures). */
+export function blogCoverSrcset(cover: NonNullable<BlogPost['cover']>): string {
+  const variants = [400, 800].flatMap((width) => {
+    const src = cover.src.replace(/\.webp$/, `-${String(width)}.webp`);
+    return width < cover.width && existsSync(path.join(publicRoot, src))
+      ? [`${src} ${String(width)}w`]
+      : [];
+  });
+  return [...variants, `${cover.src} ${String(cover.width)}w`].join(', ');
+}
 export type PublishedPost = z.output<typeof blogPostSchema>;
 export const blogPage = {
   path: '/blog',

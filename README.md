@@ -4,6 +4,12 @@ Node.js 24, strict TypeScript, Express and EJS. Public TikTok metadata analysis
 and single-server MP4/MP3 download jobs use yt-dlp and FFmpeg. Supported public photo posts provide individual images or a ZIP of selected images. Jobs are held in memory and files
 are temporary. See `docs/DOWNLOAD_JOBS.md` for deployment limits and cleanup.
 
+This is the Express TTsave production project. The confirmed VPS target is
+`/var/www/TTsave`, PM2 `ttsave`, loopback port 3000. The separate SaveFrame/Next.js
+preview is not part of this repository or its deployment. See the
+[documentation index](docs/README.md) and current
+[release preparation](docs/RELEASE_2026-10-28.md) before any release.
+
 ## Run locally
 
 Install dependencies with `npm ci`, copy `.env.example` to `.env` if you want to
@@ -12,7 +18,7 @@ override defaults, then run `npm run build` and `npm run dev`. Open
 `npm run frontend:watch` when editing the downloader modules. Production uses
 `npm run build` followed by `npm start`.
 
-Optional GA4 is configured through `GA_MEASUREMENT_ID`; see [docs/ANALYTICS.md](docs/ANALYTICS.md). Remove or blank this variable for local development. Before enabling it in production, disable the stream's Enhanced Measurement and confirm the documented privacy settings. The application sends only sanitized public-page views.
+Optional GA4 is configured through `GA_MEASUREMENT_ID`; see [docs/ANALYTICS.md](docs/ANALYTICS.md). Remove or blank this variable for local development. Before enabling it in production, disable the stream's Enhanced Measurement and confirm the documented privacy settings. The application sends sanitized public-page views and fixed downloader lifecycle events after consent.
 
 Production requires `NODE_ENV=production` and explicit
 `PUBLIC_BASE_URL=https://tiksavemp4.online`. Set `PUBLIC_CONTACT_EMAIL=tiksavemp4@gmail.com`
@@ -39,7 +45,7 @@ Photo downloads use verified JPEG, PNG or WebP bytes through the protected netwo
   browser module in `public/assets/js`, alongside theme and navigation modules.
   No inline application scripts or handlers are used.
 - `src/artwork` holds local SVG, JPEG and PNG source artwork. `npm run images:build`
-  compiles 18 sources into 36 responsive WebP variants, plus a JPEG social card
+  compiles 18 sources into 41 responsive WebP variants, plus a transparent picture fallback, JPEG social card
   and PNG favicon. Decorative artwork does not establish real source metadata
   or download capabilities. See
   `docs/IMAGE_REQUIREMENTS.md` for final licensed-photo requirements.
@@ -49,7 +55,9 @@ Photo downloads use verified JPEG, PNG or WebP bytes through the protected netwo
 - `src/api/contracts.ts` defines versioned request and response schemas.
   `src/services/yt-dlp.ts` extracts and normalizes public source metadata.
   `src/services/downloader.ts` owns bounded, expiring analyses and real jobs;
-  `src/services/memory-store.ts` defines the service contract and test store.
+  `src/services/memory-store.ts` defines the service contract;
+  `tests/fixtures/in-memory-job-store.ts` holds the test-only mock store.
+  Shared progress/capability validators live in `src/shared/download-contracts.ts`.
   Mock metadata lives exclusively in `tests/fixtures`. See `docs/API.md`
   for endpoints and errors. URL syntax alone does not establish public availability.
 
@@ -70,3 +78,22 @@ so basic service checks do not require a browser installation.
 
 The remaining `reference/DESIGN.md` is the original design source. The owner removed
 `reference/code.html`; it is not a runtime or build dependency.
+
+## Private administration
+
+The Express dashboard provides authenticated operational reports, system snapshots
+and optional authorized GA4 traffic reports. It is off until credentials are set;
+there is no default account. Run `npm run admin:password` in a private terminal and
+follow [docs/ADMIN.md](docs/ADMIN.md). The
+[blocker implementation report](docs/BLOCKER_FIXES_2026-10-28.md) records the actual
+MP3/startup/admin fixes, local tests and remaining VPS release checks. No automatic
+deployment is authorized by these instructions.
+
+## Optional Monetag advertising
+
+Advertising is disabled by default. In-Page Push and Vignette Banner have separate
+switches under the global ADVERTISING_ENABLED setting. Only reviewed,
+operator-supplied official tags and exact CSP origins are accepted. Advertising
+consent is separate from GA4, and no homepage UI changes or real ad tags ship with
+this integration. See [docs/ADVERTISING.md](docs/ADVERTISING.md) for configuration,
+consent-manager integration, testing and activation prerequisites.

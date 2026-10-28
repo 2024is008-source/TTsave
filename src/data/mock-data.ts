@@ -6,6 +6,8 @@ export const mockData = {
   result: null,
   progress: null,
   stepImageSizes: '(max-width: 600px) 100vw, 30vw',
+  showcaseImageSizes:
+    '(max-width: 1440px) 220px, (max-width: 1720px) calc(50vw - 500px), 360px',
   heroArtwork: {
     alt: 'Lifestyle photograph of an adult creator at golden-hour beach sunset',
     creator: '@jenniee',
@@ -46,18 +48,18 @@ export const mockData = {
   steps: [
     {
       image: 'copy-link-step',
-      title: 'Copy link',
+      title: 'Copy the TikTok link',
       description:
         'Open a supported public video or photo post, tap Share, then Copy link.',
     },
     {
       image: 'paste-link-step',
-      title: 'Paste link',
-      description: 'Paste the link into the downloader and select Get video.',
+      title: 'Paste the link into the downloader',
+      description: 'Paste the link above to inspect the available media and formats.',
     },
     {
       image: 'download-video-step',
-      title: 'Download video',
+      title: 'Preview or download supported media',
       description:
         'Choose an available MP4 quality or MP3 audio. Photo posts offer image selection and downloads.',
     },
@@ -65,8 +67,8 @@ export const mockData = {
   moments: [
     {
       image: 'hero-video-poster',
-      width: 1080,
-      height: 1920,
+      width: 756,
+      height: 1344,
       small: 540,
       icon: 'video',
       color: 'pink',
@@ -98,7 +100,7 @@ export const mockData = {
     {
       question: 'How do I convert a TikTok video to MP4?',
       answer:
-        'Open a public TikTok video, tap Share and choose Copy link. Paste it into TikSaveMp4 and select Get video. Choose MP4 and an available quality, then download. MP4 saves the video with its source audio.',
+        'Open a public TikTok video, tap Share and choose Copy link. Paste it into TikSaveMp4 and select the download button. Choose MP4 and an available quality, then download. MP4 saves the video with its source audio.',
     },
     {
       question: 'Can I download TikTok audio as MP3?',
@@ -113,7 +115,7 @@ export const mockData = {
     {
       question: 'How do I use the TikTok image downloader?',
       answer:
-        'TikTok to image means saving photos from a supported public photo post; it does not convert videos into images. To download TikTok images, paste the photo-post link and select Get video to analyze it. Browse the available photos and choose Download image to save one individually. For a ZIP file, open Choose images, select two or more photos, then choose Download selected. Available images depend on the post. Slideshow-to-video conversion is not supported. Save and reuse photos only with permission.',
+        'TikTok to image means saving photos from a supported public photo post; it does not convert videos into images. To download TikTok images, paste the photo-post link and select the download button to analyze it. Browse the available photos and choose Download image to save one individually. For a ZIP file, open Choose images, select two or more photos, then choose Download selected. Available images depend on the post. Slideshow-to-video conversion is not supported. Save and reuse photos only with permission.',
     },
     {
       question: 'Why are some video qualities unavailable?',

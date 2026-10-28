@@ -26,7 +26,7 @@ for (const width of [390, 1440]) {
       });
     });
     await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
-    await page.getByRole('button', { name: 'Get video' }).click();
+    await page.locator('.analyze-button').click();
     await expect(page.locator('#analyzing-indicator')).toBeVisible();
     await expect(page.locator('#analyzing-indicator')).toContainText(
       'Fetching video info',
@@ -65,7 +65,7 @@ for (const width of [390, 1440]) {
         },
       });
     });
-    await page.getByRole('button', { name: 'Get video' }).click();
+    await page.locator('.analyze-button').click();
     await expect(page.getByRole('radio', { name: /MP4 Video/ })).toBeChecked();
     await expect(page.getByRole('radio', { name: /MP3 Audio/ })).toBeDisabled();
     await expect(page.locator('#result-creator-initial')).toHaveText('T');

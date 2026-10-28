@@ -6,7 +6,14 @@ import { mockData } from '../data/mock-data.js';
 import { escapeXml, faqPage, serializeJsonLd, webApplication } from '../services/seo.js';
 import { blogPosts, featuredBlogSlugs } from '../data/blog-posts.js';
 import {
+  advertisingClient,
+  advertisingPage,
+  loadAdvertising,
+  type AdvertisingConfiguration,
+} from '../services/advertising.js';
+import {
   blogDate,
+  blogCoverSrcset,
   blogPage,
   blogSlugSchema,
   blogStructuredData,
@@ -19,29 +26,76 @@ const pages = [
     path: '/',
     title: 'TikTok to MP4, MP3 & Image Downloader | TikSaveMP4',
     description:
-      'Free and fast TikTok downloader. Save MP4 videos without watermark, convert audio to MP3, and download images online. No signup required.',
+      'Download public TikTok videos as MP4, convert available audio to MP3, or save photo posts as images and ZIP files. No TikTok login required.',
   },
   ...legalPages,
 ];
 // Applied only to rendered public pages; API/file/preview/SSE policies stay unchanged.
-const analyticsCsp = helmet.contentSecurityPolicy({
-  directives: {
-    scriptSrc: ["'self'", 'https://www.googletagmanager.com'],
-    connectSrc: [
-      "'self'",
-      'https://*.google-analytics.com',
-      'https://www.googletagmanager.com',
-    ],
-    imgSrc: [
-      "'self'",
-      'https://*.google-analytics.com',
-      'https://www.googletagmanager.com',
-    ],
-  },
-});
+function publicPageCsp(advertising: AdvertisingConfiguration, analytics: boolean) {
+  const extra = (key: keyof AdvertisingConfiguration['tags'][number]['csp']) => [
+    ...new Set(advertising.tags.flatMap((tag) => tag.csp[key])),
+  ];
+  return helmet.contentSecurityPolicy({
+    directives: {
+      scriptSrc: [
+        "'self'",
+        ...(analytics ? ['https://www.googletagmanager.com'] : []),
+        ...extra('scriptSrc'),
+      ],
+      connectSrc: [
+        "'self'",
+        ...(analytics
+          ? ['https://*.google-analytics.com', 'https://www.googletagmanager.com']
+          : []),
+        ...extra('connectSrc'),
+      ],
+      imgSrc: [
+        "'self'",
+        ...(analytics
+          ? ['https://*.google-analytics.com', 'https://www.googletagmanager.com']
+          : []),
+        ...extra('imgSrc'),
+      ],
+      ...(advertising.tags.length
+        ? {
+            frameSrc: ["'self'", ...extra('frameSrc')],
+            fontSrc: ["'self'", ...extra('fontSrc')],
+            mediaSrc: ["'self'", ...extra('mediaSrc')],
+            styleSrc: ["'self'", "'unsafe-inline'", ...extra('styleSrc')],
+          }
+        : {}),
+    },
+  });
+}
 
 export function createPublicRouter(records: readonly BlogPost[] = blogPosts) {
   const publicRouter = Router();
+  const advertising = loadAdvertising();
+  const noAdvertising = { tags: [], mobileEnabled: false };
+  const prepareAdvertising = (
+    request: import('express').Request,
+    response: import('express').Response,
+    pathname: string,
+  ) => {
+    const eligible =
+      advertisingPage(pathname, request.originalUrl) && advertising.tags.length > 0;
+    if (eligible) response.locals.advertising = advertisingClient(advertising, pathname);
+    if (eligible || env.GA_MEASUREMENT_ID)
+      publicPageCsp(
+        eligible ? advertising : noAdvertising,
+        Boolean(env.GA_MEASUREMENT_ID),
+      )(request, response, () => undefined);
+  };
+  for (const tag of advertising.tags) {
+    const code = tag.code;
+    if (code === undefined) continue;
+    publicRouter.get(tag.src, (_request, response) => {
+      response.setHeader('Cache-Control', 'private, no-store');
+      response.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+      response.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+      response.type('application/javascript').send(code);
+    });
+  }
   const registry = createBlogRegistry(records);
   const featured = featuredBlogSlugs.flatMap((slug) => {
     const post = registry.find(slug);
@@ -113,15 +167,14 @@ export function createPublicRouter(records: readonly BlogPost[] = blogPosts) {
       // Public pages have no query-driven content. Ignore every parameter, keep a
       // clean canonical and let crawlers read noindex; never reflect query values.
       const hasQuery = request.originalUrl.includes('?');
-      if (env.GA_MEASUREMENT_ID)
-        analyticsCsp(request, response, () => {
-          /* CSP only; rendering continues below. */
-        });
+      prepareAdvertising(request, response, page.path);
       if (hasQuery) response.setHeader('X-Robots-Tag', 'noindex, follow');
       response.render(page.path === '/' ? 'index' : 'legal', {
         ...mockData,
+        advertisingDisclosure: advertising.tags.length > 0,
         latestPosts: displayPosts.slice(0, 3),
         blogDate,
+        blogCoverSrcset,
         page,
         analytics: env.GA_MEASUREMENT_ID
           ? {
@@ -174,15 +227,13 @@ export function createPublicRouter(records: readonly BlogPost[] = blogPosts) {
       : blogPage;
     const hasQuery = request.originalUrl.includes('?');
     if (hasQuery) response.setHeader('X-Robots-Tag', 'noindex, follow');
-    if (env.GA_MEASUREMENT_ID)
-      analyticsCsp(request, response, () => {
-        /* CSP only; rendering continues below. */
-      });
+    prepareAdvertising(request, response, page.path);
     response.render(post ? 'blog-article' : 'blog', {
       page,
       post,
       posts: displayPosts,
       blogDate,
+      blogCoverSrcset,
       relatedPosts: post
         ? registry.published.filter((item) => post.relatedSlugs.includes(item.slug))
         : [],

@@ -2,6 +2,8 @@
   <% if (card.cover) { %>
   <img
     src="<%= card.cover.src %>"
+    srcset="<%= blogCoverSrcset(card.cover) %>"
+    sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 1050px) calc((100vw - 80px) / 2), (max-width: 1336px) calc((100vw - 144px) / 3), 398px"
     alt="<%= card.cover.alt %>"
     width="<%= card.cover.width %>"
     height="<%= card.cover.height %>"

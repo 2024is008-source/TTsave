@@ -2,15 +2,15 @@
 import { screenshotRoot } from './evidence.js';
 import { expect, test } from '@playwright/test';
 
-test('active phone and result panel persist through download states', async ({
+test('new downloader panel preserves actual media through download states', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   const capture = async (state: string) => {
-    await expect(page.locator('.hero-art')).toBeVisible();
-    await expect(page.locator('.phone:visible')).toHaveCount(1);
+    await expect(page.locator('.hero-art, .phone')).toHaveCount(0);
+    await expect(page.locator('.home-download-panel')).toBeVisible();
     await page.locator('.hero').screenshot({
       path: `${screenshotRoot}/mp3-regression-state-${state}.png`,
       style: '.site-header, .skip-link { visibility: hidden !important; }',
@@ -68,9 +68,9 @@ test('active phone and result panel persist through download states', async ({
     });
   });
   await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
-  await page.getByRole('button', { name: 'Get video' }).click();
+  await page.locator('.analyze-button').click();
   await expect(page.locator('#result-title')).toBeFocused();
-  const originalPhone = await page.locator('.idle-phone').boundingBox();
+  const originalPanel = await page.locator('.home-download-panel').boundingBox();
   await capture('ready');
   await page
     .locator('.format-option')
@@ -88,19 +88,18 @@ test('active phone and result panel persist through download states', async ({
   await expect(page.getByRole('button', { name: 'Save MP4', exact: true })).toBeEnabled();
   await expect(page.locator('#completed-quality')).toHaveText('720p');
   await capture('completed');
-  const completedPhone = await page.locator('.idle-phone').boundingBox();
-  if (!originalPhone || !completedPhone) throw new Error('Missing phone');
-  // Focus scrolling and panel height can move the phone vertically; its hardware
-  // size and horizontal position remain stable across states.
-  expect(completedPhone.width).toBeCloseTo(originalPhone.width, 1);
-  expect(completedPhone.height).toBeCloseTo(originalPhone.height, 1);
-  expect(completedPhone.x).toBeCloseTo(originalPhone.x, 1);
-  await expect(page.locator('.phone:visible')).toHaveCount(1);
+  const completedPanel = await page.locator('.home-download-panel').boundingBox();
+  if (!originalPanel || !completedPanel) throw new Error('Missing downloader panel');
+  // Result height may change; the surrounding downloader stays aligned.
+  expect(completedPanel.width).toBeCloseTo(originalPanel.width, 1);
+  expect(completedPanel.height).toBeGreaterThan(100);
+  expect(completedPanel.x).toBeCloseTo(originalPanel.x, 1);
+  await expect(page.locator('.home-download-panel')).toBeVisible();
   await expect(page.locator('.hero h1')).toBeVisible();
   const panel = await page.locator('#result-card').boundingBox();
   if (!panel) throw new Error('Missing result panel');
-  expect(panel.width).toBeLessThanOrEqual(560);
-  await expect(page.locator('.hero-art')).toBeVisible();
+  expect(panel.width).toBeLessThanOrEqual(880);
+  await expect(page.locator('.hero-art, .phone')).toHaveCount(0);
   await page.getByRole('button', { name: 'Download another video' }).click();
   await expect(page.locator('#video-url')).toHaveValue('');
   await expect(page.locator('#result-card')).toBeHidden();

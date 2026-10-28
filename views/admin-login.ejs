@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/admin-head', { title: 'Sign in' }) %>
+  </head>
+  <body class="admin-login">
+    <main class="login-card" id="main">
+      <p class="eyebrow">TikSaveMP4 · Private administration</p>
+      <h1>Sign in</h1>
+      <p>Access download operations and verified system reports.</p>
+      <% if (error) { %>
+      <p class="notice error" role="alert"><%= error %></p>
+      <% } %>
+      <form action="/admin/login" method="post">
+        <input type="hidden" name="csrf" value="<%= csrf %>" />
+        <label for="username">Username</label>
+        <input
+          id="username"
+          name="username"
+          autocomplete="username"
+          maxlength="128"
+          required
+        />
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          maxlength="256"
+          required
+        />
+        <button type="submit">Sign in securely</button>
+      </form>
+      <p class="muted">
+        Sessions expire automatically. Contact the server operator if you need access.
+      </p>
+      <a href="/">Back to TikSaveMP4</a>
+    </main>
+  </body>
+</html>

@@ -19,6 +19,12 @@ import { createApiRouter } from './routes/api.js';
 import type { DownloaderService } from './services/memory-store.js';
 import { ProductionDownloaderService } from './services/downloader.js';
 import { HttpError } from './middleware/error-handler.js';
+import {
+  operationsStore,
+  type OperationsStore,
+} from './services/operational-analytics.js';
+import { countryFor, operational } from './services/telemetry.js';
+import { createAdminRouter, type AdminOptions } from './routes/admin.js';
 
 /** Log route labels, never user-defined paths, queries or capability identifiers. */
 export function safeRequestPath(value: string | undefined): string {
@@ -49,6 +55,8 @@ export function safeRequestPath(value: string | undefined): string {
     '/api/v1/downloads',
   ];
   if (known.includes(pathname)) return pathname;
+  if (pathname.startsWith('/advertising/tags/'))
+    return '/advertising/tags/:format/:digest';
   return pathname.startsWith('/assets/') ? '/assets/:asset' : '/unmatched';
 }
 
@@ -59,8 +67,11 @@ export function createApp(
   service: DownloaderService = new ProductionDownloaderService(),
   isReady: () => boolean = () => true,
   posts?: readonly BlogPost[],
+  options?: { store?: OperationsStore; admin?: AdminOptions },
 ) {
   const app = express();
+  const operations = options?.store ?? operationsStore();
+  const rejectedSamples = new Map<string, number>();
 
   app.disable('x-powered-by');
   app.set('trust proxy', env.TRUST_PROXY ? 'loopback' : false);
@@ -68,6 +79,43 @@ export function createApp(
   app.set('views', path.join(projectRoot, 'views'));
 
   app.use(requestId);
+  app.use((request, response, next) => {
+    response.locals.analyticsRequireConsent = env.GA4_REQUIRE_CONSENT;
+    response.once('finish', () => {
+      if (
+        !operations ||
+        response.statusCode < 400 ||
+        !(
+          request.path === '/api/v1/downloads' ||
+          (request.path === '/api/v1/analyze' && !response.locals.analysisStarted)
+        )
+      )
+        return;
+      const raw: unknown = response.locals.failureCode;
+      const code =
+        typeof raw === 'string'
+          ? raw
+          : response.statusCode === 429
+            ? 'RATE_LIMITED'
+            : 'REQUEST_REJECTED';
+      if (code === 'RATE_LIMITED') {
+        const now = Date.now();
+        if (now - (rejectedSamples.get(request.path) ?? 0) < 60000) return;
+        rejectedSamples.set(request.path, now);
+      }
+      operational(() =>
+        operations.event(
+          typeof request.id === 'string' ? request.id : 'unknown-request',
+          'request.rejected',
+          'unknown',
+          code,
+          undefined,
+          countryFor(request),
+        ),
+      );
+    });
+    next();
+  });
   app.use(
     pinoHttp({
       logger,
@@ -94,7 +142,7 @@ export function createApp(
   );
   app.use((request, response, next) => {
     if (
-      /^\/(?:api(?:\/|$)|analyze(?:\/|$)|health(?:\/|$)|ready(?:\/|$))/i.test(
+      /^\/(?:admin(?:\/|$)|api(?:\/|$)|analyze(?:\/|$)|health(?:\/|$)|ready(?:\/|$))/i.test(
         request.path,
       )
     ) {
@@ -135,6 +183,7 @@ export function createApp(
   );
   app.use(express.json({ limit: '32kb' }));
   app.use(express.urlencoded({ extended: false, limit: '32kb' }));
+  app.use('/admin', createAdminRouter(service, isReady, operations, options?.admin));
 
   const creationLimit = rateLimit({
     windowMs: 60_000,
@@ -155,7 +204,7 @@ export function createApp(
 
   app.use(createPublicRouter(posts));
   app.use(analyzeRouter);
-  app.use('/api/v1', createApiRouter(service));
+  app.use('/api/v1', createApiRouter(service, operations));
 
   app.use(notFound);
   app.use(errorHandler);

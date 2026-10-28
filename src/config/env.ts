@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
+import { adminHashSchema } from '../shared/admin-settings.js';
 
 const executable = (name: string) =>
   z
@@ -60,6 +61,58 @@ const envSchema = z.object({
     .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])
     .default('info'),
   TRUST_PROXY: booleanFromString,
+  ADMIN_ENABLED: booleanFromString,
+  ADMIN_USERNAME: z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z
+      .string()
+      .regex(/^[a-zA-Z0-9._@+-]{3,128}$/)
+      .optional(),
+  ),
+  ADMIN_PASSWORD_HASH: z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    adminHashSchema.optional(),
+  ),
+  ADMIN_SESSION_TTL_MINUTES: z.coerce.number().int().min(15).max(120).default(30),
+  ADMIN_SESSION_MAX_HOURS: z.coerce.number().int().min(1).max(24).default(8),
+  ADVERTISING_ENABLED: booleanFromString,
+  MONETAG_IPP_ENABLED: booleanFromString,
+  MONETAG_VIGNETTE_ENABLED: booleanFromString,
+  MONETAG_MOBILE_ENABLED: booleanFromString,
+  MONETAG_IPP_TAG_FILE: z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z
+      .string()
+      .refine((value) => path.isAbsolute(value), 'Use an absolute private manifest path.')
+      .optional(),
+  ),
+  MONETAG_VIGNETTE_TAG_FILE: z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z
+      .string()
+      .refine((value) => path.isAbsolute(value), 'Use an absolute private manifest path.')
+      .optional(),
+  ),
+  OPERATIONS_ENABLED: booleanFromString,
+  OPERATIONS_SECRET: z.string().min(32).max(256).optional(),
+  OPERATIONS_DATA_DIR: z
+    .string()
+    .refine((value) => path.isAbsolute(value), 'Use an absolute private data directory.')
+    .default(path.resolve('.data', 'operations')),
+  OPERATIONS_RETENTION_DAYS: z.coerce.number().int().min(7).max(180).default(30),
+  GA4_PROPERTY_ID: z
+    .string()
+    .regex(/^\d{1,20}$/)
+    .optional(),
+  GA4_SERVICE_ACCOUNT_FILE: z
+    .string()
+    .refine((value) => path.isAbsolute(value))
+    .optional(),
+  GA4_REQUIRE_CONSENT: z
+    .enum(['true', 'false', '1', '0'])
+    .default('true')
+    .transform((value) => value === 'true' || value === '1'),
+  TRUST_COUNTRY_HEADER: booleanFromString,
   YTDLP_PATH: executable('yt-dlp'),
   FFMPEG_PATH: executable('ffmpeg'),
   FFPROBE_PATH: executable('ffprobe'),
@@ -130,6 +183,19 @@ export function parseEnvironment(source: NodeJS.ProcessEnv = process.env): Envir
     throw new Error(`Invalid environment configuration: ${details}`);
   }
 
+  const publicDirectory = path.resolve('public');
+  if (
+    result.data.ADMIN_ENABLED &&
+    (!result.data.ADMIN_USERNAME || !result.data.ADMIN_PASSWORD_HASH)
+  )
+    throw new Error(
+      'ADMIN_ENABLED requires ADMIN_USERNAME and a generated ADMIN_PASSWORD_HASH.',
+    );
+  if (
+    result.data.OPERATIONS_DATA_DIR === publicDirectory ||
+    result.data.OPERATIONS_DATA_DIR.startsWith(publicDirectory + path.sep)
+  )
+    throw new Error('Operational storage must be outside the public directory.');
   return result.data;
 }
 

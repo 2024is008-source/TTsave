@@ -40,6 +40,34 @@
           >
           for Google’s processing practices.
         </p>
+        <% } %> <% if (page.path === '/privacy' && typeof advertisingDisclosure !==
+        'undefined' && advertisingDisclosure) { %>
+        <section aria-labelledby="advertising-privacy">
+          <h2 id="advertising-privacy">Optional advertising</h2>
+          <p>
+            When configured, TikSaveMp4 uses Monetag In-Page Push or Vignette Banner
+            advertisements on public editorial pages. Advertising is optional and requires
+            separate advertising consent before provider scripts load. Analytics consent
+            alone does not enable advertising. The consent manager lets you decline and
+            withdraw advertising consent without preventing downloads.
+          </p>
+          <p>
+            After consent, the provider and its advertising partners may receive network
+            and browser information, including your IP address, device details and page
+            context, and may use cookies or similar technologies. TikSaveMp4 does not send
+            submitted TikTok links or download tokens as advertising parameters.
+            Third-party scripts can access their execution page, so advertising is
+            suppressed on query-string URLs and after downloader interaction.
+          </p>
+          <p>
+            Global Privacy Control and Do Not Track requests suppress advertising in this
+            integration. Withdrawal prevents new tags from starting; a safe page reload
+            through the consent manager is needed to remove previously executed provider
+            code. The operator must publish the applicable provider disclosures, partner
+            information and retention details in the consent manager before enabling live
+            advertising.
+          </p>
+        </section>
         <% } %>
         <p>
           TikSaveMp4 is an independent service and is not affiliated with, endorsed by or

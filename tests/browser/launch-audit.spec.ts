@@ -128,7 +128,7 @@ for (const [width, height] of viewports) {
         });
       });
       await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
-      await page.getByRole('button', { name: 'Get video' }).click();
+      await page.locator('.analyze-button').click();
       const mp4 = page.getByRole('radio', { name: /MP4 Video/ });
       const mp3 = page.getByRole('radio', { name: /MP3 Audio/ });
       await expect(mp4).toBeChecked();

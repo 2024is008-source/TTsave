@@ -1,0 +1,4515 @@
+{
+  "baseline": "54d1122c1ca157e98671f4bacad9345c71f98455",
+  "origin": "https://github.com/2024is008-source/TTsave.git",
+  "hashConvention": "SHA-256; UTF-8 text normalized to LF; metadata files have no self-hash",
+  "files": [
+    {
+      "path": ".env.example",
+      "status": "M",
+      "sha256": "5f84c9283835c32e607f35008c2919598069ff0665270bef6ea19d60243e6467",
+      "bytes": 2523
+    },
+    {
+      "path": ".gitignore",
+      "status": "M",
+      "sha256": "c403088ad40bc74107726201a0ba686db781681458e7b7c21fe6677b64032074",
+      "bytes": 1290
+    },
+    {
+      "path": "README.md",
+      "status": "M",
+      "sha256": "29e713b32e158eac723a6b21c27e957b90d036bc0bce82e9254ce68a01508f3c",
+      "bytes": 6433
+    },
+    {
+      "path": "config/monetag/in-page-push.example.json",
+      "status": "A",
+      "sha256": "74530e7e6ee3e78390904145d270cfa0f9e159ce5103cc80b60819306b0199fb",
+      "bytes": 283
+    },
+    {
+      "path": "config/monetag/vignette-banner.example.json",
+      "status": "A",
+      "sha256": "5b96e07f5623ae4209faa754184fb41363da99ae7f6b898a633df6eab2cfe8fc",
+      "bytes": 286
+    },
+    {
+      "path": "deploy/nginx/ttsave.conf",
+      "status": "M",
+      "sha256": "9fde215cd0240dc1673c6274b9a007763114a0913fd3ae538b6f1cdc9a5b2e5f",
+      "bytes": 2577
+    },
+    {
+      "path": "docs/ADMIN.md",
+      "status": "A",
+      "sha256": "2711ceebbb77e946bb4c54e222c1a56e7e0ae4d4cae4dbcca41c5c9bfa3fa842",
+      "bytes": 9872
+    },
+    {
+      "path": "docs/ADVERTISING.md",
+      "status": "A",
+      "sha256": "fbfdb6dfc8fa16941fa34502678aba9589854a5e0a27928c317b5d1c27818d6d",
+      "bytes": 12326
+    },
+    {
+      "path": "docs/ANALYTICS.md",
+      "status": "M",
+      "sha256": "fae89edc301952323d85c582130d4b2f87c895bf57827dd0bebb87517f2b507c",
+      "bytes": 11824
+    },
+    {
+      "path": "docs/ARTIFACT_CLEANUP_2026-10-28.md",
+      "status": "A",
+      "sha256": "80682368742d7dbe4f9690bab41e19f6460302483d3f3deb175e4a4600839364",
+      "bytes": 2258
+    },
+    {
+      "path": "docs/BLOCKER_FIXES_2026-10-28.md",
+      "status": "A",
+      "sha256": "cdeb11441e428fc0bbb1cd1776a2df3aedf34d7244235811614053f4f5dc3dfb",
+      "bytes": 23417
+    },
+    {
+      "path": "docs/CLEANUP_2026-10-28.md",
+      "status": "A",
+      "sha256": "ef7f49d4afae3a738122c993a4c4a17d41fca342ac360884035e77d298f35934",
+      "bytes": 23253
+    },
+    {
+      "path": "docs/DEPLOYMENT.md",
+      "status": "M",
+      "sha256": "9ad6cb861653900b5aa31fe70e6afddfb9edcc1eb00bf0e0e1c1fbd3f5cb29d6",
+      "bytes": 13695
+    },
+    {
+      "path": "docs/FINAL_SYSTEM_AUDIT_2026-10-28.md",
+      "status": "A",
+      "sha256": "ea24b6f1161c57799c18ff52cf1520eb30dbda00a2cf519cc4282883a92cbf8b",
+      "bytes": 27338
+    },
+    {
+      "path": "docs/HOMEPAGE_MIGRATION_2026-10-28.md",
+      "status": "A",
+      "sha256": "834eabb2b4a8ee504d0ce908af55fe1dda05cf20e2dec64993128cbcb12e8c43",
+      "bytes": 6339
+    },
+    {
+      "path": "docs/LAUNCH_CHECKLIST.md",
+      "status": "M",
+      "sha256": "bbb42e90d2a34bfed62b26d5b2bcc1ccda76a1c8aa69ec3df63be6c946b424af",
+      "bytes": 8289
+    },
+    {
+      "path": "docs/PRODUCTION_BLOCKERS_2026-10-28.md",
+      "status": "A",
+      "sha256": "27293c90c8ec3a3061d8ee983eb3a43baf11b991945019ebeda84cd8b1c8f861",
+      "bytes": 37620
+    },
+    {
+      "path": "docs/README.md",
+      "status": "A",
+      "sha256": "bd36a478763f298e08cc3de528532b3c105af36c4d5526e96310f304f9ff1d63",
+      "bytes": 3682
+    },
+    {
+      "path": "docs/RELEASE_2026-10-28.md",
+      "status": "A",
+      "sha256": "999a701c04bd6f8a8351e4dfa3105c2aae532d82a5c5a7893014ee5949197604",
+      "bytes": 20978
+    },
+    {
+      "path": "docs/SCREENSHOT_UI_SPEC.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/migration/COMPARISON.md",
+      "status": "A",
+      "sha256": "13d9c0f7fcb9fd9f93e2d67abfdf6134da509bd08b0a15a228a5a4e9bcb19e69",
+      "bytes": 7001
+    },
+    {
+      "path": "docs/migration/IMPLEMENTATION.md",
+      "status": "A",
+      "sha256": "3018a211a5ffe5ae70e235468f5d463cadecf63b88692b38f7030ec836aa9e00",
+      "bytes": 3313
+    },
+    {
+      "path": "docs/release/deletions.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/release/files.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/release/inventory.json",
+      "status": "A"
+    },
+    {
+      "path": "docs/release/local-media-verification.json",
+      "status": "A",
+      "sha256": "4c90f70fa122a813911c0384bb40ede7c4bf783a2d3cfcc87ef86376d0ac7b14",
+      "bytes": 894
+    },
+    {
+      "path": "docs/release/stage-files.txt",
+      "status": "A"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-1440-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-1440-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-1440-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-1440-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-768-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-hero-idle-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-hero-idle-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-hero-idle-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-hero-idle-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-hero-idle-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-showcase-dark-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-showcase-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-showcase-dark-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-showcase-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-showcase-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-showcase-light-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-showcase-light-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-showcase-light-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-showcase-light-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/mp3-regression-showcase-light-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/390-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/390-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/390-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/390-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/768-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/768-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/768-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/photo-selection/768-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/1440-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/1440-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/1440-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/1440-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/1440-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/1440-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/390-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/390-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/390-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/390-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/390-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/390-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/768-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/768-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/768-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/768-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/768-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/768-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792487340112/single-photo/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792493015890/mp3-regression-privacy-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792493015890/mp3-regression-privacy-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792493015890/mp3-regression-privacy-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792493015890/mp3-regression-privacy-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792493015890/mp3-regression-privacy-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792493015890/mp3-regression-privacy-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-1440-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-1440-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-1440-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-1440-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-390-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-390-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-390-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-390-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-768-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-768-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-768-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-768-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-hero-idle-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-hero-idle-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-hero-idle-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-hero-idle-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-hero-idle-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-privacy-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-privacy-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-privacy-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-privacy-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-privacy-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-privacy-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-showcase-dark-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-showcase-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-showcase-dark-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-showcase-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-showcase-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-showcase-light-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-showcase-light-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-showcase-light-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-showcase-light-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/mp3-regression-showcase-light-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/390-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/390-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/390-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/390-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/768-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/768-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/768-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/photo-selection/768-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/1440-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/1440-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/1440-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/1440-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/1440-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/1440-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/390-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/390-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/390-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/390-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/390-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/390-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/768-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/768-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/768-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/768-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/768-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/768-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495349212/single-photo/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-1440-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-1440-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-1440-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-1440-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-390-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-390-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-390-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-390-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-768-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-768-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-768-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-768-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-hero-idle-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-hero-idle-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-hero-idle-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-hero-idle-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-hero-idle-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-privacy-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-privacy-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-privacy-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-privacy-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-privacy-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-privacy-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-showcase-dark-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-showcase-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-showcase-dark-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-showcase-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-showcase-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-showcase-light-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-showcase-light-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-showcase-light-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-showcase-light-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/mp3-regression-showcase-light-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/390-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/390-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/390-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/390-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/768-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/768-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/768-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/photo-selection/768-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/1440-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/1440-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/1440-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/1440-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/1440-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/1440-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/390-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/390-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/390-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/390-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/390-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/390-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/768-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/768-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/768-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/768-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/768-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/768-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495615649/single-photo/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-1440-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-1440-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-1440-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-1440-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-390-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-390-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-390-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-390-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-768-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-768-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-768-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-768-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-hero-idle-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-hero-idle-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-hero-idle-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-hero-idle-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-hero-idle-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-privacy-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-privacy-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-privacy-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-privacy-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-privacy-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-privacy-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-showcase-dark-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-showcase-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-showcase-dark-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-showcase-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-showcase-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-showcase-light-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-showcase-light-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-showcase-light-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-showcase-light-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/mp3-regression-showcase-light-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/390-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/390-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/390-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/390-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/768-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/768-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/768-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/photo-selection/768-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/1440-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/1440-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/1440-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/1440-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/1440-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/1440-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/390-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/390-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/390-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/390-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/390-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/390-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/768-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/768-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/768-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/768-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/768-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/768-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792495822218/single-photo/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-1440-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-1440-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-1440-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-1440-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-390-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-390-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-390-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-390-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-768-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-768-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-768-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-768-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-hero-idle-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-hero-idle-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-hero-idle-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-hero-idle-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-hero-idle-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-showcase-dark-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-showcase-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-showcase-dark-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-showcase-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-showcase-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-showcase-light-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-showcase-light-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-showcase-light-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-showcase-light-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/mp3-regression-showcase-light-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/390-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/390-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/390-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/390-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/768-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/768-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/768-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/photo-selection/768-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/1440-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/1440-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/1440-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/1440-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/1440-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/1440-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/390-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/390-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/390-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/390-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/390-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/390-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/768-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/768-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/768-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/768-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/768-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/768-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792500963320/single-photo/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-1440-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-1440-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-1440-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-1440-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-390-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-390-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-390-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-390-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-768-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-768-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-768-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-768-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-hero-idle-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-hero-idle-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-hero-idle-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-hero-idle-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-hero-idle-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-showcase-dark-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-showcase-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-showcase-dark-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-showcase-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-showcase-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-showcase-light-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-showcase-light-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-showcase-light-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-showcase-light-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/mp3-regression-showcase-light-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/390-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/390-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/390-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/390-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/768-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/768-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/768-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/photo-selection/768-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/1440-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/1440-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/1440-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/1440-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/1440-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/1440-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/390-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/390-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/390-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/390-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/390-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/390-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/768-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/768-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/768-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/768-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/768-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/768-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792501248752/single-photo/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-1440-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-1440-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-1440-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-1440-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-390-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-390-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-390-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-390-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-768-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-768-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-768-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-768-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-hero-idle-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-hero-idle-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-hero-idle-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-hero-idle-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-hero-idle-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-showcase-dark-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-showcase-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-showcase-dark-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-showcase-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-showcase-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-showcase-light-1024.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-showcase-light-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-showcase-light-1920.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-showcase-light-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/mp3-regression-showcase-light-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/390-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/390-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/390-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/390-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/768-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/768-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/768-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/photo-selection/768-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/1440-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/1440-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/1440-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/1440-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/1440-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/1440-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/390-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/390-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/390-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/390-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/390-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/390-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/768-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/768-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/768-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/768-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/768-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/768-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507184038/single-photo/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507685041/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507685041/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507685041/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507685041/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507685041/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507685041/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792507685041/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-1440-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-1440-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-1440-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-1440-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-390-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-390-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-390-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-390-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-768-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-768-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-768-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/mp3-768-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/390-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/390-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/390-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/390-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/768-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/768-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/768-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/photo-selection/768-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/1440-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/1440-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/1440-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/1440-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/1440-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/1440-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/390-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/390-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/390-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/390-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/390-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/390-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/768-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/768-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/768-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/768-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/768-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/768-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792509211083/single-photo/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-1440-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-1440-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-1440-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-1440-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-390-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-390-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-390-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-390-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-768-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-768-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-768-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/mp3-768-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/390-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/390-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/390-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/390-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/768-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/768-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/768-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/photo-selection/768-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/1440-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/1440-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/1440-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/1440-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/1440-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/1440-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/390-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/390-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/390-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/390-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/390-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/390-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/768-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/768-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/768-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/768-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/768-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/768-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792510167423/single-photo/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-1440-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-1440-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-1440-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-1440-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-390-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-390-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-390-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-390-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-768-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-768-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-768-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/mp3-768-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/390-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/390-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/390-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/390-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/768-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/768-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/768-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/photo-selection/768-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/1440-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/1440-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/1440-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/1440-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/1440-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/1440-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/390-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/390-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/390-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/390-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/390-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/390-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/768-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/768-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/768-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/768-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/768-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/768-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511570675/single-photo/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-1440-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-1440-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-1440-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-1440-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-390-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-390-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-390-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-390-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-768-converting.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-768-mp4.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-768-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/mp3-768-unavailable.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/1440-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/1440-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/1440-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/1440-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/390-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/390-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/390-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/390-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/768-idle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/768-multiple-selected.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/768-photo-ready.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/photo-selection/768-unsupported.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/1440-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/1440-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/1440-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/1440-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/1440-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/1440-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/1440-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/1440-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/1440-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/390-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/390-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/390-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/390-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/390-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/390-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/390-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/390-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/390-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/768-completed.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/768-dark.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/768-error.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/768-first-visit-light.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/768-first.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/768-gallery-full.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/768-last.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/768-middle.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792511891734/single-photo/768-preparing.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792512634669/mp3-regression-privacy-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792512634669/mp3-regression-privacy-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792512634669/mp3-regression-privacy-768.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792512634669/mp3-regression-privacy-dark-1440.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792512634669/mp3-regression-privacy-dark-390.png",
+      "status": "D"
+    },
+    {
+      "path": "docs/screenshots/browser-1792512634669/mp3-regression-privacy-dark-768.png",
+      "status": "D"
+    },
+    {
+      "path": "package-lock.json",
+      "status": "M",
+      "sha256": "324b4df9bd8df727b69817be3cd59fb662d0a3b5c7e0f02c64a38725f758376b",
+      "bytes": 210155
+    },
+    {
+      "path": "package.json",
+      "status": "M",
+      "sha256": "7ed71f44d862f775397cefa5913f9586b7bf4863ebd02a08dbb911e308516e48",
+      "bytes": 2454
+    },
+    {
+      "path": "playwright.config.ts",
+      "status": "M",
+      "sha256": "b248f3880453341e933f2b123e7856b6097bcf0d8b21894c7f9b121d37aeabd0",
+      "bytes": 740
+    },
+    {
+      "path": "public/assets/admin.css",
+      "status": "A",
+      "sha256": "b7132da3933fe324405ddd845dae13ee41576ee3ec7770645e51c01708f7bc06",
+      "bytes": 5322
+    },
+    {
+      "path": "public/assets/analytics.css",
+      "status": "A",
+      "sha256": "6e001c45d610f777cee77303b652b4d847e8f596a51c55e2770bef4328421e85",
+      "bytes": 1088
+    },
+    {
+      "path": "public/assets/app.css",
+      "status": "A",
+      "sha256": "4cd343724045d7d87e1be0ac163fe1bc552e2b0e3fd05b4587266202f251a102",
+      "bytes": 112061
+    },
+    {
+      "path": "public/assets/fonts/tiktok-sans-OFL.txt",
+      "status": "A",
+      "sha256": "0b4ca3185a4ea583ef3a8a1598129f5adf73f3d5648243a7f9f1e79e8cb47b56",
+      "bytes": 4369
+    },
+    {
+      "path": "public/assets/fonts/tiktok-sans-latin.woff2",
+      "status": "A",
+      "sha256": "20e09f0a631bccb3e848f6f5f18a7fcb09df5a4f7576cc4dc22aa1dad51d9f4a",
+      "bytes": 44784
+    },
+    {
+      "path": "public/assets/images/hero-video-poster-320.webp",
+      "status": "A",
+      "sha256": "76db29eea53eda9902c3eb9845e14f29a88c39861e40636cbc97b68b73965c1e",
+      "bytes": 22768
+    },
+    {
+      "path": "public/assets/images/hero-video-poster-540.webp",
+      "status": "M",
+      "sha256": "733a773dd8e5a5bea4a332a86af2074da9707e307f77859db4797d1dfe9ea150",
+      "bytes": 50320
+    },
+    {
+      "path": "public/assets/images/hero-video-poster.webp",
+      "status": "M",
+      "sha256": "c61c9106723988a3bb2a1bb936a77556f2e0545b44cef883cfcd3f205d4c173a",
+      "bytes": 83760
+    },
+    {
+      "path": "public/assets/images/moment-city-300.webp",
+      "status": "M",
+      "sha256": "50e1559a3f22e0a024649e873b8539db010bdb252939e359e4d156481eefa4f6",
+      "bytes": 30772
+    },
+    {
+      "path": "public/assets/images/moment-city.webp",
+      "status": "M",
+      "sha256": "ef3b68cb28015ebbf678428f0b828eb8ae38115c484931d82cedf967a8f5ad8a",
+      "bytes": 78956
+    },
+    {
+      "path": "public/assets/images/moment-nature-300.webp",
+      "status": "M",
+      "sha256": "c9e5747419bd260f95b551c87183e02130827b508b31339d41cf9ef1fdb2ff88",
+      "bytes": 32384
+    },
+    {
+      "path": "public/assets/images/moment-nature.webp",
+      "status": "M",
+      "sha256": "e0e73e659c0d772e28ace01bba1b5f1f00375770b1b7656790a7ac0cb2ee7b60",
+      "bytes": 110982
+    },
+    {
+      "path": "public/assets/images/showcase-left-400.webp",
+      "status": "M",
+      "sha256": "b6565dc3aff0a04497d39fca9033a7694191c005bb6f1a01dbd9295eab9d8afc",
+      "bytes": 49694
+    },
+    {
+      "path": "public/assets/images/showcase-left.webp",
+      "status": "M",
+      "sha256": "152cb5cc8cbf0977b2824e0333c7d35174ebd8ccd015be88f01813eafc47d9bb",
+      "bytes": 140358
+    },
+    {
+      "path": "public/assets/images/showcase-right-400.webp",
+      "status": "M",
+      "sha256": "81063db20abf5f0725e11130e815c7b0a877117344d2120f01f73bb7762ae53a",
+      "bytes": 51610
+    },
+    {
+      "path": "public/assets/images/showcase-right.webp",
+      "status": "M",
+      "sha256": "7ac936933a5391b12b5ddafaab68ec7fad8203d9eaa56732cb4c846b293571e9",
+      "bytes": 153330
+    },
+    {
+      "path": "public/assets/images/tiktok-images-guide-400.webp",
+      "status": "A",
+      "sha256": "791fc1e8a2836e25683b46f3f8bd8bc6dfef01d919d8e721adb6a5c63ee294a2",
+      "bytes": 16980
+    },
+    {
+      "path": "public/assets/images/tiktok-images-guide-800.webp",
+      "status": "M",
+      "sha256": "4a7f133bb6638c70b5a3e737a7812a485011abf863aecf8da6c51be73f870cb5",
+      "bytes": 46254
+    },
+    {
+      "path": "public/assets/images/tiktok-images-guide.webp",
+      "status": "M",
+      "sha256": "b3c06bf476a1236b0710c72dffcf1e362c35ee9f6b26b6d5a09fd5016b26fd90",
+      "bytes": 120560
+    },
+    {
+      "path": "public/assets/images/tiktok-on-pc-guide-400.webp",
+      "status": "A",
+      "sha256": "bd4840eda61a6f037d242d5f4dcc87d45d1ccedef8d7622f0e9152348eb2bdf0",
+      "bytes": 14134
+    },
+    {
+      "path": "public/assets/images/tiktok-on-pc-guide-800.webp",
+      "status": "M",
+      "sha256": "af1122592065de1f2eb605ad129d4dd6abd697f277d7c776c6addf64a0a1f965",
+      "bytes": 38600
+    },
+    {
+      "path": "public/assets/images/tiktok-on-pc-guide.webp",
+      "status": "M",
+      "sha256": "2f8dfb1d8e06b4d0492acab0251858cab70940428990d15e1a668f0478edf780",
+      "bytes": 98364
+    },
+    {
+      "path": "public/assets/images/tiktok-to-mp3-guide-400.webp",
+      "status": "A",
+      "sha256": "82f2a74012c7b2ee83e03132ab7bef80c3d45aded642f04a1dd86400f4c02c0c",
+      "bytes": 14058
+    },
+    {
+      "path": "public/assets/images/tiktok-to-mp3-guide-800.webp",
+      "status": "M",
+      "sha256": "13f5e9875f1ca389999a2d79d451c2fe948741bf4fa653a91cac79377507e1c1",
+      "bytes": 37088
+    },
+    {
+      "path": "public/assets/images/tiktok-to-mp3-guide.webp",
+      "status": "M",
+      "sha256": "1040ed353c946a6828231afc2bc04f0604885d674da54ac20139e63caaa21d92",
+      "bytes": 94328
+    },
+    {
+      "path": "public/assets/images/tiktok-to-mp4-guide-400.webp",
+      "status": "A",
+      "sha256": "e9778c5f3bc41a01457e2a7aad8e40e0ba4e4a0677d074963833390f084abc0a",
+      "bytes": 11584
+    },
+    {
+      "path": "public/assets/images/tiktok-to-mp4-guide-800.webp",
+      "status": "M",
+      "sha256": "0dd45cba3ee452947f46e0b4eb3a2c4d55b2d1e904f345e180dc4efc06f18a01",
+      "bytes": 32284
+    },
+    {
+      "path": "public/assets/images/tiktok-to-mp4-guide.webp",
+      "status": "M",
+      "sha256": "264b9289c8ab7a23c56cfcf721d868869d8b75c781d8465f1bde507929cae54f",
+      "bytes": 85958
+    },
+    {
+      "path": "public/assets/images/transparent.webp",
+      "status": "A",
+      "sha256": "86be52bdb7547413cafb3ed175a806a798c65de98b40849e0b974c47d187de65",
+      "bytes": 34
+    },
+    {
+      "path": "public/assets/js/advertising.js",
+      "status": "A",
+      "sha256": "1ac6ebc4951f9ba50cc34762c7a2550084d13dca99a28b6d7a3967473f538045",
+      "bytes": 5275
+    },
+    {
+      "path": "public/assets/js/analytics.js",
+      "status": "M",
+      "sha256": "78c74d8f591483ac89e07be59d6f06d633674494a41948569c2b84e98ee731ee",
+      "bytes": 6752
+    },
+    {
+      "path": "public/assets/js/app.js",
+      "status": "M",
+      "sha256": "59a342c6227caac36c494a932b13bcdd9d9f82203b9a8dc73e056411fe94309f",
+      "bytes": 532
+    },
+    {
+      "path": "public/assets/js/downloader-bootstrap.js",
+      "status": "A",
+      "sha256": "feac910ca1b1bc6a74e0afc718594db0fe28afc56a2827f890f7d9625a189c3e",
+      "bytes": 2063
+    },
+    {
+      "path": "public/assets/js/downloader.js",
+      "status": "M",
+      "sha256": "e7891d8390d0ba5996ad97c58781909ffa2f4f18ebe557bb38588c669719ecd5",
+      "bytes": 488992
+    },
+    {
+      "path": "scripts/audit-image-loading.mjs",
+      "status": "A",
+      "sha256": "f4e14926911b0370412fea3a3aa7009acbb2a832cef7ca73cdf1ff6ba006aa35",
+      "bytes": 4829
+    },
+    {
+      "path": "scripts/audit-local-load.ts",
+      "status": "A",
+      "sha256": "cee3e3c33f1de8929bd6b16c95e23041e2085b9c0930a2de8c224e8ba585f31b",
+      "bytes": 1791
+    },
+    {
+      "path": "scripts/audit-release-assets.mjs",
+      "status": "A",
+      "sha256": "8dbb895afbad3d429beee8688e350c21653f65ddca6a5f93c9215c5dd25753d3",
+      "bytes": 1604
+    },
+    {
+      "path": "scripts/build-images.mjs",
+      "status": "M",
+      "sha256": "c891e1e645df0f150853a893cea4d24d8e541d4eea26ba58773a8b593de954e9",
+      "bytes": 3823
+    },
+    {
+      "path": "scripts/verify-http-media.mjs",
+      "status": "A",
+      "sha256": "c4fb1fd085544edfd70365b6ab867590c8de4a53648224bdb303b845cefa32ea",
+      "bytes": 7625
+    },
+    {
+      "path": "scripts/verify-media.ts",
+      "status": "M",
+      "sha256": "f164d2dc344410ef0afb601b4da9579f98118beab4b4defaa171436ca9ff7a91",
+      "bytes": 3321
+    },
+    {
+      "path": "scripts/verify-photos.ts",
+      "status": "M",
+      "sha256": "31ccb4e22b649110302c515e9b6bbc32a068287eb748f217546ce40ee40d87f2",
+      "bytes": 4560
+    },
+    {
+      "path": "scripts/verify-release.mjs",
+      "status": "A",
+      "sha256": "2a2d22a0a14eb2da390fcc819195cd3dccb5ef5e5b8b1f224ef0d17b19b9fd9f",
+      "bytes": 5948
+    },
+    {
+      "path": "src/admin-password.ts",
+      "status": "A",
+      "sha256": "e1f2db8fb3137ad0872db445ebfca37ef2e0531ef854cbaad770361f6cd0e33d",
+      "bytes": 2063
+    },
+    {
+      "path": "src/api/contracts.ts",
+      "status": "M",
+      "sha256": "d04bcef98af0373b14d91c8d6a880c6b517b3f63506520e70504bbcf5df3520c",
+      "bytes": 4823
+    },
+    {
+      "path": "src/app.ts",
+      "status": "M",
+      "sha256": "f4fd62ad4e35faadcc45181a3e1bc43cef8d17111616545d8aaab3e821fba79a",
+      "bytes": 6943
+    },
+    {
+      "path": "src/config/env.ts",
+      "status": "M",
+      "sha256": "e7c78e2d869046ed9fd868cb1734d2a5b65fe5d1897b5727961cfd9d48654149",
+      "bytes": 7109
+    },
+    {
+      "path": "src/data/legal-pages.ts",
+      "status": "M",
+      "sha256": "d154b644271b3e9efd909e935a20448e4fbbfd3f4fcb0f5c6c707d2be39d1cfd",
+      "bytes": 23255
+    },
+    {
+      "path": "src/data/mock-data.ts",
+      "status": "M",
+      "sha256": "52af7ca66078ca613a1919984e9d3c482c4d7c0bbeb63fc97d67d8b389884705",
+      "bytes": 7011
+    },
+    {
+      "path": "src/frontend/api-adapter.ts",
+      "status": "M",
+      "sha256": "c7ed9f7b84732db49da0a3f12da8f7d5cfe00ad702a1959adf0673464ba0a434",
+      "bytes": 8923
+    },
+    {
+      "path": "src/frontend/contracts.ts",
+      "status": "M",
+      "sha256": "4919354a9d701f51ddab46fed6d1e1d9fd84cca3f4f010d941441b672a1d3eef",
+      "bytes": 3146
+    },
+    {
+      "path": "src/frontend/downloader.ts",
+      "status": "M",
+      "sha256": "0bf0cd2432886a7f53b36dfa4b235a922ceb508b6c849e2ad2519a9e6fa59cec",
+      "bytes": 24494
+    },
+    {
+      "path": "src/frontend/state-machine.ts",
+      "status": "M",
+      "sha256": "bf77f371e5ec7dbca7a59054371839d6f84e813752c220dba7d887468d87968e",
+      "bytes": 15670
+    },
+    {
+      "path": "src/middleware/error-handler.ts",
+      "status": "M",
+      "sha256": "ab9ac01b4caace43c70de781a9f8baaa6b030d88daa8b6a7da93c1d602f1defc",
+      "bytes": 3036
+    },
+    {
+      "path": "src/report-analytics.ts",
+      "status": "A",
+      "sha256": "84dec7a81852f96b80365a2767d215c3338cabb3821ee1038ef2518cb8f2eff3",
+      "bytes": 1054
+    },
+    {
+      "path": "src/routes/admin.ts",
+      "status": "A",
+      "sha256": "7d2bf1cf4a9c4adabc3555bf507d24a4bf989a3cfd9c01d943105fd0db35add5",
+      "bytes": 10144
+    },
+    {
+      "path": "src/routes/api.ts",
+      "status": "M",
+      "sha256": "f2d16bbd4f1b0ca0280dc0bfb4c9a661b84bbd5bcc79f6ba9b9e652ea259c3e4",
+      "bytes": 9788
+    },
+    {
+      "path": "src/routes/public.ts",
+      "status": "M",
+      "sha256": "326701f3e146cbbc6c2b58c833a946055ef69b7eb448ec8746db7a78588832c5",
+      "bytes": 10375
+    },
+    {
+      "path": "src/services/admin-auth.ts",
+      "status": "A",
+      "sha256": "b5c34856303cefcb5e960a4a4af6b48f8b46d5c63ee92d6637899c5ca85c1582",
+      "bytes": 3916
+    },
+    {
+      "path": "src/services/admin-monitor.ts",
+      "status": "A",
+      "sha256": "bb3c70ae782891f631d9ec96bde65ff9d67731888308422d591383a80502bb1b",
+      "bytes": 3128
+    },
+    {
+      "path": "src/services/advertising.ts",
+      "status": "A",
+      "sha256": "056fc7525f9e3b6d06296fd07f78c819a1b1e8997db6ad654efc17d1a74327a3",
+      "bytes": 6605
+    },
+    {
+      "path": "src/services/blog.ts",
+      "status": "M",
+      "sha256": "28a04d2d279578883c6708f61616caa11ea9e68a841181c9876390e63472d048",
+      "bytes": 9179
+    },
+    {
+      "path": "src/services/downloader.ts",
+      "status": "M",
+      "sha256": "f82b22664f7cee93d54080a6e8573c40bbfb962f9df832e16d29909442f8a37d",
+      "bytes": 37005
+    },
+    {
+      "path": "src/services/ga4-reports.ts",
+      "status": "A",
+      "sha256": "aade7e3d216431b99ea7534f4a4c32c0dd3768fd0ea8253940f6ec9a17861753",
+      "bytes": 6537
+    },
+    {
+      "path": "src/services/memory-store.ts",
+      "status": "M",
+      "sha256": "fa5617f61677d9c70c5b2373df464d3a4348784768476354dd0cf1c9d25176e3",
+      "bytes": 1319
+    },
+    {
+      "path": "src/services/operational-analytics.ts",
+      "status": "A",
+      "sha256": "1be103ff34f67a702de34b0506553b25cc801c199f6cb2ec7ace952fdfa27c21",
+      "bytes": 14023
+    },
+    {
+      "path": "src/services/seo.ts",
+      "status": "M",
+      "sha256": "a7761593e4d0e4974937f9565d4c2bd06a9e5876a34d634831cfce7e171ee32e",
+      "bytes": 1523
+    },
+    {
+      "path": "src/services/telemetry.ts",
+      "status": "A",
+      "sha256": "4ea485198569ccf4e83ee9cfd33f75600126ebbb25837aa0423be79d51a3bec2",
+      "bytes": 825
+    },
+    {
+      "path": "src/services/tool-process.ts",
+      "status": "M",
+      "sha256": "8a81c08aae363f165084192931f6b0d73dfe91fcb15c586c4462d86ee11bba49",
+      "bytes": 7031
+    },
+    {
+      "path": "src/services/verify-video.ts",
+      "status": "M",
+      "sha256": "8aa62b7c78d9cdc1a6fec124a97dc7886d6400357b419980a64ca8139991a5e5",
+      "bytes": 3095
+    },
+    {
+      "path": "src/shared/admin-settings.ts",
+      "status": "A",
+      "sha256": "d578f570cf14ee5427314d0dc03878908da19bb6b449e62a54f73bafa3b903c2",
+      "bytes": 149
+    },
+    {
+      "path": "src/shared/download-contracts.ts",
+      "status": "A",
+      "sha256": "518f7eaf3edcab8ad33aac3f170340abd5f03d84f77f4c44d949de953b2d4148",
+      "bytes": 433
+    },
+    {
+      "path": "src/styles/_tiksave-home.scss",
+      "status": "A",
+      "sha256": "f29f5de8b55bded47517021f86c2be69c2c9723337a2639dcc02356bcb576e50",
+      "bytes": 14134
+    },
+    {
+      "path": "src/styles/app.scss",
+      "status": "M",
+      "sha256": "81f8a80ed4818e469f04155fa2ac9e50e9145480b5a01a040e071cea3f1ddde3",
+      "bytes": 262
+    },
+    {
+      "path": "tests/admin-auth.test.ts",
+      "status": "A",
+      "sha256": "fecde30d3f60c580bed7a50f8e1e5f2ab93a7be15f9a7cda903b489050efd959",
+      "bytes": 2654
+    },
+    {
+      "path": "tests/admin-monitor.test.ts",
+      "status": "A",
+      "sha256": "e9974ecd145893eade44d97c598c41ff2a6e1cf871cfbea35891c52a284295ed",
+      "bytes": 2653
+    },
+    {
+      "path": "tests/advertising-loader.test.ts",
+      "status": "A",
+      "sha256": "8ec134e25acb65c966152075de89ec45a8c2b2e4a2ff92388c04edbb5ea7b19c",
+      "bytes": 5969
+    },
+    {
+      "path": "tests/advertising.test.ts",
+      "status": "A",
+      "sha256": "ba21535601d8af0540343789606b285f320931955943b6806dda124cc1aa250d",
+      "bytes": 7534
+    },
+    {
+      "path": "tests/analytics.test.ts",
+      "status": "M",
+      "sha256": "7cd4ce09c8c7b467ec9c7224e9c3ac1659a44bc9a73600804f18699656f78d4d",
+      "bytes": 9635
+    },
+    {
+      "path": "tests/browser/admin.spec.ts",
+      "status": "A",
+      "sha256": "d5b7907348c91502c267962ac62df9a515ca568e0dff1a4439a16d18609c08d6",
+      "bytes": 4051
+    },
+    {
+      "path": "tests/browser/advertising.spec.ts",
+      "status": "A",
+      "sha256": "82e235256e051d7caf3db3fba0a3d8567996d15f86e53cf056613ca3e2f7dc44",
+      "bytes": 6431
+    },
+    {
+      "path": "tests/browser/analytics.spec.ts",
+      "status": "M",
+      "sha256": "d4a879a1eafe81b95e3941ffe37d3f2f895317a59d0f6157065eb88a622d261d",
+      "bytes": 6067
+    },
+    {
+      "path": "tests/browser/blog.spec.ts",
+      "status": "M",
+      "sha256": "fc090017b751633b147b246eaad5c04d16521747d6f5789eacb7281c3316693a",
+      "bytes": 6440
+    },
+    {
+      "path": "tests/browser/download-api.spec.ts",
+      "status": "M",
+      "sha256": "af79aab3bc71de61712d49f1e6c835bf03072ed028329db6d8c0fcd98c7f8219",
+      "bytes": 3081
+    },
+    {
+      "path": "tests/browser/downloader.spec.ts",
+      "status": "M",
+      "sha256": "9a2fbf9bec826f0a9350ebbe5b08d6eb226f44b51e47810d62856bde9d1ac986",
+      "bytes": 4183
+    },
+    {
+      "path": "tests/browser/fetch-panel.spec.ts",
+      "status": "M",
+      "sha256": "b47658716feb58fa0c73be32d8e0817f38bbedf6506919f33e4b913f3529daf0",
+      "bytes": 4187
+    },
+    {
+      "path": "tests/browser/hero-states.spec.ts",
+      "status": "M",
+      "sha256": "43f8607fa512f5038158a1bc0d5faa8328f2314a8a7d146893967fcfe9158293",
+      "bytes": 4817
+    },
+    {
+      "path": "tests/browser/homepage-migration.spec.ts",
+      "status": "A",
+      "sha256": "9645771fc6c488f8f7db5b4084150f34a112774c6139fd606cc3bf269c96c1f2",
+      "bytes": 3254
+    },
+    {
+      "path": "tests/browser/images.spec.ts",
+      "status": "A",
+      "sha256": "c81909c22719d0a383f3cfa9285918b04ff6bbedad2d0f1c94503f13dd3da59d",
+      "bytes": 1573
+    },
+    {
+      "path": "tests/browser/launch-audit.spec.ts",
+      "status": "M",
+      "sha256": "2cebb922485575f0a3f7ec16f40f46013661c389280c578123f31c64d56b08da",
+      "bytes": 7395
+    },
+    {
+      "path": "tests/browser/mp3.spec.ts",
+      "status": "M",
+      "sha256": "d3cfe239f640430de831427761bb7d0336b3bf32a25b5572fab650a570883499",
+      "bytes": 6237
+    },
+    {
+      "path": "tests/browser/performance.spec.ts",
+      "status": "M",
+      "sha256": "9ee836c5836bfaf0e1145dd6d7550edccf69f7c8c6966bfabb68a7f513083c0e",
+      "bytes": 3360
+    },
+    {
+      "path": "tests/browser/photo-repeat.spec.ts",
+      "status": "M",
+      "sha256": "d84465c9690022e7a5c3e0a15271cd385c0bf278679df4260e16919ef9fcb2b0",
+      "bytes": 6187
+    },
+    {
+      "path": "tests/browser/photo-selection.spec.ts",
+      "status": "M",
+      "sha256": "26a738ea97946413cb2fe983d90261bf04dc605b0b30310311673a705c7ef065",
+      "bytes": 7134
+    },
+    {
+      "path": "tests/browser/photos.spec.ts",
+      "status": "M",
+      "sha256": "8da83fc0be49584b5cca00037e84d57409c2937b3c46e9b134b6e90744c58f31",
+      "bytes": 11762
+    },
+    {
+      "path": "tests/browser/public-budget.ts",
+      "status": "A",
+      "sha256": "a0b2bc8b181b8906d1edd2306ee13e76d8345ce8a9feaceafe64e2f2b9919aff",
+      "bytes": 1108
+    },
+    {
+      "path": "tests/browser/responsive-audit.spec.ts",
+      "status": "A",
+      "sha256": "1b7840889858ec64a5815da7b60db5ef895405524c77be336d59a728c94c89f1",
+      "bytes": 1780
+    },
+    {
+      "path": "tests/browser/result-workspace.spec.ts",
+      "status": "M",
+      "sha256": "4b8b5b6c642b26c3f7ae33152a6536890eccd82e144341f09335e7b8079e0cfb",
+      "bytes": 6273
+    },
+    {
+      "path": "tests/browser/seo.spec.ts",
+      "status": "M",
+      "sha256": "f0660a67a428b964e71e7efcb08ec8fbe2b26c67acd3803e0c291e8712f912fc",
+      "bytes": 4788
+    },
+    {
+      "path": "tests/browser/startup-race.spec.ts",
+      "status": "A",
+      "sha256": "e0d61ee7392216fac2edaa19951a0f7e8136f89086bbbc24302c43eab259cb59",
+      "bytes": 4001
+    },
+    {
+      "path": "tests/browser/ui.spec.ts",
+      "status": "M",
+      "sha256": "605e65bad5678c0047fb1055d0a99e1ea8f92d0cce6cb091d511bc909cd0e22a",
+      "bytes": 6024
+    },
+    {
+      "path": "tests/download-contracts.test.ts",
+      "status": "A",
+      "sha256": "9a8ebdddf1b03174e688d0191040c431da13c6d35293e94c4d6bf51eb3e95147",
+      "bytes": 1815
+    },
+    {
+      "path": "tests/e2e/admin.test.ts",
+      "status": "A",
+      "sha256": "42e34023e66d75c769f9a59c4b6fc854fa3dbe54c7e5ef427ed0dac377d45de8",
+      "bytes": 8026
+    },
+    {
+      "path": "tests/e2e/advertising.test.ts",
+      "status": "A",
+      "sha256": "cdb6f3903c1d9c7093b4f98e40a41f274a61e3af718fd4c63489c163b6702570",
+      "bytes": 6409
+    },
+    {
+      "path": "tests/e2e/analytics.test.ts",
+      "status": "M",
+      "sha256": "51d269a6dfb2d19300e44bf93765e66ef79467cc6fe67734c1c297b11a36ebb2",
+      "bytes": 4032
+    },
+    {
+      "path": "tests/e2e/app.test.ts",
+      "status": "M",
+      "sha256": "f996b4dee4cafdcf8bd6d9c403471fcca8a8d81b257c2b2f428e311e97d39a63",
+      "bytes": 4646
+    },
+    {
+      "path": "tests/e2e/images.test.ts",
+      "status": "A",
+      "sha256": "d7416ae590ff644fb15fb5f6ee63f540c30eb6299dc9d86673fa7365cf73466e",
+      "bytes": 2903
+    },
+    {
+      "path": "tests/e2e/mp3.test.ts",
+      "status": "M",
+      "sha256": "4aa17c8befaa62697b412484d327a255fb586344ce0eeb38a3a6a0297ab50733",
+      "bytes": 10466
+    },
+    {
+      "path": "tests/e2e/seo.test.ts",
+      "status": "M",
+      "sha256": "fd42922b52e4ca0fd7c0694328b4e991033d853490405b568bdfe756c8ca861a",
+      "bytes": 22750
+    },
+    {
+      "path": "tests/fixtures/in-memory-job-store.ts",
+      "status": "A",
+      "sha256": "c5266b21cb7e727c7f03b95cb12086c67408c629dc2a65c92f3cdafd818078b4",
+      "bytes": 3089
+    },
+    {
+      "path": "tests/fixtures/mock-downloader.ts",
+      "status": "M",
+      "sha256": "9b6b9d3b326c0bf3d6b0274b94616d15db4874213aac48018523bbc09e17de32",
+      "bytes": 898
+    },
+    {
+      "path": "tests/helpers/advertising.ts",
+      "status": "A",
+      "sha256": "cc8ce8dea6d911d0a59aea16c4c743add24623781b1518f3ba07307c111554c8",
+      "bytes": 1394
+    },
+    {
+      "path": "tests/operational-analytics.test.ts",
+      "status": "A",
+      "sha256": "a5accc518ce66bfed3c6eae9ae347d077c7bb1fb0789e980f2b5aa43ddd3ba98",
+      "bytes": 5787
+    },
+    {
+      "path": "tests/state-machine.test.ts",
+      "status": "M",
+      "sha256": "85198dde3c03d73219aa92eef2b4377c6ca642264a0208b1ef448ba66a7bc724",
+      "bytes": 12516
+    },
+    {
+      "path": "tests/verify-video.test.ts",
+      "status": "A",
+      "sha256": "58b058aa5a05cdb3f2bfecbaefdd0e34ba9ebcebd057c3d285bc54a515e5a264",
+      "bytes": 2008
+    },
+    {
+      "path": "views/admin-dashboard.ejs",
+      "status": "A",
+      "sha256": "b345498a4c4bc523421809791621bebe283a9202e84d69b53d7db2098e01f4dd",
+      "bytes": 12007
+    },
+    {
+      "path": "views/admin-login.ejs",
+      "status": "A",
+      "sha256": "b9f58c45a932099e62498280ec6e6e2cfae21f65c3f6b01d9f59bfeb2a560b52",
+      "bytes": 1256
+    },
+    {
+      "path": "views/blog-article.ejs",
+      "status": "M",
+      "sha256": "b9de92bad3f4f5b0460a3f1d9b3e3b1867e534f7b18404f3fcba7849ed7170c3",
+      "bytes": 3116
+    },
+    {
+      "path": "views/index.ejs",
+      "status": "M",
+      "sha256": "3274f9eec06942ff55652475cfa550b19473a6de791b9c4c28353bf595ae6548",
+      "bytes": 560
+    },
+    {
+      "path": "views/legal.ejs",
+      "status": "M",
+      "sha256": "d787126ce6c7bb23a8378e8642de6ce3e7bd1e7d9af01344f4114018f194825b",
+      "bytes": 6637
+    },
+    {
+      "path": "views/partials/admin-head.ejs",
+      "status": "A",
+      "sha256": "24a48ea3cdf61efcc3d2527f24ea5cea1cfccbfc067ab811f5a9f96b6cd2733c",
+      "bytes": 260
+    },
+    {
+      "path": "views/partials/blog-card.ejs",
+      "status": "M",
+      "sha256": "dc7b18195ac8d34bf41ec3a26893a6c17b6b29dffaaaf2898f060039533b0b59",
+      "bytes": 934
+    },
+    {
+      "path": "views/partials/downloader.ejs",
+      "status": "M",
+      "sha256": "a33496139921d639563ec56353563c7396c4f552e2496c1c5f791b0203450931",
+      "bytes": 2209
+    },
+    {
+      "path": "views/partials/footer.ejs",
+      "status": "M",
+      "sha256": "7798fb27a82e275f2f4dc4617d17cc4ee097f970c3e7c8ffe4ee3f02b901ac3c",
+      "bytes": 2593
+    },
+    {
+      "path": "views/partials/head.ejs",
+      "status": "M",
+      "sha256": "87781f371e430f9690fa44dab427f1efcfeb69299f2720ac41db5b928d640e46",
+      "bytes": 2999
+    },
+    {
+      "path": "views/partials/header.ejs",
+      "status": "M",
+      "sha256": "fcf5175893e130736d05074a9b77cc5c083fdfe4454d3ff658cba3128e91a00c",
+      "bytes": 3488
+    },
+    {
+      "path": "views/partials/hero.ejs",
+      "status": "M",
+      "sha256": "0979f890df85524056f9270c7b1155ad53879f36aa7415c29b145ff0463dd2fe",
+      "bytes": 1718
+    },
+    {
+      "path": "views/partials/home-features.ejs",
+      "status": "A",
+      "sha256": "a5ebd9f673e1ed4e8b5dcbac27ed45fc18bc0f725e0339ecf30ac0b969201efa",
+      "bytes": 1284
+    },
+    {
+      "path": "views/partials/home-steps.ejs",
+      "status": "A",
+      "sha256": "91a7e0feb8f34758575b4fcdf2fbb219504ee8570c79ab2f648f08800d61403b",
+      "bytes": 847
+    },
+    {
+      "path": "views/partials/icon.ejs",
+      "status": "M",
+      "sha256": "d4839c0a35ab0e7cbe9807e9052054162a8a0fa4d3a027b8dc62d0c3459eb180",
+      "bytes": 2011
+    },
+    {
+      "path": "views/partials/picture.ejs",
+      "status": "M",
+      "sha256": "96676274548600eaf50cd167ceb648c1e9652e11b81728c84c8f959d53c4da29",
+      "bytes": 816
+    },
+    {
+      "path": "vitest.config.ts",
+      "status": "M",
+      "sha256": "743c629d485ac710b76b3fca3f8db8cc16d00d5a5d4e62559ab3a4f920d7095d",
+      "bytes": 441
+    }
+  ]
+}

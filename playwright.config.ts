@@ -6,7 +6,14 @@ export default defineConfig({
   testDir: './tests/browser',
   fullyParallel: false,
   workers: 1,
-  use: { channel: 'chrome', baseURL: 'http://127.0.0.1:3100' },
+  outputDir: 'test-results',
+  use: {
+    channel: 'chrome',
+    baseURL: 'http://127.0.0.1:3100',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    trace: 'retain-on-failure',
+  },
   webServer: {
     command: 'node dist/server.js',
     url: 'http://127.0.0.1:3100/health',
