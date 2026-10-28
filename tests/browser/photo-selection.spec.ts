@@ -129,7 +129,7 @@ for (const [width, height] of [
     await page.goto('/');
     await capture('idle');
     await page.locator('#video-url').fill('https://www.tiktok.com/@creator/photo/123');
-    await page.getByRole('button', { name: 'Get video', exact: true }).click();
+    await page.locator('.analyze-button').click();
     await expect(page.locator('#photo-position')).toHaveText('1 of 4');
     await page.locator('#photo-multi summary').click();
     await expect(page.locator('#photo-download-selected')).toBeDisabled();
@@ -176,7 +176,7 @@ for (const [width, height] of [
     await page.locator('#photo-another').click();
     unsupported = true;
     await page.locator('#video-url').fill('https://www.tiktok.com/@creator/photo/456');
-    await page.getByRole('button', { name: 'Get video', exact: true }).click();
+    await page.locator('.analyze-button').click();
     await expect(page.locator('#error-card')).toContainText(
       'This photo post is not supported.',
     );

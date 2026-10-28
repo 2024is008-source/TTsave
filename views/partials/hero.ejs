@@ -1,238 +1,59 @@
-<%# ═══════════════════════════════════════════════════════════════ hero.ejs — Idle +
-Active result workspace data-downloader-state is set on this element by downloader.ts
-Active states: ready | starting-download | downloading | completed | download-requested |
-error ═══════════════════════════════════════════════════════════════ %>
-<section class="hero" id="hero" aria-labelledby="hero-title" data-downloader-state="idle">
-  <%# ── Introduction row (always visible, compact in active state) ── %>
-  <div class="hero-intro container">
-    <div class="hero-copy">
-      <div class="eyebrow-pill" aria-label="Public posts, MP4, MP3, Image">
-        <span class="eyebrow-spark" aria-hidden="true">⚡</span>
-        <span>Public posts</span>
-        <span class="eyebrow-dot" aria-hidden="true">·</span>
-        <span>MP4</span>
-        <span class="eyebrow-dot" aria-hidden="true">·</span>
-        <span>MP3</span>
-        <span class="eyebrow-dot" aria-hidden="true">·</span>
-        <span>Image</span>
-      </div>
-      <h1 id="hero-title">
-        <span class="gradient-text">TikTok to MP4</span><br />
-        Downloader
-      </h1>
-      <p class="hero-description">
-        Convert supported public TikTok videos to MP4 or MP3. Paste a link, review the
-        available options, and download to your device.
+<section
+  class="hero home-tool"
+  id="hero"
+  aria-labelledby="hero-title"
+  data-downloader-state="idle"
+>
+  <div class="home-intro container">
+    <h1 id="hero-title">
+      Download TikTok<br />
+      Videos &amp; Photos
+    </h1>
+    <p class="hero-description">
+      Save public TikTok videos and photo slideshows with a simple link.
+    </p>
+  </div>
+  <div class="home-tool-content">
+    <div class="home-media-tabs" role="tablist" aria-label="TikTok media type">
+      <button
+        id="tool-photo"
+        type="button"
+        role="tab"
+        aria-selected="true"
+        aria-controls="downloader-panel"
+        data-media-tool="photo"
+      >
+        <%- include('icon', {name: 'image'}) %> Photo
+      </button>
+      <button
+        id="tool-video"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        aria-controls="downloader-panel"
+        tabindex="-1"
+        data-media-tool="video"
+      >
+        <%- include('icon', {name: 'video'}) %> Video
+      </button>
+    </div>
+    <div
+      class="home-download-panel"
+      id="downloader-panel"
+      role="tabpanel"
+      aria-labelledby="tool-photo"
+    >
+      <h2 id="panel-tool-title">Download TikTok Photos &amp; Slideshows</h2>
+      <p id="panel-tool-subtitle">
+        Paste a public TikTok post link to save individual images or a selected slideshow.
       </p>
       <%- include('downloader') %>
-    </div>
-    <%# ── Idle-only decorative art column ── %>
-    <div
-      class="hero-art"
-      aria-label="Smartphone showcasing a lifestyle sunset video"
-      aria-hidden="false"
-    >
-      <div class="phone-stage">
-        <div class="iridescent-ribbon" aria-hidden="true"></div>
-        <div class="art-sphere sphere-one" aria-hidden="true"></div>
-        <div class="art-sphere sphere-two" aria-hidden="true"></div>
-        <div class="phone idle-phone">
-          <div class="phone-screen">
-            <%- include('picture', { imageClass: 'phone-scene', imageName:
-            'hero-video-poster', imageWidth: 1080, imageHeight: 1920, smallWidth: 540,
-            imageSizes: '(max-width: 480px) 248px, (max-width: 1100px) 260px, 290px',
-            imageAlt: heroArtwork.alt, imageLoading: 'eager' }) %>
-            <!-- Top gradient overlay -->
-            <div class="phone-overlay-top" aria-hidden="true"></div>
-            <!-- Bottom gradient overlay -->
-            <div class="phone-overlay-bottom" aria-hidden="true"></div>
-
-            <div class="island" aria-hidden="true"><span></span></div>
-            <div class="phone-top" aria-hidden="true">
-              <span class="phone-time">9:41</span>
-              <div class="phone-status-icons">
-                <svg
-                  width="14"
-                  height="10"
-                  viewBox="0 0 14 10"
-                  fill="white"
-                  aria-hidden="true"
-                >
-                  <rect x="0" y="3" width="2" height="7" rx="1" opacity="0.4" />
-                  <rect x="3" y="2" width="2" height="8" rx="1" opacity="0.6" />
-                  <rect x="6" y="1" width="2" height="9" rx="1" opacity="0.8" />
-                  <rect x="9" y="0" width="2" height="10" rx="1" />
-                </svg>
-                <svg
-                  width="14"
-                  height="10"
-                  viewBox="0 0 14 10"
-                  fill="white"
-                  aria-hidden="true"
-                >
-                  <rect
-                    x="0"
-                    y="1"
-                    width="12"
-                    height="8"
-                    rx="2"
-                    stroke="white"
-                    stroke-width="1.5"
-                    fill="none"
-                  />
-                  <rect x="1.5" y="2.5" width="7" height="5" rx="1" fill="white" />
-                  <path d="M13 3.5v3c.83-.4 1.5-1.5 0-3z" fill="white" />
-                </svg>
-              </div>
-            </div>
-            <div class="phone-action-rail" aria-hidden="true">
-              <span class="phone-action phone-action--heart">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M12 20.4 10.55 19.08C5.4 14.4 2 11.3 2 7.5A5.45 5.45 0 0 1 7.5 2 6 6 0 0 1 12 4.08 6 6 0 0 1 16.5 2 5.45 5.45 0 0 1 22 7.5c0 3.8-3.4 6.9-8.55 11.58Z"
-                  />
-                </svg>
-              </span>
-              <span class="phone-action phone-action--comment">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M21 11.5a8.4 8.4 0 0 1-9 8.5 9.8 9.8 0 0 1-3.6-.72L3 21l1.65-4.83A8.23 8.23 0 0 1 3 11.5a8.4 8.4 0 0 1 9-8.5 8.4 8.4 0 0 1 9 8.5Z"
-                  />
-                  <circle cx="8" cy="11.5" r="1" />
-                  <circle cx="12" cy="11.5" r="1" />
-                  <circle cx="16" cy="11.5" r="1" />
-                </svg>
-              </span>
-              <span class="phone-action phone-action--share">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m21 3-8.2 18-2.1-7.7L3 10.8 21 3Z" />
-                  <path d="m10.7 13.3 5.1-5.1" />
-                </svg>
-              </span>
-              <span class="phone-action phone-action--sound">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M9 18V6l10-3v12" />
-                  <ellipse cx="6" cy="18" rx="3" ry="2" />
-                  <ellipse cx="16" cy="15" rx="3" ry="2" />
-                </svg>
-              </span>
-            </div>
-            <div class="phone-caption" aria-hidden="true">
-              <div class="creator-line">
-                <%- include('picture', { imageClass: 'creator-avatar', imageName:
-                'hero-avatar', imageWidth: 256, imageHeight: 256, smallWidth: 128,
-                imageSizes: '32px', imageAlt: '', imageLoading: 'eager' }) %>
-                <span><%= heroArtwork.creator %></span>
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 20 20"
-                  fill="#4299e1"
-                  aria-hidden="true"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-              <p><%= heroArtwork.caption %></p>
-              <span class="scene-label"><%= heroArtwork.label %></span>
-            </div>
-            <div class="home-indicator" aria-hidden="true"></div>
-          </div>
-          <div class="phone-button" aria-hidden="true"></div>
-          <div class="phone-volume volume-up" aria-hidden="true"></div>
-          <div class="phone-volume volume-down" aria-hidden="true"></div>
-        </div>
-        <div class="phone-pedestal" aria-hidden="true"></div>
-
-        <!-- Music tile floating -->
-        <div class="music-tile" aria-hidden="true">
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path d="M9 18V6l11-3v13M9 10l11-3" />
-            <ellipse cx="6" cy="18" rx="3" ry="2" />
-            <ellipse cx="17" cy="16" rx="3" ry="2" />
-          </svg>
-        </div>
-        <div class="tiktok-tile" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.26a8.16 8.16 0 0 0 4.77 1.52V7.31a4.85 4.85 0 0 1-1-.62Z"
-              fill="#25F4EE"
-              transform="translate(-1 0)"
-            />
-            <path
-              d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.26a8.16 8.16 0 0 0 4.77 1.52V7.31a4.85 4.85 0 0 1-1-.62Z"
-              fill="#FE2C55"
-              transform="translate(1 0)"
-              style="mix-blend-mode: screen"
-            />
-          </svg>
+      <div class="result-workspace" aria-label="Media download workspace">
+        <div class="result-workspace-inner">
+          <div class="result-preview-column" hidden><%- include('phone-preview') %></div>
+          <%- include('result-card') %>
         </div>
       </div>
-
-      <%# ── Idle info panel ── %>
-      <div class="hero-side-card">
-        <div class="floating-quality-panel" id="idle-info">
-          <div class="fqp-row">
-            <span class="fqp-icon fqp-icon--pink" aria-hidden="true">↗</span>
-            <div>
-              <div class="fqp-title">Public posts</div>
-              <div class="fqp-sub">Public TikTok links only</div>
-            </div>
-          </div>
-          <div class="fqp-row">
-            <span class="fqp-icon fqp-icon--blue" aria-hidden="true">MP4</span>
-            <div>
-              <div class="fqp-title">MP4 format</div>
-              <div class="fqp-sub">Video with audio</div>
-            </div>
-          </div>
-          <div class="fqp-row">
-            <span class="fqp-icon fqp-icon--violet" aria-hidden="true">✓</span>
-            <div>
-              <div class="fqp-title">Available quality</div>
-              <div class="fqp-sub">Original available source</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <%# ── Active result workspace (shown only in result states) ── %>
-  <div class="result-workspace container" aria-label="Video download workspace">
-    <div class="result-workspace-inner">
-      <%# ── Preview column: premium phone ── %>
-      <div class="result-preview-column" aria-hidden="false">
-        <div class="phone result-phone">
-          <div class="phone-screen">
-            <%- include('phone-preview') %>
-            <!-- Analyzing shimmer overlay -->
-            <div class="phone-analyzing-overlay" aria-hidden="true"></div>
-            <!-- Bottom readability gradient -->
-            <div class="phone-overlay-bottom" aria-hidden="true"></div>
-            <div class="island" aria-hidden="true"><span></span></div>
-            <div class="phone-button" aria-hidden="true"></div>
-          </div>
-          <div class="phone-side-button" aria-hidden="true"></div>
-          <div class="phone-volume result-volume-up" aria-hidden="true"></div>
-          <div class="phone-volume result-volume-down" aria-hidden="true"></div>
-        </div>
-        <div class="result-phone-glow" aria-hidden="true"></div>
-      </div>
-
-      <%# ── Details panel: metadata + quality + download ── %> <%- include('result-card')
-      %>
     </div>
   </div>
 </section>

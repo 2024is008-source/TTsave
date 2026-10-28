@@ -41,6 +41,46 @@ function makeAdapter(): DownloaderAdapter {
   };
 }
 
+it('reports success only after confirmed server delivery and never just preparation or handoff', async () => {
+  const confirmation = deferred<boolean>();
+  const adapter = makeAdapter();
+  adapter.confirmDelivery = vi.fn(() => confirmation.promise);
+  const delivered = vi.fn();
+  const controller = createDownloaderController({
+    adapter,
+    requestDownload: vi.fn(),
+    onDelivered: delivered,
+  });
+  controller.setUrl('https://vt.tiktok.com/abc/');
+  await controller.analyze();
+  await controller.download();
+  expect(delivered).not.toHaveBeenCalled();
+  controller.save();
+  expect(delivered).not.toHaveBeenCalled();
+  confirmation.resolve(true);
+  await vi.waitFor(() => expect(delivered).toHaveBeenCalledExactlyOnceWith('mp4'));
+});
+
+it('does not report stale or unsuccessful delivery confirmations', async () => {
+  const confirmation = deferred<boolean>();
+  const adapter = makeAdapter();
+  adapter.confirmDelivery = vi.fn(() => confirmation.promise);
+  const delivered = vi.fn();
+  const controller = createDownloaderController({
+    adapter,
+    requestDownload: vi.fn(),
+    onDelivered: delivered,
+  });
+  controller.setUrl('https://vt.tiktok.com/abc/');
+  await controller.analyze();
+  await controller.download();
+  controller.save();
+  controller.setUrl('https://vt.tiktok.com/new/');
+  confirmation.resolve(true);
+  await Promise.resolve();
+  expect(delivered).not.toHaveBeenCalled();
+});
+
 describe('downloader state machine', () => {
   it('defaults to MP4, preserves quality across MP3 switching, sends an audio intent and resets on new URLs', async () => {
     const adapter = makeAdapter();

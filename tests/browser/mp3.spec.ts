@@ -93,7 +93,7 @@ for (const [width, height] of [
       });
     };
     await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
-    await page.getByRole('button', { name: 'Get video' }).click();
+    await page.locator('.analyze-button').click();
     const mp4 = page.getByRole('radio', { name: /MP4 Video/ });
     const mp3 = page.getByRole('radio', { name: /MP3 Audio/ });
     await expect(mp4).toBeChecked();
@@ -129,7 +129,7 @@ for (const [width, height] of [
     await capture('completed');
     await page.getByRole('button', { name: 'Download another video' }).click();
     await page.locator('#video-url').fill('https://vt.tiktok.com/again/');
-    await page.getByRole('button', { name: 'Get video' }).click();
+    await page.locator('.analyze-button').click();
     await expect(mp4).toBeChecked();
     await mp3.check();
     await page.getByRole('button', { name: 'Download MP3', exact: true }).click();
@@ -140,7 +140,7 @@ for (const [width, height] of [
     await capture('error');
     await page.evaluate(() => document.dispatchEvent(new Event('audio-unavailable')));
     await page.locator('#video-url').fill('https://vt.tiktok.com/silent/');
-    await page.getByRole('button', { name: 'Get video' }).click();
+    await page.locator('.analyze-button').click();
     await expect(mp3).toBeDisabled();
     await expect(page.locator('#audio-unavailable')).toBeVisible();
     await capture('unavailable');

@@ -146,7 +146,7 @@ describe('public SEO and policies', () => {
         expect(response.text).not.toContain(previousBrand);
       }
       expect(document.querySelector('.wordmark')?.textContent.replace(/\s+/g, '')).toBe(
-        'TikSaveMp4',
+        path === '/' ? 'TikSaveMP4TikTokMediaUtility' : 'TikSaveMp4',
       );
       expect(
         document.querySelector('.footer-bottom')?.textContent.replace(/\s+/g, ' '),
@@ -177,7 +177,7 @@ describe('public SEO and policies', () => {
     expect(
       document.querySelector('meta[name="description"]')?.getAttribute('content'),
     ).toBe(
-      'Free and fast TikTok downloader. Save MP4 videos without watermark, convert audio to MP3, and download images online. No signup required.',
+      'Download public TikTok videos as MP4, convert available audio to MP3, or save photo posts as images and ZIP files. No TikTok login required.',
     );
     const data: unknown = JSON.parse(
       document.querySelector('script[type="application/ld+json"]')?.textContent ?? '',
@@ -197,7 +197,7 @@ describe('public SEO and policies', () => {
     }));
     expect(visibleFaqs).toEqual(mockData.faqs);
     expect(document.querySelector('h1')?.textContent.replace(/\s+/g, ' ').trim()).toBe(
-      'TikTok to MP4 Downloader',
+      'Download TikTok Videos & Photos',
     );
     expect(JSON.stringify(data)).not.toMatch(
       /"(?:aggregateRating|review|offers|downloadCount|price)"\s*:/,
@@ -328,7 +328,7 @@ describe('public SEO and policies', () => {
     const response = await request(app).get('/').expect(200);
     const document = new JSDOM(response.text).window.document;
     expect(document.querySelector('h1')?.textContent.replace(/\s+/g, ' ').trim()).toBe(
-      'TikTok to MP4 Downloader',
+      'Download TikTok Videos & Photos',
     );
     expect(document.querySelector('#download-form')?.getAttribute('action')).toBe(
       '/api/v1/analyze',
@@ -336,7 +336,7 @@ describe('public SEO and policies', () => {
     expect(document.querySelector('label[for="video-url"]')?.textContent).toContain(
       'video or photo',
     );
-    expect(document.querySelector('.analyze-label')?.textContent).toBe('Get video');
+    expect(document.querySelector('.analyze-label')?.textContent).toBe('Download Photo');
     const faq = [...document.querySelectorAll('.faq-item')].find((item) =>
       item
         .querySelector('summary')
@@ -461,9 +461,8 @@ describe('public SEO and policies', () => {
       expect(image.getAttribute('height')).toMatch(/^\d+$/);
       expect(image.hasAttribute('alt')).toBe(true);
     }
-    expect(document.querySelector('.phone-scene img')?.getAttribute('loading')).toBe(
-      'eager',
-    );
+    expect(document.querySelector('.phone-scene')).toBeNull();
+    expect(document.querySelectorAll('.blog-card img').length).toBeGreaterThan(0);
   });
   it('lists only public canonical pages in the sitemap', async () => {
     const response = await request(app).get('/sitemap.xml').expect(200);

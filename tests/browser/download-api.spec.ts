@@ -53,7 +53,7 @@ test('frontend uses authorized job events and a completed single-use file URL', 
   await page.setViewportSize({ width: 390, height: 900 });
   await page.goto('/');
   await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
-  await page.getByRole('button', { name: 'Get video' }).click();
+  await page.locator('.analyze-button').click();
   await expect(page.locator('#result-title')).toBeFocused();
   const downloadEvent = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Download MP4', exact: true }).click();

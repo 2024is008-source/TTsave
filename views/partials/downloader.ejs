@@ -1,39 +1,41 @@
 <div class="downloader" id="downloader">
   <form id="download-form" action="/api/v1/analyze" method="post">
     <label class="field-label" for="video-url">TikTok video or photo link</label>
-    <div class="input-capsule">
-      <span class="input-icon"><%- include('icon', { name: 'link' }) %></span>
-      <input
-        id="video-url"
-        name="url"
-        type="url"
-        inputmode="url"
-        autocomplete="off"
-        placeholder="Paste a public TikTok link here..."
-        required
-        maxlength="2048"
-        aria-describedby="availability form-status"
-      />
-      <button class="clear-button" type="button" aria-label="Clear TikTok link" hidden>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-      </button>
-      <button class="paste-button" type="button">Paste</button>
-      <button class="primary-button analyze-button" type="submit">
+    <div class="home-form-row">
+      <div class="input-capsule">
+        <span class="input-icon"><%- include('icon', { name: 'link' }) %></span>
+        <input
+          id="video-url"
+          name="url"
+          type="url"
+          inputmode="url"
+          autocomplete="off"
+          placeholder="Paste a TikTok photo or share link"
+          required
+          maxlength="2048"
+          aria-describedby="availability form-status"
+        />
+        <button class="clear-button" type="button" aria-label="Clear TikTok link" hidden>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        <button class="paste-button" type="button">Paste</button>
+      </div>
+      <button class="primary-button analyze-button" type="submit" disabled>
         <%- include('icon', { name: 'download' }) %>
-        <span class="analyze-label">Get video</span>
+        <span class="analyze-label">Download Photo</span>
       </button>
     </div>
     <button class="cancel-button" type="button" hidden>Cancel</button>
@@ -46,6 +48,11 @@
     </div>
     <p class="availability" id="availability"><%= availability %></p>
   </form>
+  <noscript
+    ><p>
+      Enable JavaScript to use the downloader. Links are never submitted automatically.
+    </p></noscript
+  >
   <p
     class="form-status"
     id="form-status"

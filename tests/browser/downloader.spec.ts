@@ -54,7 +54,7 @@ test('keyboard selection, cancellation, real progress and browser handoff', asyn
     });
   });
   await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
-  await page.getByRole('button', { name: 'Get video' }).click();
+  await page.locator('.analyze-button').click();
   await expect(page.locator('#result-title')).toBeFocused();
   const source = page.getByRole('radio', { name: 'Source format' });
   const alternative = page.getByRole('radio', { name: 'Alternative format' });

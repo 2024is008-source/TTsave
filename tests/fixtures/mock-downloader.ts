@@ -1,8 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import {
-  InMemoryJobStore,
-  type DownloaderService,
-} from '../../src/services/memory-store.js';
+import type { DownloaderService } from '../../src/services/memory-store.js';
+import { InMemoryJobStore } from './in-memory-job-store.js';
 import type { Analysis } from '../../src/api/contracts.js';
 
 /** Explicit contract fixtures, confined to automated tests. */

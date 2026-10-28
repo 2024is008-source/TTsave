@@ -1,0 +1,42 @@
+{
+  "checkedAt": "2026-10-28T06:03:47.864Z",
+  "target": "local",
+  "passed": true,
+  "stages": [
+    {
+      "phase": "analysis",
+      "kind": "video",
+      "formatCount": 2,
+      "mp3": true
+    },
+    {
+      "phase": "mp4",
+      "passed": true,
+      "prepared": "ready",
+      "http": 200,
+      "mime": "video/mp4",
+      "noStore": true,
+      "attachment": true,
+      "replayStatus": 409,
+      "bytes": 2027898,
+      "lengthMatches": true,
+      "fullDecodePassed": true,
+      "finalStatus": "delivered"
+    },
+    {
+      "phase": "mp3",
+      "passed": true,
+      "prepared": "ready",
+      "http": 200,
+      "mime": "audio/mpeg",
+      "noStore": true,
+      "attachment": true,
+      "replayStatus": 409,
+      "bytes": 490646,
+      "lengthMatches": true,
+      "fullDecodePassed": true,
+      "finalStatus": "delivered"
+    }
+  ],
+  "localTempEntriesAfterShutdown": 0
+}

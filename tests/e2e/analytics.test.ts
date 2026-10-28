@@ -12,7 +12,7 @@ afterEach(() => {
 
 describe('public-page-only GA4 layout and CSP', () => {
   it.each(['/', ...legalPages.map((page) => page.path), '/blog'])(
-    'loads one external Google tag with safe metadata for %s',
+    'defers the Google tag until consent with safe metadata for %s',
     async (path) => {
       env.GA_MEASUREMENT_ID = 'G-TEST123456';
       const response = await request(createApp())
@@ -24,17 +24,15 @@ describe('public-page-only GA4 layout and CSP', () => {
       const init = document.querySelector('#analytics-init');
       if (!init) throw new Error('Missing Analytics initializer');
       expect(init.getAttribute('src')).toBe(
-        '/assets/js/analytics.js?v=origin-referrer-blog-1',
+        '/assets/js/analytics.js?v=consent-downloads-2',
       );
       expect(init.getAttribute('data-measurement-id')).toBe(env.GA_MEASUREMENT_ID);
       expect(init.getAttribute('data-page-location')).toBe(env.PUBLIC_BASE_URL + path);
       expect(init.outerHTML).not.toMatch(/SECRET|attacker/);
       const tags = document.querySelectorAll('script[src*="googletagmanager.com"]');
-      expect(tags).toHaveLength(1);
-      expect(tags[0]?.getAttribute('src')).toBe(
-        'https://www.googletagmanager.com/gtag/js?id=G-TEST123456',
-      );
-      expect(tags[0]?.getAttribute('referrerpolicy')).toBe('no-referrer');
+      expect(tags).toHaveLength(0);
+      expect(init.getAttribute('data-require-consent')).toBe('true');
+      expect(document.querySelector('[data-analytics-accept]')).not.toBeNull();
       expect(
         document.querySelectorAll('script:not([src]):not([type="application/ld+json"])'),
       ).toHaveLength(0);

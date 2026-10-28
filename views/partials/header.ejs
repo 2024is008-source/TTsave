@@ -1,10 +1,44 @@
 <header class="site-header">
   <div class="container header-inner">
+    <% if (page.path === '/') { %>
+    <a class="wordmark" href="/" aria-label="TikSaveMP4 home"
+      ><span class="home-brand-icon" aria-hidden="true"
+        ><svg viewBox="0 0 24 24" fill="none">
+          <path
+            d="M14 3v12a4 4 0 1 1-4-4"
+            stroke="#25f4ee"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <path
+            d="M14 3c0 4 3 6 6 6"
+            stroke="#fe2c55"
+            stroke-width="2"
+            stroke-linecap="round"
+          /></svg></span
+      ><span class="home-brand-copy"
+        >TikSaveMP4<small>TikTok Media Utility</small></span
+      ></a
+    >
+    <% } else { %>
     <a class="wordmark" href="/" aria-label="TikSaveMp4 home"
       >Tik<span class="brand">Save</span><span class="brand-suffix">Mp4</span
       ><span class="brand-dot" aria-hidden="true"></span
     ></a>
+    <% } %>
     <nav class="desktop-nav" aria-label="Main navigation">
+      <% if (page.path === '/') { %>
+      <details class="home-nav-dropdown">
+        <summary>TikTok Downloader <span aria-hidden="true">⌄</span></summary>
+        <div>
+          <a href="#downloader" data-open-tool="video">Video &amp; MP3</a
+          ><a href="#downloader" data-open-tool="photo">Photos &amp; ZIP</a>
+        </div>
+      </details>
+      <a href="#downloader" data-open-tool="photo">Photo Slideshows</a
+      ><a href="#how-it-works">How to Use</a><a href="#faq">FAQ</a
+      ><a href="/blog">Blog Guides</a>
+      <% } else { %>
       <a href="/" class="<%= page.path === '/' ? 'nav-active' : '' %>">Home</a
       ><a href="<%= page.path === '/' ? '' : '/' %>#how-it-works">How it works</a
       ><a href="<%= page.path === '/' ? '' : '/' %>#features">Features</a
@@ -15,6 +49,7 @@
         aria-current="<%= page.path === '/blog' ? 'page' : page.path.startsWith('/blog/') ? 'location' : 'false' %>"
         >Blog</a
       >
+      <% } %>
     </nav>
     <div class="header-actions">
       <button

@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { mkdtemp, readdir, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import { env } from '../src/config/env.js';
@@ -12,6 +12,7 @@ import { z } from 'zod';
 const source = videoUrlSchema.parse(process.argv[2]);
 const mode = z.enum(['both', 'mp4', 'mp3']).default('both').parse(process.argv[3]);
 const parent = path.resolve('node_modules/.cache');
+await mkdir(parent, { recursive: true });
 const root = await mkdtemp(path.join(parent, 'media-live-'));
 const context = {
   signal: new AbortController().signal,

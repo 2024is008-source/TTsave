@@ -61,18 +61,14 @@ for (const [width, height] of [
           }),
     );
     await page.goto('/');
-    if ((width ?? 390) >= 1024) await expect(page.locator('.hero-art')).toBeVisible();
-    else await expect(page.locator('.hero-art')).toBeHidden();
+    await expect(page.locator('.hero-art')).toHaveCount(0);
     await page.locator('#video-url').fill('https://www.tiktok.com/@test/video/123');
-    await page.getByRole('button', { name: 'Get video' }).click();
+    await page.locator('.analyze-button').click();
     await expect(page.locator('#result-title')).toBeFocused();
-    if ((width ?? 390) >= 1024) await expect(page.locator('.hero-art')).toBeVisible();
-    else await expect(page.locator('.hero-art')).toBeHidden();
+    await expect(page.locator('.hero-art')).toHaveCount(0);
     await expect(page.locator('.hero h1')).toBeVisible();
     await expect(page.locator('.result-phone')).toBeHidden();
-    await expect(page.locator('.phone:visible')).toHaveCount(
-      (width ?? 390) >= 1024 ? 1 : 0,
-    );
+    await expect(page.locator('.phone:visible')).toHaveCount(0);
     await expect(page.locator('#result-thumbnail')).toHaveAttribute('src', thumbnail);
     await expect
       .poll(() =>
@@ -140,11 +136,10 @@ for (const [width, height] of [
     await page.locator('#video-url').fill('https://www.tiktok.com/@second/video/456');
     await expect(page.locator('#result-card')).toBeHidden();
     await expect(page.locator('#result-creator')).toBeEmpty();
-    await page.getByRole('button', { name: 'Get video' }).click();
+    await page.locator('.analyze-button').click();
     await expect(page.locator('#form-status')).toHaveText('Video unavailable');
     await expect(page.locator('#form-status')).toBeFocused();
-    if ((width ?? 390) >= 1024) await expect(page.locator('.hero-art')).toBeVisible();
-    else await expect(page.locator('.hero-art')).toBeHidden();
+    await expect(page.locator('.hero-art')).toHaveCount(0);
     await expect(page.locator('#video-url')).toHaveValue(
       'https://www.tiktok.com/@second/video/456',
     );

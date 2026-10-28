@@ -8,17 +8,16 @@ export function serializeJsonLd(value: unknown): string {
     .replace(/\u2029/g, '\\u2029');
 }
 
+const xmlEntities: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&apos;',
+};
+
 export function escapeXml(value: string): string {
-  return value.replace(/[&<>"']/g, (character) => {
-    const entities: Record<string, string> = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&apos;',
-    };
-    return entities[character] ?? character;
-  });
+  return value.replace(/[&<>"']/g, (character) => xmlEntities[character] ?? character);
 }
 
 export function webApplication(baseUrl: string) {

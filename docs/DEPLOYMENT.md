@@ -1,5 +1,19 @@
 # Ubuntu deployment and recovery
 
+**Current release procedure:** use [RELEASE_2026-10-28.md](RELEASE_2026-10-28.md)
+for the reviewed candidate, explicit Git manifest, staging, admin setup and
+approved switch/rollback. The procedures and production observations below are
+historical context; they do not authorize any live command or describe the new
+candidate as deployed.
+
+The owner confirms the website is **not connected to Cloudflare**. Use the current
+direct Nginx/TLS release checklist; Cloudflare sections below are conditional
+historical guidance, not active deployment requirements.
+
+New local candidate: read [the blocker implementation report](BLOCKER_FIXES_2026-10-28.md) and [private admin setup](ADMIN.md) before staging. MP3/startup/admin development fixes are implemented locally; the earlier production observations below still describe the unchanged live artifact. Do not restart or deploy without permission.
+
+Current release gate: read [the October 28 production blocker review and exact switch/rollback procedure](PRODUCTION_BLOCKERS_2026-10-28.md) first. The owner has confirmed production is Express TTsave at `/var/www/TTsave`, PM2 `ttsave`, port 3000, commit `54d1122`. Local fixes are uncommitted; that baseline alone is not the audited release. Real production MP4 passed, MP3 failed, and a private dashboard is required but absent. The review supersedes older architecture/access/admin assumptions below; no deployment has been authorized.
+
 Prepared October 9, 2026. This is a runbook, not evidence of deployment. Local tests run on Windows; Ubuntu, PM2 and Nginx have not been accessed. Do not launch until every production gate in LAUNCH_CHECKLIST.md is verified.
 
 ## Environment and ownership
@@ -71,7 +85,7 @@ Use an owner-authorized public TikTok video to test analysis, returned quality, 
 
 ## Operations, privacy and rollback
 
-Configure PM2 and Nginx log rotation, restrictive log access and a documented short retention period. Nginx access logs deliberately omit URLs, queries and headers; IPs remain necessary security data. Critical Nginx error records may still include request context, so restrict access and never export raw logs as public evidence. Application logs use fixed route labels and sanitized error categories. Optional GA4 is enabled only by `GA_MEASUREMENT_ID`. Before setting it, disable Enhanced Measurement in the Google web stream and confirm retention and consent arrangements using [ANALYTICS.md](ANALYTICS.md). No advertising integration is included.
+Configure PM2 and Nginx log rotation, restrictive log access and a documented short retention period. Nginx access logs deliberately omit URLs, queries and headers; IPs remain necessary security data. Critical Nginx error records may still include request context, so restrict access and never export raw logs as public evidence. Application logs use fixed route labels and sanitized error categories. Optional GA4 is enabled only by `GA_MEASUREMENT_ID`. Before setting it, disable Enhanced Measurement in the Google web stream and confirm retention and consent arrangements using [ANALYTICS.md](ANALYTICS.md). Monetag scaffolding is included but must remain disabled; see ADVERTISING.md.
 
 Monitor health/readiness failures, process restarts, queue rejection, disk free space, stale temporary files and TLS expiry. `/health` is liveness, not proof TikTok is reachable. Test resource behavior on the actual VPS with approved sources; local CPU/RSS numbers are not sizing guarantees. Temporary media must never be backed up or served statically.
 
@@ -86,3 +100,15 @@ The selected-image ZIP writer requires no additional executable or dependency. E
 Photo limits: 35 images; 12 MiB and 40 million decoded pixels per image; 64 MiB combined bytes; complete output additionally bounded by `DOWNLOAD_MAX_BYTES`; one concurrent archive; sequential image retrieval; 60-second photo processing deadline (or configured `DOWNLOAD_TIMEOUT_MS` if lower). Preview memory holds at most 32 entries of at most 1 MiB each; previews expire with the authorized analysis and are cleared on shutdown. Images/archives use the existing server-owned `job-*` directories and cleanup on delivery, cancellation, failure, timeout, expiry and shutdown. Preserve active file delivery until the stream closes. Retention defaults remain analysis/job ten minutes, ready file sixty seconds, sweep every thirty seconds.
 
 Before deployment, rerun `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:e2e`, `npm run build`, `npx playwright test`, `npm run tools:check` and `git diff --check`. Use the install/startup and rollback commands above, after explicit deployment authorization. Verify an owner-authorized public photo post through real TLS/Nginx/PM2: previews, every individual image, selection reset, one-image delivery, ordered selected ZIP, verified MIME, cancellation, expiry, cleanup and rate/concurrency exhaustion. Recheck MP4 and MP3 with fully decoded files. Verify OS/process-tree egress policy before public launch; application-level pinning does not constrain yt-dlp's networking. Production access was not supplied and no deployment was performed.
+
+## October 28 advertising, analytics and Cloudflare addendum
+
+Use the current [audit](FINAL_SYSTEM_AUDIT_2026-10-28.md) and [advertising guide](ADVERTISING.md) alongside this historical runbook. Keep ADVERTISING_ENABLED, MONETAG_IPP_ENABLED, MONETAG_VIGNETTE_ENABLED and MONETAG_MOBILE_ENABLED false until official tags, verified origins, CMP callbacks and real-creative checks are complete. No private publisher code belongs in public/ or Git.
+
+If local operational counters are enabled, use private OPERATIONS_DATA_DIR storage outside the release/web root, owned by the PM2 account. Back up operations.key and the SQLite database together. Quiesce the app before a filesystem copy and preserve SQLite sidecar files if present, or use a tested SQLite-consistent backup method. A copy of only an actively written main database file can omit WAL transactions. Verify restore in an isolated checkout before relying on a backup. Media jobs remain ephemeral across process restarts; the audit fixes stale ready counter records rather than promising download resumption.
+
+The Nginx template now overwrites X-TikSave-Country with XX. Keep TRUST_COUNTRY_HEADER false until a reviewed trusted edge map replaces that fixed value. Never forward a visitor-provided geography label. GA4 country reports do not require this server header.
+
+When Cloudflare proxying is enabled, verify Full (strict) TLS with a valid origin certificate and origin access restrictions. Per-visitor rate limiting also needs reviewed Nginx real-IP configuration: trust only current official Cloudflare ranges before accepting CF-Connecting-IP. Without it, remote_addr may be a Cloudflare edge address shared by many visitors. Do not use set_real_ip_from 0.0.0.0/0 or blindly trust arbitrary forwarded headers. The actual account settings/ranges/certificates were not accessed or changed here. Keep cache bypasses for APIs, streams, file delivery, ad bootstrap routes, readiness and errors; do not apply Cache Everything to them.
+
+References: [Cloudflare headers](https://developers.cloudflare.com/fundamentals/reference/http-headers/), [Full strict](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/), [Nginx real-IP module](https://nginx.org/en/docs/http/ngx_http_realip_module.html).

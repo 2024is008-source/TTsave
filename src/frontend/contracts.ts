@@ -1,8 +1,10 @@
 import { z } from 'zod';
 import { accessTokenSchema, safeFileUrlSchema } from '../api/contracts.js';
 import { thumbnailSchema, photoItemSchema } from '../shared/thumbnail.js';
+import { progressSchema } from '../shared/download-contracts.js';
 
 export { videoUrlSchema } from '../shared/video-url.js';
+export { progressSchema } from '../shared/download-contracts.js';
 
 export const formatSchema = z.object({
   id: z.string().min(1).max(200),
@@ -47,13 +49,6 @@ export const mediaSchema = z
         !value.capabilities.mp3
       : value.formats.length > 0,
   );
-export const progressSchema = z.object({
-  phase: z.enum(['downloading', 'converting']).optional(),
-  downloadedBytes: z.number().int().nonnegative().optional(),
-  percent: z.number().min(0).max(100).optional(),
-  speedBytesPerSecond: z.number().nonnegative().optional(),
-  sizeBytes: z.number().int().nonnegative().optional(),
-});
 export const jobSchema = z.object({
   id: z.string().min(1).max(200),
   accessToken: accessTokenSchema.optional(),
@@ -70,6 +65,7 @@ export type DownloadJob = z.infer<typeof jobSchema>;
 export type Download = z.infer<typeof downloadSchema>;
 
 export type DownloaderAdapter = {
+  confirmDelivery?: (job: DownloadJob, signal: AbortSignal) => Promise<boolean>;
   cancelDownload?: (job: DownloadJob) => Promise<void>;
   analyze: (url: string, signal: AbortSignal) => Promise<Media>;
   startDownload: (

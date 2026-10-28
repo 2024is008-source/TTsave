@@ -1,0 +1,57 @@
+.analytics-consent {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background: #fff;
+  color: #181b26;
+  border: 1px solid #ccd2df;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px #0002;
+  z-index: 100;
+}
+.analytics-consent p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+.analytics-consent a {
+  color: #a00030;
+  text-decoration: underline;
+}
+.analytics-consent > div {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.analytics-consent button,
+.analytics-preferences {
+  min-height: 44px;
+  font: inherit;
+  padding: 10px 18px;
+  border: 1px solid #a00030;
+  border-radius: 10px;
+  color: #a00030;
+  background: #fff;
+  cursor: pointer;
+}
+.analytics-consent [data-analytics-accept] {
+  background: #a00030;
+  color: #fff;
+}
+.analytics-preferences {
+  display: block;
+  margin: 12px auto 24px;
+  font-size: 13px;
+}
+.analytics-consent[hidden] {
+  display: none;
+}
+.analytics-consent :focus-visible,
+.analytics-preferences:focus-visible {
+  outline: 3px solid #287cff;
+  outline-offset: 3px;
+}

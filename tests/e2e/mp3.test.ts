@@ -27,6 +27,7 @@ let download: ReturnType<typeof downloadChild> | undefined;
 let conversion: ReturnType<typeof converter> | undefined;
 let conversionMode: 'success' | 'failure' | 'pending';
 let invalidProbe: boolean;
+let changedSourceDimensions: boolean;
 const metadata = { analyzeSource: vi.fn(() => Promise.resolve(sourceFixture())) };
 function converter(args: string[]) {
   const output = args.at(-1);
@@ -50,6 +51,7 @@ beforeEach(async () => {
   root = await mkdtemp(path.join(tmpdir(), 'tiksavemp4-mp3-test-'));
   conversionMode = 'success';
   invalidProbe = false;
+  changedSourceDimensions = false;
   download = undefined;
   conversion = undefined;
   metadata.analyzeSource.mockImplementation(() => Promise.resolve(sourceFixture()));
@@ -75,7 +77,20 @@ beforeEach(async () => {
             streams: [{ codec_type: 'audio', codec_name: invalidProbe ? 'aac' : 'mp3' }],
             format: { duration: '30', format_name: 'mp3' },
           })
-        : probeChild();
+        : probeChild(
+            changedSourceDimensions
+              ? {
+                  streams: [
+                    { codec_type: 'video', width: 540, height: 960 },
+                    { codec_type: 'audio' },
+                  ],
+                  format: {
+                    duration: '27.466667',
+                    format_name: 'mov,mp4,m4a,3gp,3g2,mj2',
+                  },
+                }
+              : undefined,
+          );
     download = downloadChild(args);
     return download;
   });
@@ -109,6 +124,23 @@ async function start() {
   await download.complete();
   return { job, media, directory: download.directory };
 }
+it('converts the real-source 576x1024 metadata / 540x960 input mismatch safely for MP3', async () => {
+  changedSourceDimensions = true;
+  metadata.analyzeSource.mockImplementation(() => {
+    const source = sourceFixture();
+    const first = source.media.formats[0];
+    if (!first) throw new Error('Missing fixture format');
+    source.media.formats[0] = { ...first, width: 576, height: 1024 };
+    return Promise.resolve(source);
+  });
+  const { job } = await start();
+  await vi.waitFor(() => expect(service.getJob(job.id).status).toBe('ready'));
+  expect(conversion).toBeDefined();
+  expect(service.getJob(job.id).deliveredFormat).toMatchObject({
+    container: 'mp3',
+    hasAudio: true,
+  });
+});
 it('converts with fixed safe encoder settings, serves audio/mpeg and cleans after single-use delivery', async () => {
   const { job, directory } = await start();
   await vi.waitFor(() => expect(service.getJob(job.id).status).toBe('ready'));

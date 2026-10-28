@@ -1,0 +1,41 @@
+<section class="home-features container" id="features" aria-labelledby="features-title">
+  <h2 id="features-title">Built for Fast, Transparent Media Inspection</h2>
+  <p class="home-section-description">
+    A TikTok to MP4 converter for supported public videos, with MP3 audio when available.
+    Use TikSaveMP4 as a TikTok photo downloader for public photo posts.
+  </p>
+  <div class="feature-grid">
+    <% features.forEach((feature) => { %>
+    <article class="feature-card">
+      <div class="icon-well" aria-hidden="true">
+        <%- include('icon', { name: feature.icon }) %>
+      </div>
+      <div>
+        <h3><%= feature.title %></h3>
+        <p><%= feature.description %></p>
+      </div>
+    </article>
+    <% }) %>
+  </div>
+  <div class="format-reference">
+    <h3>Supported Media &amp; Format Reference</h3>
+    <dl>
+      <div>
+        <dt>Video</dt>
+        <dd>MP4 with available source quality</dd>
+      </div>
+      <div>
+        <dt>Audio</dt>
+        <dd>MP3 when source audio is available</dd>
+      </div>
+      <div>
+        <dt>Photos</dt>
+        <dd>Individual images or a ZIP of selected photos</dd>
+      </div>
+      <div>
+        <dt>Access</dt>
+        <dd>Public posts only. No TikTok login required.</dd>
+      </div>
+    </dl>
+  </div>
+</section>

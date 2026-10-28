@@ -49,8 +49,9 @@ describe('application routes', () => {
     expect(response.text).toContain('<span class="brand-suffix">Mp4</span>');
     expect(response.text).toContain('/assets/js/app.js');
     expect(response.text).toContain('Preview unavailable');
-    expect(response.text).toContain('/assets/images/showcase-left.webp');
-    expect(response.text).toContain('/assets/images/moment-city.webp');
+    expect(response.text).not.toContain('class="hero-art"');
+    expect(response.text).toContain('id="downloader-panel"');
+    expect(response.text).toContain('Download TikTok');
     expect(response.text).not.toMatch(
       /on(?:click|submit)=|cdn\.tailwindcss|sarah\.wanders|74%|5\.1 MB/,
     );

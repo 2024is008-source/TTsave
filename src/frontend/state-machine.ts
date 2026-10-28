@@ -273,16 +273,19 @@ export function transition(state: State, event: Event): State {
 type ControllerOptions = {
   adapter: DownloaderAdapter;
   requestDownload: (url: string) => void;
+  onDelivered?: (type: 'mp4' | 'mp3' | 'image' | 'zip') => void;
 };
 
 export function createDownloaderController({
   adapter,
   requestDownload,
+  onDelivered,
 }: ControllerOptions) {
   let state = initialState();
   let operation = 0;
   let abortController: AbortController | null = null;
   let readyJob: DownloadJob | null = null;
+  let deliveryController: AbortController | null = null;
   const listeners = new Set<(state: State) => void>();
   const dispatch = (event: Event) => {
     const next = transition(state, event);
@@ -291,6 +294,8 @@ export function createDownloaderController({
     for (const listener of listeners) listener(state);
   };
   const invalidate = () => {
+    deliveryController?.abort();
+    deliveryController = null;
     operation += 1;
     abortController?.abort();
     abortController = null;
@@ -366,6 +371,20 @@ export function createDownloaderController({
       }
       try {
         requestDownload(state.download.url);
+        if (readyJob && adapter.confirmDelivery) {
+          const controller = new AbortController();
+          deliveryController = controller;
+          const type =
+            state.downloadType === 'image' && state.selectedPhotoIds.length > 1
+              ? 'zip'
+              : state.downloadType;
+          void adapter
+            .confirmDelivery(readyJob, controller.signal)
+            .then((delivered) => {
+              if (delivered && !controller.signal.aborted) onDelivered?.(type);
+            })
+            .catch(() => undefined);
+        }
         readyJob = null;
         dispatch({ type: 'REQUESTED' });
       } catch {

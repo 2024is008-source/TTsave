@@ -1,0 +1,18 @@
+{
+  "format": "vignette-banner",
+  "reviewed": false,
+  "tag": {
+    "kind": "external",
+    "src": "",
+    "attributes": {}
+  },
+  "csp": {
+    "scriptSrc": [],
+    "connectSrc": [],
+    "imgSrc": [],
+    "frameSrc": [],
+    "styleSrc": [],
+    "fontSrc": [],
+    "mediaSrc": []
+  }
+}

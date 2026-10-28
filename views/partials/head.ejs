@@ -1,4 +1,13 @@
 <meta charset="utf-8" />
+<% if (typeof advertising !== 'undefined' && advertising) { %>
+<script
+  defer
+  id="advertising-init"
+  src="/assets/js/advertising.js?v=1"
+  data-configuration="<%= JSON.stringify(advertising) %>"
+  referrerpolicy="no-referrer"
+></script>
+<% } %>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title><%= seo.title %></title>
 <meta name="description" content="<%= seo.description %>" />
@@ -41,20 +50,20 @@
 <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="96x96" />
 <meta name="theme-color" content="#f8faff" />
 <script src="/assets/js/theme-init.js"></script>
-<% if (typeof analytics !== 'undefined' && analytics) { %>
+<% if (seo.canonical === 'https://tiksavemp4.online/') { %>
+<script src="/assets/js/downloader-bootstrap.js?v=1"></script>
+<% } %> <% if (typeof analytics !== 'undefined' && analytics) { %>
 <script
+  defer
   id="analytics-init"
-  src="/assets/js/analytics.js?v=origin-referrer-blog-1"
+  src="/assets/js/analytics.js?v=consent-downloads-2"
+  data-require-consent="<%= typeof analyticsRequireConsent === 'undefined' ? true : analyticsRequireConsent %>"
   data-measurement-id="<%= analytics.measurementId %>"
   data-page-location="<%= analytics.pageLocation %>"
   data-page-title="<%= analytics.pageTitle %>"
   referrerpolicy="no-referrer"
 ></script>
-<script
-  async
-  src="https://www.googletagmanager.com/gtag/js?id=<%= analytics.measurementId %>"
-  referrerpolicy="no-referrer"
-></script>
+<link rel="stylesheet" href="/assets/analytics.css" />
 <% } %>
-<link rel="stylesheet" href="/assets/app.css?v=blog-3" />
-<script type="module" src="/assets/js/app.js?v=seo-fixes-1"></script>
+<link rel="stylesheet" href="/assets/app.css?v=tiksave-ui-1" />
+<script type="module" src="/assets/js/app.js?v=tiksave-ui-1"></script>

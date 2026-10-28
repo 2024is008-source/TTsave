@@ -18,7 +18,8 @@ async function writeChanged(filename, bytes) {
 
 const assets = [
   ['preview-unavailable', 1080, 1920, 540],
-  ['hero-video-poster', 1080, 1920, 540],
+  // Keep the existing 9:16 crop without enlarging the 768px JPEG source.
+  ['hero-video-poster', 756, 1344, 540],
   ['hero-avatar', 256, 256, 128],
   ['video-card', 800, 600, 400],
   ['available-quality', 800, 600, 400],
@@ -54,7 +55,10 @@ for (const [name, width, height, smallWidth] of assets) {
     continue;
   }
 
-  for (const size of [width, smallWidth]) {
+  const photographic = /^(?:hero-video-poster|moment-|showcase-|tiktok-)/.test(name);
+  const extraWidths =
+    name === 'hero-video-poster' ? [320] : name.startsWith('tiktok-') ? [400] : [];
+  for (const size of [width, smallWidth, ...extraWidths]) {
     const destination = new URL(
       `${name}${size === width ? '' : `-${size}`}.webp`,
       output,
@@ -63,8 +67,10 @@ for (const [name, width, height, smallWidth] of assets) {
       .resize(size, Math.round((height / width) * size), {
         fit: 'cover',
         position: 'center',
+        withoutEnlargement: true,
       })
-      .webp({ quality: 87, effort: 5 })
+      // Compared at display size: preserve gradients/alpha while reducing photo bytes.
+      .webp({ quality: photographic ? 82 : 87, effort: photographic ? 6 : 5 })
       .toBuffer();
     await writeChanged(fileURLToPath(destination), encoded);
     built++;
@@ -76,6 +82,14 @@ console.log(
 );
 
 const socialOutput = new URL('../public/assets/og/', import.meta.url);
+
+// Picture fallback for artwork hidden by the matching CSS media query.
+await writeChanged(
+  fileURLToPath(new URL('transparent.webp', output)),
+  await sharp({ create: { width: 1, height: 1, channels: 4, background: '#00000000' } })
+    .webp({ lossless: true })
+    .toBuffer(),
+);
 await mkdir(socialOutput, { recursive: true });
 const socialCard = await sharp(fileURLToPath(new URL('og-image.svg', source)))
   .resize(1200, 630)

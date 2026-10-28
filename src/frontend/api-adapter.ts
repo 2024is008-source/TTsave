@@ -41,6 +41,36 @@ export function createApiAdapter(transport: typeof fetch = fetch): DownloaderAda
   };
   return {
     cancelDownload: cancel,
+    async confirmDelivery(job, signal) {
+      const deadline = Date.now() + 120000;
+      while (Date.now() < deadline && !signal.aborted) {
+        const response = await transport(
+          `/api/v1/downloads/${encodeURIComponent(job.id)}`,
+          {
+            headers: job.accessToken
+              ? { Authorization: `Bearer ${job.accessToken}` }
+              : {},
+            signal: AbortSignal.any([signal, AbortSignal.timeout(10000)]),
+            cache: 'no-store',
+          },
+        );
+        if (!response.ok) return false;
+        const parsed = apiJobSchema.safeParse(await response.json());
+        if (!parsed.success) return false;
+        if (parsed.data.status === 'delivered') return true;
+        if (['error', 'cancelled', 'expired'].includes(parsed.data.status)) return false;
+        await new Promise<void>((resolve) => {
+          const done = () => {
+            clearTimeout(timer);
+            signal.removeEventListener('abort', done);
+            resolve();
+          };
+          const timer = setTimeout(done, 1500);
+          signal.addEventListener('abort', done, { once: true });
+        });
+      }
+      return false;
+    },
     async analyze(url, signal) {
       const data = analysisSchema.parse(await read('/analyze', signal, { url }));
       return {

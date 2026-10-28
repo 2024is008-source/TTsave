@@ -94,7 +94,7 @@ for (const [width, height] of [
     });
     await page.goto('/');
     await page.locator('#video-url').fill('https://www.tiktok.com/@creator/photo/123');
-    await page.getByRole('button', { name: 'Get video', exact: true }).click();
+    await page.locator('.analyze-button').click();
     for (let index = 0; index < 3; index++) {
       await expect(page.locator('#photo-position')).toHaveText(
         `${String(index + 1)} of 25`,

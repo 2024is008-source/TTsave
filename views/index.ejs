@@ -3,23 +3,14 @@
   <head>
     <%- include('partials/head') %>
   </head>
-  <body>
+  <body class="tiksave-home">
     <a class="skip-link" href="#main">Skip to content</a>
     <%- include('partials/header') %>
     <main id="main">
       <%- include('partials/hero') %>
       <div class="landing-showcase">
-        <div class="showcase-decoration" aria-hidden="true">
-          <%- include('partials/picture', { imageClass: 'showcase-art showcase-art--left',
-          imageName: 'showcase-left', imageWidth: 800, imageHeight: 1200, smallWidth: 400,
-          imageSizes: '280px', imageAlt: '', imageLoading: 'lazy' }) %> <%-
-          include('partials/picture', { imageClass: 'showcase-art showcase-art--right',
-          imageName: 'showcase-right', imageWidth: 800, imageHeight: 1200, smallWidth:
-          400, imageSizes: '280px', imageAlt: '', imageLoading: 'lazy' }) %>
-        </div>
-        <%- include('partials/features') %> <%- include('partials/steps') %> <%-
-        include('partials/moments') %> <%- include('partials/faq') %> <%-
-        include('partials/blog-preview') %> <%- include('partials/cta') %>
+        <%- include('partials/home-steps') %> <%- include('partials/home-features') %> <%-
+        include('partials/faq') %> <%- include('partials/blog-preview') %>
       </div>
     </main>
     <%- include('partials/footer') %>

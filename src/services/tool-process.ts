@@ -3,6 +3,7 @@ import type { Readable } from 'node:stream';
 import type { Logger } from 'pino';
 import { StringDecoder } from 'node:string_decoder';
 import { HttpError } from '../middleware/error-handler.js';
+import type { ApiJob } from '../api/contracts.js';
 
 export type AnalysisContext = {
   signal: AbortSignal;
@@ -10,6 +11,7 @@ export type AnalysisContext = {
   logger: Logger;
   jobId?: string;
   stage?: string;
+  onJob?: (job: ApiJob) => void;
 };
 export type ProcessLimits = {
   timeoutMs: number;

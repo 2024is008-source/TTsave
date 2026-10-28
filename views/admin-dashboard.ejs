@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/admin-head', { title: 'Operations' }) %>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to reports</a>
+    <header class="admin-header">
+      <a class="brand" href="/admin">TikSaveMP4 <span>Admin</span></a>
+      <nav aria-label="Admin sections">
+        <a href="#downloads">Downloads</a><a href="#system">System</a
+        ><a href="#traffic">GA4 traffic</a>
+      </nav>
+      <form action="/admin/logout" method="post">
+        <input type="hidden" name="csrf" value="<%= csrf %>" /><button
+          class="secondary"
+          type="submit"
+        >
+          Sign out
+        </button>
+      </form>
+    </header>
+    <main class="admin-main" id="main">
+      <div class="page-intro">
+        <div>
+          <p class="eyebrow">Private administration</p>
+          <h1>Operations</h1>
+          <p>Server delivery records and Google traffic reports, kept distinct.</p>
+        </div>
+        <a href="/">View public website</a>
+      </div>
+      <form class="filters panel" action="/admin" method="get" aria-label="Report dates">
+        <div>
+          <label for="from">From (UTC)</label
+          ><input type="date" name="from" id="from" value="<%= range.from %>" required />
+        </div>
+        <div>
+          <label for="to">To (UTC)</label
+          ><input type="date" name="to" id="to" value="<%= range.to %>" required />
+        </div>
+        <button type="submit">Apply dates</button>
+        <p class="muted">
+          Up to 730 days. Detailed records follow the configured retention period.
+        </p>
+      </form>
+      <section id="downloads" aria-labelledby="downloads-title">
+        <div class="section-heading">
+          <h2 id="downloads-title">Download activity</h2>
+          <span>Selected UTC date range</span>
+        </div>
+        <% if (!operations) { %>
+        <p class="notice"><%= operationsMessage %></p>
+        <% } else { %>
+        <p class="muted">
+          Recording started <%= new
+          Date(operations.trackingStarted).toISOString().slice(0, 10) %>. Counts represent
+          server jobs; delivery does not prove a file was saved to a device.
+        </p>
+        <div class="stats-grid">
+          <% for (const [key, label] of statLabels) { %>
+          <article class="stat panel">
+            <h3><%= label %></h3>
+            <p><%= number(operations.totals[key]) %></p>
+          </article>
+          <% } %>
+        </div>
+        <div class="two-column">
+          <section class="panel">
+            <h3>Media breakdown</h3>
+            <div
+              class="table-scroll"
+              tabindex="0"
+              role="region"
+              aria-label="Downloads by media"
+            >
+              <table>
+                <caption>
+                  Attempts and delivered jobs by media
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">Attempts</th>
+                    <th scope="col">Delivered</th>
+                    <th scope="col">Failed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for (const [type, label] of mediaLabels) { %> <% const row =
+                  operations.byType.find(item => item.type === type); %>
+                  <tr>
+                    <th scope="row"><%= label %></th>
+                    <td><%= number(Number(row?.attempts ?? 0)) %></td>
+                    <td><%= number(Number(row?.delivered ?? 0)) %></td>
+                    <td><%= number(Number(row?.failed ?? 0)) %></td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="panel">
+            <h3>Daily activity</h3>
+            <div
+              class="table-scroll"
+              tabindex="0"
+              role="region"
+              aria-label="Daily download activity"
+            >
+              <table>
+                <caption>
+                  UTC day totals
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Day</th>
+                    <th scope="col">Attempts</th>
+                    <th scope="col">Prepared</th>
+                    <th scope="col">Delivered</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for (const day of operations.daily) { %>
+                  <tr>
+                    <th scope="row"><%= day.day %></th>
+                    <td><%= number(Number(day.attempts)) %></td>
+                    <td><%= number(Number(day.prepared)) %></td>
+                    <td><%= number(Number(day.delivered)) %></td>
+                  </tr>
+                  <% } %> <% if (!operations.daily.length) { %>
+                  <tr>
+                    <td colspan="4">No recorded activity for this date range.</td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+        <div class="two-column">
+          <section class="panel">
+            <h3>Recent processing errors</h3>
+            <p class="muted">Sanitized codes only; up to 100 retained records.</p>
+            <div
+              class="table-scroll"
+              tabindex="0"
+              role="region"
+              aria-label="Sanitized processing errors"
+            >
+              <table>
+                <caption>
+                  Recent errors in the selected range
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Stage</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Code</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for (const error of operations.errors) { %>
+                  <tr>
+                    <td><%= error.stage %></td>
+                    <td><%= error.type %></td>
+                    <td><code><%= error.code %></code></td>
+                  </tr>
+                  <% } %> <% if (!operations.errors.length) { %>
+                  <tr>
+                    <td colspan="3">No recorded errors in this date range.</td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="panel">
+            <h3>Server job countries</h3>
+            <p class="muted">
+              Retained detailed jobs only. XX means unknown. These are job counts, not
+              unique visitors.
+            </p>
+            <div
+              class="table-scroll"
+              tabindex="0"
+              role="region"
+              aria-label="Server country aggregates"
+            >
+              <table>
+                <caption>
+                  Trusted country labels
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Country</th>
+                    <th scope="col">Jobs</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for (const row of operations.countries) { %>
+                  <tr>
+                    <th scope="row">
+                      <%= row.country === 'XX' ? 'Unknown (XX)' : row.country %>
+                    </th>
+                    <td><%= number(Number(row.count)) %></td>
+                  </tr>
+                  <% } %> <% if (!operations.countries.length) { %>
+                  <tr>
+                    <td colspan="2">No retained country records.</td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+        <% } %>
+      </section>
+      <section id="system" aria-labelledby="system-title">
+        <div class="section-heading">
+          <h2 id="system-title">System health</h2>
+          <span>Tool and storage checks cached for 30 seconds</span>
+        </div>
+        <div class="two-column">
+          <section class="panel">
+            <h3>Application and queue</h3>
+            <dl class="metrics">
+              <dt>Backend readiness</dt>
+              <dd><%= system.applicationReady ? 'Ready' : 'Not ready' %></dd>
+              <dt>Process uptime</dt>
+              <dd><%= number(system.uptimeSeconds) %> seconds</dd>
+              <dt>Active analyses</dt>
+              <dd><%= number(system.queue?.activeAnalyses) %></dd>
+              <dt>Active downloads / conversions</dt>
+              <dd><%= number(system.queue?.activeJobs) %></dd>
+              <dt>Active archives</dt>
+              <dd><%= number(system.queue?.activeArchives) %></dd>
+              <dt>Process RSS</dt>
+              <dd><%= bytes(system.memory.rss) %></dd>
+              <dt>Heap used</dt>
+              <dd><%= bytes(system.memory.heapUsed) %></dd>
+            </dl>
+          </section>
+          <section class="panel">
+            <h3>Tools and storage</h3>
+            <dl class="metrics">
+              <% for (const [key, label] of toolLabels) { %>
+              <dt><%= label %></dt>
+              <dd><%= availability(system.tools?.[key]) %></dd>
+              <% } %>
+              <dt>Disk available</dt>
+              <dd><%= bytes(system.disk?.availableBytes) %></dd>
+              <dt>Disk capacity</dt>
+              <dd><%= bytes(system.disk?.totalBytes) %></dd>
+              <dt>Managed temporary files</dt>
+              <dd>
+                <%= system.temporary?.available ? bytes(system.temporary.bytes) +
+                (system.temporary.partial ? ' (partial scan)' : '') : 'Unavailable' %>
+              </dd>
+              <dt>Last tool/storage check</dt>
+              <dd><%= system.checkedAt ?? 'Unavailable' %></dd>
+            </dl>
+            <p class="muted">
+              Only managed job/preview files are counted. No filenames, source links or
+              private filesystem paths are shown.
+            </p>
+          </section>
+        </div>
+      </section>
+      <section id="traffic" aria-labelledby="traffic-title">
+        <div class="section-heading">
+          <h2 id="traffic-title">GA4 traffic</h2>
+          <span>Separate from server delivery records</span>
+        </div>
+        <p class="notice"><%= google.message %></p>
+        <p class="muted">
+          Traffic depends on visitor consent and Google's processing. No visitor counts
+          are inferred from server download jobs.
+        </p>
+        <% for (const report of google.reports) { %>
+        <section class="panel">
+          <h3><%= report.name %></h3>
+          <div
+            class="table-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="GA4 <%= report.name %>"
+          >
+            <table>
+              <caption>
+                Authorized Google Analytics report
+              </caption>
+              <thead>
+                <tr>
+                  <% for (const header of report.headers) { %>
+                  <th scope="col"><%= header %></th>
+                  <% } %>
+                </tr>
+              </thead>
+              <tbody>
+                <% for (const row of report.rows) { %>
+                <tr>
+                  <% for (const cell of row) { %>
+                  <td><%= cell %></td>
+                  <% } %>
+                </tr>
+                <% } %><% if (!report.rows.length) { %>
+                <tr>
+                  <td colspan="<%= report.headers.length %>">
+                    No report data returned for this date range.
+                  </td>
+                </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <% } %>
+      </section>
+    </main>
+    <footer class="admin-footer">
+      Private operations · No advertising or visitor analytics runs on these pages.
+    </footer>
+  </body>
+</html>
